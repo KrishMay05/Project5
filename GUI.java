@@ -40,7 +40,7 @@ public class GUI {
         /**
          * Creates arraylist of userFileNames
          */
-        try (BufferedReader bfr = new BufferedReader(new FileReader("users.txt"))) {
+        try (BufferedReader bfr = new BufferedReader(new FileReader("users5.txt"))) {
             String line = bfr.readLine();
             while (line != null) {
                 userFileNames.add(line);

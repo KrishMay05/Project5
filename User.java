@@ -32,7 +32,7 @@ public class User {
         // name is stored on first line of file
         // password is stored on second line of file
         try (FileWriter fw = new FileWriter( n, true)) {
-            BufferedWriter bw = new BufferedWriter(new FileWriter("users.txt", true));
+            BufferedWriter bw = new BufferedWriter(new FileWriter("users5.txt", true));
             bw.append( n + "\n");
             bw.close();
             fw.write(name + "\n");
@@ -235,7 +235,7 @@ public class User {
                         true));
                 BufferedWriter fw2message = new BufferedWriter(new FileWriter(recName + userName + ".txt",
                         true));
-                BufferedWriter messageFile = new BufferedWriter(new FileWriter("messages.txt", true));
+                BufferedWriter messageFile = new BufferedWriter(new FileWriter("messages5.txt", true));
                 // Write a line of data to the file.
                 fw.append(userName + recName + ".txt\n");
                 fw2.append(recName + userName + ".txt\n");
@@ -421,17 +421,17 @@ public class User {
     public void deleteAllFiles(File file, String fileName) {
         try {
             file.delete();
-            FileWriter fw = new FileWriter("users.txt", false);
+            FileWriter fw = new FileWriter("users5.txt", false);
             fw.write("");
             fw.flush();
             fw.close();
-            BufferedReader br = new BufferedReader( new FileReader( "messages.txt" ));
+            BufferedReader br = new BufferedReader( new FileReader( "messages5.txt" ));
             String line;
             while ((line = br.readLine()) != null) {
                 file = new File(line);
                 file.delete();
             }
-            FileWriter fw2 = new FileWriter("messages.txt", false);
+            FileWriter fw2 = new FileWriter("messages5.txt", false);
             fw2.close();
             br.close();
         } catch (Exception e) {
