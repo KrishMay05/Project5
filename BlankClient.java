@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -20,25 +21,48 @@ import java.net.UnknownHostException;
  * @version [COMPLETION DATE]
  */
 public class BlankClient extends JComponent implements Runnable{
+    JFrame frame;
+    Container content;
     BlankClient blankClient;
     JButton enterSystemButton;
     JButton exitSystemButton;
+    boolean enterSystemOrNot;
+    JPanel welcomePanel;
 
 
     ActionListener actionListener = new ActionListener() {
         @Override public void actionPerformed(ActionEvent e) {
             if (e.getSource() == enterSystemButton) {
-
+                welcomePanel.setVisible(false);
             }
             if (e.getSource() == exitSystemButton) {
-
+                JOptionPane.showMessageDialog(null, "Thank you for using the Blank Messaging",
+                        "BlankMessaging", JOptionPane.INFORMATION_MESSAGE);
+                frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
             }
         }
     };
 
+    public void displayWelcomePanel() {
+        JLabel label = new JLabel("Welcome, would you like access to Blank Messaging?");
+        label.setHorizontalAlignment(JLabel.CENTER);
+        enterSystemButton = new JButton("Yes");
+        enterSystemButton.addActionListener(actionListener);
+        exitSystemButton = new JButton("No");
+        exitSystemButton.addActionListener(actionListener);
+
+        welcomePanel = new JPanel();
+        welcomePanel.setLayout(new GridLayout(3, 1));
+        welcomePanel.add(label);
+        welcomePanel.add(enterSystemButton);
+        welcomePanel.add(exitSystemButton);
+        content.add(welcomePanel, BorderLayout.CENTER);
+
+
+    }
 
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
-        SwingUtilities.invokeLater(new BlankClient());
+
         /*
         String hostname = "localhost" //change for different hosts
         int portNumber = 7059; //change for different port numbers
@@ -57,35 +81,29 @@ public class BlankClient extends JComponent implements Runnable{
         }
 
          */
+        SwingUtilities.invokeLater(new BlankClient());
     }
 
     public void run() {
-        JFrame frame = new JFrame("BlankMessaging");
-        Container content = frame.getContentPane();
+        frame = new JFrame("BlankMessaging");
+        content = frame.getContentPane();
         content.setLayout(new BorderLayout());
         blankClient = new BlankClient();
         content.add(blankClient, BorderLayout.CENTER);
 
-        JLabel label = new JLabel("Welcome, would you like access to Blank Messaging?");
-        label.setHorizontalAlignment(JLabel.CENTER);
-        enterSystemButton = new JButton("Yes");
-        enterSystemButton.addActionListener(actionListener);
-        exitSystemButton = new JButton("No");
-        exitSystemButton.addActionListener(actionListener);
-
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new GridLayout(3, 1));
-        
-        topPanel.add(label);
-        topPanel.add(enterSystemButton);
-        topPanel.add(exitSystemButton);
-
-
-        content.add(topPanel, BorderLayout.CENTER);
 
         frame.setSize(600, 400);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
+
+        displayWelcomePanel();
+
+        /*
+        if (boolean.is)
+
+         */
+
+
     }
 }
