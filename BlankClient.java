@@ -26,7 +26,6 @@ public class BlankClient extends JComponent implements Runnable{
     BlankClient blankClient;
     JButton enterSystemButton;
     JButton exitSystemButton;
-    boolean enterSystemOrNot;
     JPanel welcomePanel;
 
 
@@ -41,7 +40,7 @@ public class BlankClient extends JComponent implements Runnable{
                 frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
             }
         }
-    };
+    }; //actionListener
 
     public void displayWelcomePanel() {
         JLabel label = new JLabel("Welcome, would you like access to Blank Messaging?");
@@ -58,8 +57,7 @@ public class BlankClient extends JComponent implements Runnable{
         welcomePanel.add(exitSystemButton);
         content.add(welcomePanel, BorderLayout.CENTER);
 
-
-    }
+    } //displayWelcomePanel
 
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
 
@@ -82,7 +80,7 @@ public class BlankClient extends JComponent implements Runnable{
 
          */
         SwingUtilities.invokeLater(new BlankClient());
-    }
+    }//main method
 
     public void run() {
         frame = new JFrame("BlankMessaging");
@@ -97,13 +95,10 @@ public class BlankClient extends JComponent implements Runnable{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
 
+
         displayWelcomePanel();
 
-        /*
-        if (boolean.is)
-
-         */
 
 
-    }
-}
+    } //run
+}//BlankClient
