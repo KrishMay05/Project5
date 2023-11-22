@@ -19,62 +19,38 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 
-/**
- * BlankClient.java
- * <p>
- * Runs all JFrame GUI prompting elements, sends gathered information to the server, and uses returned info to
- * display messages to the user.
- *
- * @author Krish Patel, Josh Rubow, Aun Ali, Hersh Tripathi
- * @version [COMPLETION DATE]
- */
-public class BlankClient extends JComponent implements Runnable{
-    JFrame frame;
-    Container content;
-    BlankClient blankClient;
-    JButton enterSystemButton;
-    JButton exitSystemButton;
-    JPanel welcomePanel;
+public class BlankClient extends JComponent implements Runnable {
+    private JFrame frame;
+    private Container content;
+    private BlankClient blankClient;
+    private JButton enterSystemButton;
+    private JButton exitSystemButton;
+    private JPanel welcomePanel;
     private PrintWriter writer;
     private Socket socket;
     private BufferedReader bfr;
-    public boolean currentIf;
+    private boolean currentIf;
+    private boolean buttonClick = true;
 
     ActionListener actionListener = new ActionListener() {
-        @Override public void actionPerformed(ActionEvent e) {
+        @Override
+        public void actionPerformed(ActionEvent e) {
             if (e.getSource() == enterSystemButton) {
                 welcomePanel.setVisible(false);
-                String hostname = "localhost"; //change for different hosts
-                int portNumber = 2020; //change for different port numbers
-                try {
-                    socket = new Socket(hostname, portNumber);
-                    bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    writer = new PrintWriter(socket.getOutputStream());
-                    sendDataToServer("Hello, server!");
-                    // THIS IS WHERE WE WILL IMPLEMENT ALL THE REST OF THE FRONT END LOGIC 
-                    // ^^^^^^
-                    // ^^^^^^
-                    // ^^^^^^
-                    // ^^^^^^
-                } catch (ConnectException a) {
-                    JOptionPane.showMessageDialog(null, "There has been an issue connecting " +
-                        "to the server", "BlankMessaging", JOptionPane.ERROR_MESSAGE);
-                } catch (UnknownHostException b) {
-                    JOptionPane.showMessageDialog(null, "There has been an issue connecting " +
-                        "to the server", "BlankMessaging", JOptionPane.ERROR_MESSAGE);
-                } catch (IOException c) {
-                    JOptionPane.showMessageDialog(null, "There has been an issue reading " +
-                        "or writing to the server", "BlankMessaging", JOptionPane.ERROR_MESSAGE);
-                }
+                currentIf = true;
+                buttonClick = true;
             }
             if (e.getSource() == exitSystemButton) {
                 JOptionPane.showMessageDialog(null, "Thank you for using the Blank Messaging",
                         "BlankMessaging", JOptionPane.INFORMATION_MESSAGE);
                 frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+                currentIf = false;
+                buttonClick = false;
             }
         }
-    }; //actionListener
+    }; // actionListener
 
     public void displayWelcomePanel() {
         JLabel label = new JLabel("Welcome, would you like access to Blank Messaging?");
@@ -89,8 +65,7 @@ public class BlankClient extends JComponent implements Runnable{
         welcomePanel.add(enterSystemButton);
         welcomePanel.add(exitSystemButton);
         content.add(welcomePanel, BorderLayout.CENTER);
-
-    } //displayWelcomePanel
+    } // displayWelcomePanel
 
     public void sendDataToServer(String data) throws IOException {
         writer.println(data);
@@ -99,7 +74,7 @@ public class BlankClient extends JComponent implements Runnable{
 
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
         SwingUtilities.invokeLater(new BlankClient());
-    }//main method
+    }// main method
 
     public void run() {
         frame = new JFrame("BlankMessaging");
@@ -113,6 +88,37 @@ public class BlankClient extends JComponent implements Runnable{
         frame.setVisible(true);
         displayWelcomePanel();
 
+        SwingWorker<Void, Void> worker = new SwingWorker<>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                while (true) {
+                    if (buttonClick) {
+                        buttonClick = false;
+                        if (currentIf) {
+                            currentIf = false;
+                            try {
+                                socket = new Socket("localhost", 2020);
+                                bfr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                                writer = new PrintWriter(socket.getOutputStream());
+                                sendDataToServer("Hello, server!");
+                            } catch (ConnectException a) {
+                                JOptionPane.showMessageDialog(null, "There has been an issue connecting " +
+                                        "to the server", "BlankMessaging", JOptionPane.ERROR_MESSAGE);
+                            } catch (UnknownHostException b) {
+                                JOptionPane.showMessageDialog(null, "There has been an issue connecting " +
+                                        "to the server", "BlankMessaging", JOptionPane.ERROR_MESSAGE);
+                            } catch (IOException c) {
+                                JOptionPane.showMessageDialog(null, "There has been an issue reading " +
+                                        "or writing to the server", "BlankMessaging", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+                    } else {
+                        return null;
+                    }
+                }
+            }
+        };
 
-    } //run
-}//BlankClient
+        worker.execute();
+    } // run
+}
