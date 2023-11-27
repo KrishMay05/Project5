@@ -18,6 +18,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
@@ -29,8 +30,10 @@ public class BlankClient extends JComponent implements Runnable {
     private JButton exitSystemButton;
     private JButton loginButton;
     private JButton signUpButton;
+    private JButton submitNewInfo;
     private JPanel welcomePanel;
     private JPanel loginSignUpPanel;
+    private JPanel signUpPanel;
     private PrintWriter writer;
     private Socket socket;
     private BufferedReader bfr;
@@ -38,6 +41,10 @@ public class BlankClient extends JComponent implements Runnable {
     private boolean buttonClick = false;
     private boolean login = false;
     private boolean loginIf = false;
+    private JTextField usernameField;
+    private JTextField passwordField;
+    private String usernameInput;
+    private String passwordInput;
 
     ActionListener actionListener = new ActionListener() {
         @Override
@@ -65,6 +72,11 @@ public class BlankClient extends JComponent implements Runnable {
                 SwingUtilities.invokeLater(() -> login = false);
                 SwingUtilities.invokeLater(() -> buttonClick = true);
                 SwingUtilities.invokeLater(() -> loginIf = true);
+            }
+            if (e.getSource() == submitNewInfo) {
+                signUpPanel.setVisible(false);
+                usernameInput = usernameField.getText();
+                passwordInput = passwordField.getText();
             }
         }
     };
@@ -100,6 +112,20 @@ public class BlankClient extends JComponent implements Runnable {
         content.add(loginSignUpPanel, BorderLayout.CENTER);
     } 
 
+    public void displaySignUpPanel() {
+        submitNewInfo = new JButton("Yes");
+        submitNewInfo.addActionListener(actionListener);
+        usernameField = new JTextField();
+        passwordField = new JTextField();
+        signUpPanel = new JPanel();
+        signUpPanel.setLayout(new GridLayout(3, 1));
+        signUpPanel.add(usernameField);
+        signUpPanel.add(passwordField);
+        signUpPanel.add(submitNewInfo);
+        content.add(signUpPanel, BorderLayout.CENTER);
+        
+    }
+
     public void sendDataToServer(String data) throws IOException {
         writer.println(data);
         writer.flush();
@@ -120,7 +146,6 @@ public class BlankClient extends JComponent implements Runnable {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
         displayWelcomePanel();
-
         SwingWorker<Void, Void> worker = new SwingWorker<>() {
             @Override
             protected Void doInBackground() throws Exception {
@@ -141,11 +166,18 @@ public class BlankClient extends JComponent implements Runnable {
                             content.revalidate();
                             content.repaint();
                             if (loginIf) {
+                                System.out.println("eval pls");
+                                content.remove(loginSignUpPanel);
+                                SwingUtilities.invokeLater(() -> loginIf = false);
                                 if (login) {
                                     sendDataToServer("Login");
                                 } else {
+                                    displaySignUpPanel();
+                                    content.revalidate();
+                                    content.repaint();
                                     sendDataToServer("Sign Up");
                                 }
+                                SwingUtilities.invokeLater(() -> login = false);
                             }
                             SwingUtilities.invokeLater(() -> loginIf = false);
                         } catch (ConnectException a) {
