@@ -182,15 +182,3 @@ public class BlankClient extends JComponent implements Runnable {
         });
     } // run
 }
-showMessageDialog(null, "Error: " + e.getMessage());
-        }
-    }
-
-    public static void updateUsers() {
-        users.reset();
-        ArrayList<String> userFileNames = new ArrayList<>();
-        /**
-         * Creates arraylist of userFileNames
-         */
-        try String line = bfr.readLine();
-            while (line

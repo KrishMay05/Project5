@@ -114,6 +114,3 @@ public class BlankServer {
     }
 
 }
- (BufferedReader bfr = new BufferedReader(new FileReader("users5.txt"))) {
-                       e.printStackTrace();
-           
