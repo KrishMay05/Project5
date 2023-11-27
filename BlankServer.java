@@ -19,9 +19,10 @@ public class BlankServer {
                 BufferedReader br = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 PrintWriter pw = new PrintWriter(clientSocket.getOutputStream());
                 System.out.println(br.readLine());
-                clientSocket.close();
-                serverSocket.close();
+                // clientSocket.close();
+                // serverSocket.close();
             }
+            
         } catch (Exception e) {
             // JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
         }
@@ -113,3 +114,6 @@ public class BlankServer {
     }
 
 }
+ (BufferedReader bfr = new BufferedReader(new FileReader("users5.txt"))) {
+                       e.printStackTrace();
+           
