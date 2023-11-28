@@ -15,12 +15,21 @@ public class BlankServer {
         try {
             ServerSocket serverSocket = new ServerSocket(portNumber);
             while (true) {
+                String userInfo[] = new String[2];
+                String line;
                 Socket clientSocket = serverSocket.accept();
                 BufferedReader br = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 PrintWriter pw = new PrintWriter(clientSocket.getOutputStream());
-                System.out.println(br.readLine());
-                // clientSocket.close();
-                // serverSocket.close();
+                line = br.readLine();
+                if(line.equals("EXIT")) {
+                    clientSocket.close();
+                    serverSocket.close();
+                    br.close();
+                    pw.close();
+                    return;
+                }
+                userInfo = line.split(" ");
+                System.out.println(userInfo[0] + userInfo[1]);
             }
             
         } catch (Exception e) {

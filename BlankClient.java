@@ -33,9 +33,12 @@ public class BlankClient extends JComponent implements Runnable {
     private JButton loginButton;
     private JButton signUpButton;
     private JButton submitNewInfo;
+    private JButton Consumer;
+    private JButton Producer;
     private JPanel welcomePanel;
     private JPanel loginSignUpPanel;
     private JPanel signUpPanel;
+    private JPanel consumerOrProduerPanel;
     private PrintWriter writer;
     private Socket socket;
     private BufferedReader bfr;
@@ -43,6 +46,7 @@ public class BlankClient extends JComponent implements Runnable {
     private boolean buttonClick = false;
     private boolean login = false;
     private boolean loginIf = false;
+    private boolean consumerBool = true;
     private JTextField usernameField;
     private JTextField passwordField;
     private String userInfo[] = new String[2];
@@ -57,6 +61,11 @@ public class BlankClient extends JComponent implements Runnable {
                 SwingUtilities.invokeLater(() -> buttonClick = true);
             }
             if (e.getSource() == exitSystemButton) {
+                try {
+                    socket = new Socket("localhost", 2020);
+                    writer = new PrintWriter(socket.getOutputStream());
+                    sendDataToServer("EXIT");
+                } catch (Exception e2) {}
                 JOptionPane.showMessageDialog(null, "Thank you for using the Blank Messaging",
                         "BlankMessaging", JOptionPane.INFORMATION_MESSAGE);
                 frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
@@ -87,6 +96,8 @@ public class BlankClient extends JComponent implements Runnable {
         exitSystemButton = new JButton("No");
         exitSystemButton.addActionListener(actionListener);
         welcomePanel = new JPanel();
+        label.setForeground(Color.WHITE);
+        welcomePanel.setBackground(Color.BLACK);
         welcomePanel.setLayout(new GridLayout(3, 1));
         welcomePanel.add(label);
         welcomePanel.add(enterSystemButton);
@@ -101,7 +112,10 @@ public class BlankClient extends JComponent implements Runnable {
         loginButton.addActionListener(actionListener);
         signUpButton = new JButton("Signup");
         signUpButton.addActionListener(actionListener);
+
         loginSignUpPanel = new JPanel();
+        label.setForeground(Color.WHITE);
+        loginSignUpPanel.setBackground(Color.BLACK);
         loginSignUpPanel.setLayout(new GridLayout(3, 1));
         loginSignUpPanel.add(label);
         loginSignUpPanel.add(loginButton);
@@ -112,14 +126,27 @@ public class BlankClient extends JComponent implements Runnable {
     public void displaySignUpPanel() {
         submitNewInfo = new JButton("Submit Info");
         submitNewInfo.addActionListener(actionListener);
-        usernameField = new JTextField("Please input Email: ", 20);
+        usernameField = new JTextField(20);
         usernameField.setBackground(Color.lightGray);
-        passwordField = new JTextField("Please input Password: ", 20);
+        passwordField = new JTextField( 20);
         passwordField.setBackground(Color.lightGray);
+
+        JLabel userNameDisplay = new JLabel("Please Eneter Your Email: ");
+        JLabel userPasswordDisplay = new JLabel("Please Eneter Your Email: ");
+        JLabel userInstructions = new JLabel("Hit This Button When You Are Done");
+        userInstructions.isPreferredSizeSet();
         signUpPanel = new JPanel();
-        signUpPanel.setLayout(new GridLayout(3, 1));
+        signUpPanel.setLayout(new GridLayout(3, 2));
+
+        userNameDisplay.setForeground(Color.WHITE);
+        userPasswordDisplay.setForeground(Color.WHITE);
+        userInstructions.setForeground(Color.WHITE);
+        signUpPanel.setBackground(Color.BLACK);
+        signUpPanel.add(userNameDisplay);
         signUpPanel.add(usernameField);
+        signUpPanel.add(userPasswordDisplay);
         signUpPanel.add(passwordField);
+        signUpPanel.add(userInstructions);
         signUpPanel.add(submitNewInfo);
         content.add(signUpPanel, BorderLayout.CENTER);
         submitNewInfo.addActionListener(new ActionListener() {
@@ -130,6 +157,47 @@ public class BlankClient extends JComponent implements Runnable {
                 userInfo[1] = passwordField.getText();
                 signUpPanel.setVisible(false);
                 latch.countDown();
+            }
+        });
+    }
+    public void displayCoSPanel() {
+        Consumer = new JButton("Consumer");
+        Producer = new JButton("Producer");
+        Consumer.addActionListener(actionListener);
+        Producer.addActionListener(actionListener);
+
+        consumerOrProduerPanel = new JPanel();
+        consumerOrProduerPanel.setLayout(new GridLayout(1, 2));
+        consumerOrProduerPanel.setBackground(Color.BLACK);
+        consumerOrProduerPanel.add(Consumer);
+        consumerOrProduerPanel.add(Producer);
+        content.add(consumerOrProduerPanel, BorderLayout.CENTER);
+        Consumer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                latch.countDown();
+                consumerOrProduerPanel.setVisible(false);
+                SwingUtilities.invokeLater(() -> login = true);
+                SwingUtilities.invokeLater(() -> buttonClick = true);
+                SwingUtilities.invokeLater(() -> loginIf = true);
+                SwingUtilities.invokeLater(() -> consumerBool = true);
+                latch.countDown();
+                content.remove(consumerOrProduerPanel);
+            }
+        });
+        Producer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                consumerOrProduerPanel.setVisible(false);
+                SwingUtilities.invokeLater(() -> login = true);
+                SwingUtilities.invokeLater(() -> buttonClick = true);
+                SwingUtilities.invokeLater(() -> loginIf = true);
+                SwingUtilities.invokeLater(() -> consumerBool = false);
+                latch.countDown();
+                content.remove(consumerOrProduerPanel);
+                SwingUtilities.invokeLater(() -> {
+                    System.out.println(consumerBool);
+                });
             }
         });
     }
@@ -178,14 +246,21 @@ public class BlankClient extends JComponent implements Runnable {
                                 content.remove(loginSignUpPanel);
                                 SwingUtilities.invokeLater(() -> loginIf = false);
                                 if (login) {
-                                    sendDataToServer("Login");
+                                    // sendDataToServer("Login");
                                 } else {
                                     displaySignUpPanel();
                                     content.revalidate();
                                     content.repaint();
                                     latch.await();
-                                    sendDataToServer("Sign Up");
-                                    System.out.println(userInfo[0]);
+                                    System.out.println(userInfo[0]+" "+userInfo[1]);
+                                    content.remove(signUpPanel);
+                                    displayCoSPanel();
+                                    content.revalidate();
+                                    content.repaint();
+                                    latch.await();
+                                    System.out.println(consumerBool);
+                                    return null;
+                                    
                                 }
                                 SwingUtilities.invokeLater(() -> login = false);
                             }
