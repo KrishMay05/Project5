@@ -1,4 +1,5 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -11,6 +12,7 @@ import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.concurrent.CountDownLatch;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -43,8 +45,8 @@ public class BlankClient extends JComponent implements Runnable {
     private boolean loginIf = false;
     private JTextField usernameField;
     private JTextField passwordField;
-    private String usernameInput;
-    private String passwordInput;
+    private String userInfo[] = new String[2];
+    private CountDownLatch latch = new CountDownLatch(1);
 
     ActionListener actionListener = new ActionListener() {
         @Override
@@ -72,11 +74,6 @@ public class BlankClient extends JComponent implements Runnable {
                 SwingUtilities.invokeLater(() -> login = false);
                 SwingUtilities.invokeLater(() -> buttonClick = true);
                 SwingUtilities.invokeLater(() -> loginIf = true);
-            }
-            if (e.getSource() == submitNewInfo) {
-                signUpPanel.setVisible(false);
-                usernameInput = usernameField.getText();
-                passwordInput = passwordField.getText();
             }
         }
     };
@@ -113,17 +110,28 @@ public class BlankClient extends JComponent implements Runnable {
     } 
 
     public void displaySignUpPanel() {
-        submitNewInfo = new JButton("Yes");
+        submitNewInfo = new JButton("Submit Info");
         submitNewInfo.addActionListener(actionListener);
-        usernameField = new JTextField();
-        passwordField = new JTextField();
+        usernameField = new JTextField("Please input Email: ", 20);
+        usernameField.setBackground(Color.lightGray);
+        passwordField = new JTextField("Please input Password: ", 20);
+        passwordField.setBackground(Color.lightGray);
         signUpPanel = new JPanel();
         signUpPanel.setLayout(new GridLayout(3, 1));
         signUpPanel.add(usernameField);
         signUpPanel.add(passwordField);
         signUpPanel.add(submitNewInfo);
         content.add(signUpPanel, BorderLayout.CENTER);
-        
+        submitNewInfo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Assign the text input to the variable when the button is pressed
+                userInfo[0] = usernameField.getText();
+                userInfo[1] = passwordField.getText();
+                signUpPanel.setVisible(false);
+                latch.countDown();
+            }
+        });
     }
 
     public void sendDataToServer(String data) throws IOException {
@@ -175,11 +183,14 @@ public class BlankClient extends JComponent implements Runnable {
                                     displaySignUpPanel();
                                     content.revalidate();
                                     content.repaint();
+                                    latch.await();
                                     sendDataToServer("Sign Up");
+                                    System.out.println(userInfo[0]);
                                 }
                                 SwingUtilities.invokeLater(() -> login = false);
                             }
                             SwingUtilities.invokeLater(() -> loginIf = false);
+
                         } catch (ConnectException a) {
                             JOptionPane.showMessageDialog(null, "There has been an issue connecting " +
                                     "to the server", "BlankMessaging", JOptionPane.ERROR_MESSAGE);
