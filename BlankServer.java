@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class BlankServer {
     public static boolean a = true;
@@ -20,7 +21,7 @@ public class BlankServer {
                 BufferedReader br = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 PrintWriter pw = new PrintWriter(clientSocket.getOutputStream());
                 line = br.readLine();
-                System.out.println(line);
+                System.out.println(line); //reads "hello server" currently
                 if(line.equals("EXIT")) {
                     clientSocket.close();
                     serverSocket.close();
@@ -28,13 +29,14 @@ public class BlankServer {
                     pw.close();
                     return;
                 }
-                String[] userInfo = line.split(" ");
+                String userType = br.readLine(); //reads "Consumer" or "Producer" and name/password
+                String[] userInfo = userType.split(" ");
+                System.out.println(Arrays.toString(userInfo));
                 if(userInfo[2].contains("Consumer")) {
                     users.add(new Consumer(userInfo[0], userInfo[1]));
                 } else {
                     // users.add(new Seller(userInfo[0], userInfo[1]));
                 }
-                System.out.println(userInfo[0] + userInfo[1]);
             }
             
         } catch (Exception e) {
