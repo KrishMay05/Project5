@@ -272,8 +272,12 @@ public class BlankClient extends JComponent implements Runnable {
                                     content.revalidate();
                                     content.repaint();
                                     latch.await();
-                                    System.out.println(consumerBool);
-                                    return null;
+                                    SwingUtilities.invokeLater(() -> {});
+                                    if (consumerBool) {
+                                        sendDataToServer(userInfo[0] + " " + userInfo[1] + " " + "Consumer");
+                                    } else {
+                                        sendDataToServer(userInfo[0] + " " + userInfo[1] + " " + "Producer");
+                                    }
                                     
                                 }
                                 SwingUtilities.invokeLater(() -> login = false);
