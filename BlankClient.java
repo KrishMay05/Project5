@@ -233,9 +233,9 @@ public class BlankClient extends JComponent implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 consumerOrProduerPanel.setVisible(false);
-                login = true;
-                buttonClick = true;
-                loginIf = true;
+                SwingUtilities.invokeLater(() -> login = true);
+                SwingUtilities.invokeLater(() -> buttonClick = true);
+                SwingUtilities.invokeLater(() -> loginIf = true);
                 consumerBool = false;
                 content.remove(consumerOrProduerPanel);
         
@@ -245,13 +245,16 @@ public class BlankClient extends JComponent implements Runnable {
                         latch.countDown();
                         // Additional logic for debugging
                         System.out.println("Producer ActionListener executed");
+                        System.out.println(consumerBool + " == false"); //displays after user signs up
                         return null;
                     }
                 };
                 worker.execute();
             }
         });
-    }    public void sendDataToServer(String data) throws IOException {
+    }   
+     
+    public void sendDataToServer(String data) throws IOException {
         writer.println(data);
         writer.flush();
     }
@@ -305,7 +308,7 @@ public class BlankClient extends JComponent implements Runnable {
                                 latch.await();
                                 while (!userInfo[0].contains("@")) {
                                     userInfo[0] = "";
-                                    displaySignUpPanel();
+                                    displaySignUpPanel(); //does a latch countdown in the method
                                     content.revalidate();
                                     content.repaint();
                                     latch.await();
@@ -317,8 +320,7 @@ public class BlankClient extends JComponent implements Runnable {
                                 content.revalidate();
                                 content.repaint();
                                 latch.await();
-                                SwingUtilities.invokeLater(() -> {});
-                                System.out.println(consumerBool + " == fasle");
+                                //SwingUtilities.invokeLater(() -> {});
                                 if (consumerBool) {
                                     sendDataToServer(userInfo[0] + " " + userInfo[1] + " " + "Consumer");
                                 } else {

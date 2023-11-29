@@ -20,6 +20,7 @@ public class BlankServer {
                 BufferedReader br = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 PrintWriter pw = new PrintWriter(clientSocket.getOutputStream());
                 line = br.readLine();
+                System.out.println(line);
                 if(line.equals("EXIT")) {
                     clientSocket.close();
                     serverSocket.close();
