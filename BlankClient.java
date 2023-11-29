@@ -15,6 +15,7 @@ import java.net.UnknownHostException;
 import java.util.concurrent.CountDownLatch;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -23,7 +24,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
-
 public class BlankClient extends JComponent implements Runnable {
     private JFrame frame;
     private Container content;
@@ -35,10 +35,13 @@ public class BlankClient extends JComponent implements Runnable {
     private JButton submitNewInfo;
     private JButton Consumer;
     private JButton Producer;
+    private JButton numStoreButton;
     private JPanel welcomePanel;
     private JPanel loginSignUpPanel;
     private JPanel signUpPanel;
+    private JPanel consumerProducerPanel;
     private JPanel consumerOrProduerPanel;
+    private JPanel storeNumberPanel;
     private PrintWriter writer;
     private Socket socket;
     private BufferedReader bfr;
@@ -165,6 +168,42 @@ public class BlankClient extends JComponent implements Runnable {
             }
         });
     }
+
+    public void displayStoreNumberPanel() {
+        numStoreButton = new JButton("Submit Info");
+        numStoreButton.addActionListener(actionListener);
+        Integer[] choices = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+        JComboBox<Integer> numberDropdownMenu = new JComboBox<Integer>(choices);
+        JButton storeNums = new JButton("OK");
+    
+        JPanel storeNumberPanel = new JPanel();
+        storeNumberPanel.setLayout(new GridLayout(3, 2));
+        storeNumberPanel.setBackground(Color.BLACK);
+        storeNumberPanel.add(numberDropdownMenu);
+        storeNumberPanel.add(storeNums);
+        storeNumberPanel.add(submitNewInfo);
+    
+        storeNums.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Assign the text input to the variable when the button is pressed
+                System.out.println(numberDropdownMenu.getSelectedItem());
+                latch.countDown();
+            }
+        });
+    
+        // Create a new frame for the store number panel
+        JFrame storeNumFrame = new JFrame();
+        storeNumFrame.getContentPane().setLayout(new BorderLayout());
+        storeNumFrame.getContentPane().add(storeNumberPanel, BorderLayout.CENTER);
+        storeNumFrame.setSize(300, 300);
+        storeNumFrame.setVisible(true);
+    
+        // Revalidate and repaint to update the GUI
+        content.revalidate();
+        content.repaint();
+    }
+    
     public void displayCoSPanel() {
         Consumer = new JButton("Consumer");
         Producer = new JButton("Producer");
@@ -230,80 +269,85 @@ public class BlankClient extends JComponent implements Runnable {
         SwingWorker<Void, Void> worker = new SwingWorker<>() {
             @Override
             protected Void doInBackground() throws Exception {
-                while (!isCancelled()) {
-                    if (buttonClick) {
-                        SwingUtilities.invokeLater(() -> buttonClick = false);
-                        try {
-                            socket = new Socket("localhost", 2020);
-                            bfr = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
-                            writer = new PrintWriter(socket.getOutputStream());
-
-                            if (currentIf) {
-                                sendDataToServer("Hello, server!");
-                                SwingUtilities.invokeLater(() -> currentIf = false);
-                            }
-                            content.remove(welcomePanel);  // Remove the previous panel
-                            displayLoginSignUpPanel();     // Display the new panel
+                try {
+                    socket = new Socket("localhost", 2020);
+                    bfr = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
+                    writer = new PrintWriter(socket.getOutputStream());
+        
+                    while (!isCancelled()) {
+                        if (currentIf) {
+                            sendDataToServer("Hello, server!");
+                            SwingUtilities.invokeLater(() -> currentIf = false);
+                        }
+                        if (buttonClick) {
+                            buttonClick = false;
+                            content.remove(welcomePanel);
+                            displayLoginSignUpPanel();
                             content.revalidate();
                             content.repaint();
-                            if (loginIf) {
-                                System.out.println("eval pls");
-                                content.remove(loginSignUpPanel);
-                                SwingUtilities.invokeLater(() -> loginIf = false);
-                                if (login) {
-                                    // sendDataToServer("Login");
-                                } else {
+                        }
+        
+                        if (loginIf) {
+                            loginIf = false;
+                            content.remove(loginSignUpPanel);
+                            if (login) {
+                                // Handle login logic
+                            } else {
+                                userInfo[0] = "";
+                                displaySignUpPanel();
+                                content.revalidate();
+                                content.repaint();
+                                latch.await();
+                                while (!userInfo[0].contains("@")) {
                                     userInfo[0] = "";
                                     displaySignUpPanel();
                                     content.revalidate();
                                     content.repaint();
                                     latch.await();
-                                    while (!userInfo[0].contains("@")) {
-                                        userInfo[0] = "";
-                                        displaySignUpPanel();
-                                        content.revalidate();
-                                        content.repaint();
-                                        latch.await();
-                                        // content.remove(signUpPanel);
-                                    }
-                                    content.remove(signUpPanel);
-                                    System.out.println(userInfo[0]+" "+userInfo[1]);
-                                    displayCoSPanel();
+                                    // content.remove(signUpPanel);
+                                }
+                                content.remove(signUpPanel);
+                                displayCoSPanel();
+                                content.revalidate();
+                                content.repaint();
+                                latch.await();
+                                SwingUtilities.invokeLater(() -> {});
+                                if (consumerBool) {
+                                    sendDataToServer(userInfo[0] + " " + userInfo[1] + " " + "Consumer");
+                                } else {
+                                    content.remove(consumerOrProduerPanel);
+                                    displayStoreNumberPanel();
                                     content.revalidate();
                                     content.repaint();
-                                    latch.await();
-                                    SwingUtilities.invokeLater(() -> {});
-                                    if (consumerBool) {
-                                        sendDataToServer(userInfo[0] + " " + userInfo[1] + " " + "Consumer");
-                                    } else {
-                                        sendDataToServer(userInfo[0] + " " + userInfo[1] + " " + "Producer");
-                                    }
-                                    
+                                    sendDataToServer(userInfo[0] + " " + userInfo[1] + " " + "Producer");
                                 }
-                                SwingUtilities.invokeLater(() -> login = false);
                             }
-                            SwingUtilities.invokeLater(() -> loginIf = false);
-
-                        } catch (ConnectException a) {
-                            JOptionPane.showMessageDialog(null, "There has been an issue connecting " +
-                                    "to the server", "BlankMessaging", JOptionPane.ERROR_MESSAGE);
-                            return null;
-                        } catch (UnknownHostException b) {
-                            JOptionPane.showMessageDialog(null, "There has been an issue connecting " +
-                                    "to the server", "BlankMessaging", JOptionPane.ERROR_MESSAGE);
-                            return null;
-                        } catch (IOException c) {
-                            JOptionPane.showMessageDialog(null, "There has been an issue reading " +
-                                    "or writing to the server", "BlankMessaging", JOptionPane.ERROR_MESSAGE);
-                            return null;
+                            SwingUtilities.invokeLater(() -> login = false);
                         }
                     }
+                } catch (ConnectException a) {
+                    JOptionPane.showMessageDialog(null, "There has been an issue connecting " +
+                            "to the server", "BlankMessaging", JOptionPane.ERROR_MESSAGE);
+                } catch (UnknownHostException b) {
+                    JOptionPane.showMessageDialog(null, "There has been an issue connecting " +
+                            "to the server", "BlankMessaging", JOptionPane.ERROR_MESSAGE);
+                } catch (IOException c) {
+                    JOptionPane.showMessageDialog(null, "There has been an issue reading " +
+                            "or writing to the server", "BlankMessaging", JOptionPane.ERROR_MESSAGE);
+                } finally {
+                    try {
+                        if (bfr != null) bfr.close();
+                        if (writer != null) writer.close();
+                        if (socket != null) socket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
+                }
                 return null;
             }
         };
         worker.execute();
-
+        
         frame.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {

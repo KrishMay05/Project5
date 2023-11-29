@@ -31,7 +31,7 @@ public class BlankServer {
                 if(userInfo[2].contains("Consumer")) {
                     users.add(new Consumer(userInfo[0], userInfo[1]));
                 } else {
-                    users.add(new Seller(userInfo[0], userInfo[1]));
+                    // users.add(new Seller(userInfo[0], userInfo[1]));
                 }
                 System.out.println(userInfo[0] + userInfo[1]);
             }
