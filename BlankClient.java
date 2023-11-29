@@ -225,28 +225,33 @@ public class BlankClient extends JComponent implements Runnable {
                 SwingUtilities.invokeLater(() -> buttonClick = true);
                 SwingUtilities.invokeLater(() -> loginIf = true);
                 SwingUtilities.invokeLater(() -> consumerBool = true);
-                latch.countDown();
                 content.remove(consumerOrProduerPanel);
+                latch.countDown();
             }
         });
         Producer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 consumerOrProduerPanel.setVisible(false);
-                SwingUtilities.invokeLater(() -> login = true);
-                SwingUtilities.invokeLater(() -> buttonClick = true);
-                SwingUtilities.invokeLater(() -> loginIf = true);
-                SwingUtilities.invokeLater(() -> consumerBool = false);
-                latch.countDown();
+                login = true;
+                buttonClick = true;
+                loginIf = true;
+                consumerBool = false;
                 content.remove(consumerOrProduerPanel);
-                SwingUtilities.invokeLater(() -> {
-                    System.out.println(consumerBool);
-                });
+        
+                SwingWorker<Void, Void> worker = new SwingWorker<>() {
+                    @Override
+                    protected Void doInBackground() throws Exception {
+                        latch.countDown();
+                        // Additional logic for debugging
+                        System.out.println("Producer ActionListener executed");
+                        return null;
+                    }
+                };
+                worker.execute();
             }
         });
-    }
-
-    public void sendDataToServer(String data) throws IOException {
+    }    public void sendDataToServer(String data) throws IOException {
         writer.println(data);
         writer.flush();
     }
@@ -307,20 +312,28 @@ public class BlankClient extends JComponent implements Runnable {
                                     // content.remove(signUpPanel);
                                 }
                                 content.remove(signUpPanel);
+                                System.out.println(userInfo[0]+" "+userInfo[1]);
                                 displayCoSPanel();
                                 content.revalidate();
                                 content.repaint();
                                 latch.await();
                                 SwingUtilities.invokeLater(() -> {});
+                                System.out.println(consumerBool + " == fasle");
                                 if (consumerBool) {
                                     sendDataToServer(userInfo[0] + " " + userInfo[1] + " " + "Consumer");
                                 } else {
-                                    content.remove(consumerOrProduerPanel);
-                                    displayStoreNumberPanel();
-                                    content.revalidate();
-                                    content.repaint();
                                     sendDataToServer(userInfo[0] + " " + userInfo[1] + " " + "Producer");
-                                }
+                                }   
+                                // if (consumerBool) {
+                                //     sendDataToServer(userInfo[0] + " " + userInfo[1] + " " + "Consumer");
+                                // } else {
+                                //     content.remove(consumerOrProduerPanel);
+                                //     System.out.println("GAWD");
+                                //     displayStoreNumberPanel();
+                                //     content.revalidate();
+                                //     content.repaint();
+                                //     sendDataToServer(userInfo[0] + " " + userInfo[1] + " " + "Producer");
+                                // }
                             }
                             SwingUtilities.invokeLater(() -> login = false);
                         }
