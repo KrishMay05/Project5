@@ -49,7 +49,7 @@ public class BlankClient extends JComponent implements Runnable {
     private boolean consumerBool = true;
     private JTextField usernameField;
     private JTextField passwordField;
-    private String userInfo[] = new String[2];
+    private String userInfo[] = {"", ""};
     private CountDownLatch latch = new CountDownLatch(1);
 
     ActionListener actionListener = new ActionListener() {
@@ -83,6 +83,7 @@ public class BlankClient extends JComponent implements Runnable {
                 SwingUtilities.invokeLater(() -> login = false);
                 SwingUtilities.invokeLater(() -> buttonClick = true);
                 SwingUtilities.invokeLater(() -> loginIf = true);
+                
             }
         }
     };
@@ -131,8 +132,8 @@ public class BlankClient extends JComponent implements Runnable {
         passwordField = new JTextField( 20);
         passwordField.setBackground(Color.lightGray);
 
-        JLabel userNameDisplay = new JLabel("Please Eneter Your Email: ");
-        JLabel userPasswordDisplay = new JLabel("Please Eneter Your Email: ");
+        JLabel userNameDisplay = new JLabel("Please Eneter Your Email[Must contain @]: ");
+        JLabel userPasswordDisplay = new JLabel("Please Eneter Your Password: ");
         JLabel userInstructions = new JLabel("Hit This Button When You Are Done");
         userInstructions.isPreferredSizeSet();
         signUpPanel = new JPanel();
@@ -153,10 +154,14 @@ public class BlankClient extends JComponent implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Assign the text input to the variable when the button is pressed
-                userInfo[0] = usernameField.getText();
-                userInfo[1] = passwordField.getText();
-                signUpPanel.setVisible(false);
-                latch.countDown();
+                if (!usernameField.getText().contains("@")) {
+                    JOptionPane.showMessageDialog(null, "PLEASE PUT AN EMAIL", "EMAIL", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    userInfo[0] = usernameField.getText();
+                    userInfo[1] = passwordField.getText();
+                    signUpPanel.setVisible(false);
+                    latch.countDown();
+                }
             }
         });
     }
@@ -248,12 +253,21 @@ public class BlankClient extends JComponent implements Runnable {
                                 if (login) {
                                     // sendDataToServer("Login");
                                 } else {
+                                    userInfo[0] = "";
                                     displaySignUpPanel();
                                     content.revalidate();
                                     content.repaint();
                                     latch.await();
-                                    System.out.println(userInfo[0]+" "+userInfo[1]);
+                                    while (!userInfo[0].contains("@")) {
+                                        userInfo[0] = "";
+                                        displaySignUpPanel();
+                                        content.revalidate();
+                                        content.repaint();
+                                        latch.await();
+                                        // content.remove(signUpPanel);
+                                    }
                                     content.remove(signUpPanel);
+                                    System.out.println(userInfo[0]+" "+userInfo[1]);
                                     displayCoSPanel();
                                     content.revalidate();
                                     content.repaint();
