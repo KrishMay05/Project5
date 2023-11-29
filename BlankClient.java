@@ -41,6 +41,7 @@ public class BlankClient extends JComponent implements Runnable {
     private JPanel welcomePanel;
     private JPanel loginSignUpPanel;
     private JPanel signUpPanel;
+    private JPanel loginPanel;
     private JPanel storeInfoPanel;
     // private JPanel consumerProducerPanel;
     private JPanel consumerOrProduerPanel;
@@ -138,8 +139,8 @@ public class BlankClient extends JComponent implements Runnable {
         passwordField = new JTextField( 20);
         passwordField.setBackground(Color.lightGray);
 
-        JLabel userNameDisplay = new JLabel("Please Eneter Your Email[Must contain @]: ");
-        JLabel userPasswordDisplay = new JLabel("Please Eneter Your Password: ");
+        JLabel userNameDisplay = new JLabel("Please Enter Your Email[Must contain @]: ");
+        JLabel userPasswordDisplay = new JLabel("Please Enter Your Password: ");
         JLabel userInstructions = new JLabel("Hit This Button When You Are Done");
         userInstructions.isPreferredSizeSet();
         signUpPanel = new JPanel();
@@ -166,6 +167,49 @@ public class BlankClient extends JComponent implements Runnable {
                     userInfo[0] = usernameField.getText();
                     userInfo[1] = passwordField.getText();
                     signUpPanel.setVisible(false);
+                    latch.countDown();
+                }
+            }
+        });
+    }
+    public void displayLoginPanel() {        
+        submitNewInfo = new JButton("Submit Info");
+        submitNewInfo.addActionListener(actionListener);
+        usernameField = new JTextField(20);
+        usernameField.setBackground(Color.lightGray);
+        passwordField = new JTextField( 20);
+        passwordField.setBackground(Color.lightGray);
+
+        JLabel userNameDisplay = new JLabel("Please Enter Your Email[Must contain @]: ");
+        JLabel userPasswordDisplay = new JLabel("Please Enter Your Password: ");
+        JLabel userInstructions = new JLabel("Hit This Button When You Are Done");
+        userInstructions.isPreferredSizeSet();
+        loginPanel = new JPanel();
+        loginPanel.setLayout(new GridLayout(3, 2));
+
+        userNameDisplay.setForeground(Color.WHITE);
+        userPasswordDisplay.setForeground(Color.WHITE);
+        userInstructions.setForeground(Color.WHITE);
+        loginPanel.setBackground(Color.BLACK);
+        loginPanel.add(userNameDisplay);
+        loginPanel.add(usernameField);
+        loginPanel.add(userPasswordDisplay);
+        loginPanel.add(passwordField);
+        loginPanel.add(userInstructions);
+        loginPanel.add(submitNewInfo);
+        content.add(loginPanel, BorderLayout.CENTER);
+        submitNewInfo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Assign the text input to the variable when the button is pressed
+                if (!usernameField.getText().contains("@")) {
+                    JOptionPane.showMessageDialog(null, "PLEASE PUT AN EMAIL", "EMAIL", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    userInfo[0] = usernameField.getText();
+                    userInfo[1] = passwordField.getText();
+                    // Send info to server
+
+                    loginPanel.setVisible(false);
                     latch.countDown();
                 }
             }
@@ -354,7 +398,14 @@ public class BlankClient extends JComponent implements Runnable {
                             content.remove(loginSignUpPanel);
                             if (login) {
                                 // Handle login logic
-                            } else {
+                                userInfo[0] = "";
+                                displayLoginPanel();
+                                content.revalidate();
+                                content.repaint();
+                                latch.await();
+                                //display seller vs consumer panel here
+
+                            } else { // Handle sign up logic
                                 userInfo[0] = "";
                                 displaySignUpPanel();
                                 content.revalidate();
