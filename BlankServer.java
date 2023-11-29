@@ -36,7 +36,7 @@ public class BlankServer {
                 PrintWriter pw = new PrintWriter(clientSocket.getOutputStream());
                 line = br.readLine();
                 System.out.println(line); //reads "hello server" currently
-                if(line.equals("EXIT")) {
+                if (line.equals("EXIT")) {
                     clientSocket.close();
                     serverSocket.close();
                     br.close();
