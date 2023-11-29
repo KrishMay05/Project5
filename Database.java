@@ -19,7 +19,7 @@ public class Database implements Iterable<User> {
 
 
     // initits the databse
-    public void add(User user) {
+    public synchronized void add(User user) {
         users.add(user);
     }
 
@@ -89,7 +89,7 @@ public class Database implements Iterable<User> {
     }
 
     // this resets the database to an empty arraylist
-    public void reset() {
+    public synchronized void reset() {
         users = new ArrayList<>();
     }
 
