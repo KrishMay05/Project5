@@ -202,7 +202,7 @@ public class BlankClient extends JComponent implements Runnable {
         
         JLabel storeNameDisplay = new JLabel("Please Enter The Name of The Store: ");
         storeInfoPanel = new JPanel();
-        storeInfoPanel.setLayout(new GridLayout(storeNum + 1, 1));
+        storeInfoPanel.setLayout(new GridLayout(storeNum + 2, 1));
         ArrayList<JTextField> storeText = new ArrayList<>();
         for ( int i = 0; i < storeNum; i++) {
             storeText.add(new JTextField(20));
@@ -212,7 +212,7 @@ public class BlankClient extends JComponent implements Runnable {
         storeNameDisplay.setForeground(Color.WHITE);
         storeInfoPanel.setBackground(Color.BLACK);
         storeInfoPanel.add(storeNameDisplay);
-        ;  // Add storeField to the panel
+        // Add storeField to the panel
         storeInfoPanel.add(submitStore);
         content.add(storeInfoPanel, BorderLayout.CENTER);
         // Use a variable to store the user input
@@ -223,13 +223,17 @@ public class BlankClient extends JComponent implements Runnable {
                 // Assign the text input to the variable when the button is pressed
                 String l = "";
                 for ( int i = 0; i < storeNum; i++) {
-                    l += " " + storeText.get(i).getText();
+                    l += " " + storeText.get(i).getText().replace(" ", "_");
                 }
-                signUpPanel.setVisible(false);
+                storeInfoPanel.setVisible(false);
+                content.remove(storeInfoPanel);
                 latch.countDown();
                 try {
                     sendDataToServer(userInfo[0] + " " + userInfo[1] + " Producer" + l);
                 } catch (IOException e1) {}
+                displayWelcomePanel();
+                content.revalidate();
+                content.repaint();
             }
         });
     
@@ -244,7 +248,7 @@ public class BlankClient extends JComponent implements Runnable {
         Producer = new JButton("Producer");
         Consumer.addActionListener(actionListener);
         Producer.addActionListener(actionListener);
-
+    
         consumerOrProduerPanel = new JPanel();
         consumerOrProduerPanel.setLayout(new GridLayout(1, 2));
         consumerOrProduerPanel.setBackground(Color.BLACK);
@@ -260,18 +264,22 @@ public class BlankClient extends JComponent implements Runnable {
                 SwingUtilities.invokeLater(() -> loginIf = true);
                 consumerBool = true;
                 content.remove(consumerOrProduerPanel);
-                try {
-                    sendDataToServer(userInfo[0] + " " + userInfo[1] + " Consumer");
-                } catch (IOException e1) {
-                }
                 SwingWorker<Void, Void> worker = new SwingWorker<>() {
                     @Override
                     protected Void doInBackground() throws Exception {
+                        try {
+                            sendDataToServer(userInfo[0] + " " + userInfo[1] + " Consumer");
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
                         latch.countDown();
-                        // Additional logic for debugging
-                        System.out.println("Producer ActionListener executed");
-                        System.out.println(consumerBool + " == false"); //displays after user signs up
                         return null;
+                    }
+                    @Override
+                    protected void done() {
+                        displayWelcomePanel();
+                        content.revalidate();
+                        content.repaint();
                     }
                 };
                 worker.execute();
@@ -293,9 +301,6 @@ public class BlankClient extends JComponent implements Runnable {
                     @Override
                     protected Void doInBackground() throws Exception {
                         latch.countDown();
-                        // Additional logic for debugging
-                        System.out.println("Producer ActionListener executed");
-                        System.out.println(consumerBool + " == false"); //displays after user signs up
                         return null;
                     }
                 };
@@ -303,7 +308,7 @@ public class BlankClient extends JComponent implements Runnable {
             }
         });
     }
-
+    
     public void sendDataToServer(String data) throws IOException {
         writer.println(data);
         writer.flush();
@@ -312,7 +317,6 @@ public class BlankClient extends JComponent implements Runnable {
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
         SwingUtilities.invokeLater(new BlankClient());
     }// main method
-
     public void run() {
         frame = new JFrame("BlankMessaging");
         content = frame.getContentPane();
@@ -358,11 +362,10 @@ public class BlankClient extends JComponent implements Runnable {
                                 latch.await();
                                 while (!userInfo[0].contains("@")) {
                                     userInfo[0] = "";
-                                    displaySignUpPanel(); //does a latch countdown in the method
+                                    displaySignUpPanel();
                                     content.revalidate();
                                     content.repaint();
                                     latch.await();
-                                    // content.remove(signUpPanel);
                                 }
                                 content.remove(signUpPanel);
                                 System.out.println(userInfo[0]+" "+userInfo[1]);
@@ -373,21 +376,6 @@ public class BlankClient extends JComponent implements Runnable {
                                 SwingUtilities.invokeLater(() -> {
                                     System.out.println(consumerBool);
                                 });
-                                // if (consumerBool) {
-                                //     sendDataToServer(userInfo[0] + " " + userInfo[1] + " " + "Consumer");
-                                // } else {
-                                //     sendDataToServer(userInfo[0] + " " + userInfo[1] + " " + "Producer");
-                                // }
-                                // if (consumerBool) {
-                                //     sendDataToServer(userInfo[0] + " " + userInfo[1] + " " + "Consumer");
-                                // } else {
-                                //     content.remove(consumerOrProduerPanel);
-                                //     System.out.println("GAWD");
-                                //     displayStoreNumberPanel();
-                                //     content.revalidate();
-                                //     content.repaint();
-                                //     sendDataToServer(userInfo[0] + " " + userInfo[1] + " " + "Producer");
-                                // }
                             }
                             SwingUtilities.invokeLater(() -> login = false);
                         }
