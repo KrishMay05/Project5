@@ -224,9 +224,19 @@ public class BlankClient extends JComponent implements Runnable {
                 SwingUtilities.invokeLater(() -> login = true);
                 SwingUtilities.invokeLater(() -> buttonClick = true);
                 SwingUtilities.invokeLater(() -> loginIf = true);
-                SwingUtilities.invokeLater(() -> consumerBool = true);
+                consumerBool = true;
                 content.remove(consumerOrProduerPanel);
-                latch.countDown();
+                SwingWorker<Void, Void> worker = new SwingWorker<>() {
+                    @Override
+                    protected Void doInBackground() throws Exception {
+                        latch.countDown();
+                        // Additional logic for debugging
+                        System.out.println("Consumer ActionListener executed");
+                        System.out.println(consumerBool + " == true"); //displays after user signs up
+                        return null;
+                    }
+                };
+                worker.execute();
             }
         });
         Producer.addActionListener(new ActionListener() {
@@ -253,7 +263,7 @@ public class BlankClient extends JComponent implements Runnable {
             }
         });
     }   
-     
+
     public void sendDataToServer(String data) throws IOException {
         writer.println(data);
         writer.flush();
