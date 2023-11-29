@@ -43,45 +43,45 @@ public class BlankServer {
                     pw.close();
                     return;
                 }
-                if(line.contains("LOGIN")) {
+                if (line.contains("LOGIN")) {
 
                 }
-                if(line.contains("SIGNUP")) {
+                if (line.contains("SIGNUP")) {
                     String userType = br.readLine(); //reads "Consumer" or "Producer" and name/password
                     String[] userInfo = userType.split(" ");
                     System.out.println(Arrays.toString(userInfo));
-                    if(userInfo[2].contains("Consumer")) {
+                    if (userInfo[2].contains("Consumer")) {
                         users.add(new Consumer(userInfo[1], userInfo[2]));
                     } else {
                         users.add(new Seller(userInfo[1], userInfo[2],
                             new ArrayList<>(Arrays.asList(Arrays.copyOfRange(userInfo, 3, userInfo.length - 1 )))));
                     }
                 }
-                if(line.contains("SEARCHUSER")) {
+                if (line.contains("SEARCHUSER")) {
 
                 }
-                if(line.contains("SENDMESSAGE")) {
+                if (line.contains("SENDMESSAGE")) {
 
                 }
-                if(line.contains("BLOCK")) {
+                if (line.contains("BLOCK")) {
 
                 }
-                if(line.contains("MANAGESEND")) {
+                if (line.contains("MANAGESEND")) {
 
                 }
-                if(line.contains("MANAGEEDIT")) {
+                if (line.contains("MANAGEEDIT")) {
 
                 }
-                if(line.contains("MANAGEDELETE")) {
+                if (line.contains("MANAGEDELETE")) {
 
                 }
-                if(line.contains("MANAGEREAD")) {
+                if (line.contains("MANAGEREAD")) {
 
                 }
-                if(line.contains("MANAGEEXPORT")) {
+                if (line.contains("MANAGEEXPORT")) {
 
                 }
-                if(line.contains("MANAGEIMPORT")) {
+                if (line.contains("MANAGEIMPORT")) {
 
                 }
                 
