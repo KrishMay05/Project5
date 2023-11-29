@@ -15,7 +15,6 @@ public class BlankServer {
         try {
             ServerSocket serverSocket = new ServerSocket(portNumber);
             while (true) {
-                String userInfo[] = new String[2];
                 String line;
                 Socket clientSocket = serverSocket.accept();
                 BufferedReader br = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -28,7 +27,12 @@ public class BlankServer {
                     pw.close();
                     return;
                 }
-                userInfo = line.split(" ");
+                String[] userInfo = line.split(" ");
+                if(userInfo[2].contains("Consumer")) {
+                    users.add(new Consumer(userInfo[0], userInfo[1]));
+                } else {
+                    users.add(new Seller(userInfo[0], userInfo[1]));
+                }
                 System.out.println(userInfo[0] + userInfo[1]);
             }
             
