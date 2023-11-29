@@ -12,6 +12,7 @@ import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
 import javax.swing.JButton;
@@ -35,11 +36,13 @@ public class BlankClient extends JComponent implements Runnable {
     private JButton submitNewInfo;
     private JButton Consumer;
     private JButton Producer;
+    private JButton submitStore;
     private JButton numStoreButton;
     private JPanel welcomePanel;
     private JPanel loginSignUpPanel;
     private JPanel signUpPanel;
-    private JPanel consumerProducerPanel;
+    private JPanel storeInfoPanel;
+    // private JPanel consumerProducerPanel;
     private JPanel consumerOrProduerPanel;
     private JPanel storeNumberPanel;
     private PrintWriter writer;
@@ -174,35 +177,67 @@ public class BlankClient extends JComponent implements Runnable {
         numStoreButton.addActionListener(actionListener);
         Integer[] choices = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
         JComboBox<Integer> numberDropdownMenu = new JComboBox<Integer>(choices);
-        JButton storeNums = new JButton("OK");
-    
-        JPanel storeNumberPanel = new JPanel();
+        storeNumberPanel = new JPanel();
         storeNumberPanel.setLayout(new GridLayout(3, 2));
         storeNumberPanel.setBackground(Color.BLACK);
         storeNumberPanel.add(numberDropdownMenu);
-        storeNumberPanel.add(storeNums);
-        storeNumberPanel.add(submitNewInfo);
+        storeNumberPanel.add(numStoreButton);
+            content.add(storeNumberPanel, BorderLayout.CENTER);
     
-        storeNums.addActionListener(new ActionListener() {
+        numStoreButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Assign the text input to the variable when the button is pressed
-                System.out.println(numberDropdownMenu.getSelectedItem());
+                storeNumberPanel.setVisible(false);
+                content.remove(storeNumberPanel);
+                displayStoreInfoPanel(numberDropdownMenu.getSelectedIndex() + 1);
                 latch.countDown();
             }
         });
-    
-        // Create a new frame for the store number panel
-        JFrame storeNumFrame = new JFrame();
-        storeNumFrame.getContentPane().setLayout(new BorderLayout());
-        storeNumFrame.getContentPane().add(storeNumberPanel, BorderLayout.CENTER);
-        storeNumFrame.setSize(300, 300);
-        storeNumFrame.setVisible(true);
-    
-        // Revalidate and repaint to update the GUI
         content.revalidate();
         content.repaint();
     }
+    
+    public void displayStoreInfoPanel(int storeNum) {
+        submitStore = new JButton("Submit Store");
+        
+        JLabel storeNameDisplay = new JLabel("Please Enter The Name of The Store: ");
+        storeInfoPanel = new JPanel();
+        storeInfoPanel.setLayout(new GridLayout(storeNum + 1, 1));
+        ArrayList<JTextField> storeText = new ArrayList<>();
+        for ( int i = 0; i < storeNum; i++) {
+            storeText.add(new JTextField(20));
+            storeText.get(i).setBackground(Color.lightGray);
+            storeInfoPanel.add(storeText.get(i));
+        }
+        storeNameDisplay.setForeground(Color.WHITE);
+        storeInfoPanel.setBackground(Color.BLACK);
+        storeInfoPanel.add(storeNameDisplay);
+        ;  // Add storeField to the panel
+        storeInfoPanel.add(submitStore);
+        content.add(storeInfoPanel, BorderLayout.CENTER);
+        // Use a variable to store the user input
+    
+        submitStore.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Assign the text input to the variable when the button is pressed
+                String l = "";
+                for ( int i = 0; i < storeNum; i++) {
+                    l += " " + storeText.get(i).getText();
+                }
+                signUpPanel.setVisible(false);
+                latch.countDown();
+                try {
+                    sendDataToServer(userInfo[0] + " " + userInfo[1] + " Producer" + l);
+                } catch (IOException e1) {}
+            }
+        });
+    
+        // Wait for latch or do any other necessary operations
+    
+        // Return the user input
+    }
+    
     
     public void displayCoSPanel() {
         Consumer = new JButton("Consumer");
@@ -219,20 +254,23 @@ public class BlankClient extends JComponent implements Runnable {
         Consumer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                latch.countDown();
                 consumerOrProduerPanel.setVisible(false);
                 SwingUtilities.invokeLater(() -> login = true);
                 SwingUtilities.invokeLater(() -> buttonClick = true);
                 SwingUtilities.invokeLater(() -> loginIf = true);
                 consumerBool = true;
                 content.remove(consumerOrProduerPanel);
+                try {
+                    sendDataToServer(userInfo[0] + " " + userInfo[1] + " Consumer");
+                } catch (IOException e1) {
+                }
                 SwingWorker<Void, Void> worker = new SwingWorker<>() {
                     @Override
                     protected Void doInBackground() throws Exception {
                         latch.countDown();
                         // Additional logic for debugging
-                        System.out.println("Consumer ActionListener executed");
-                        System.out.println(consumerBool + " == true"); //displays after user signs up
+                        System.out.println("Producer ActionListener executed");
+                        System.out.println(consumerBool + " == false"); //displays after user signs up
                         return null;
                     }
                 };
@@ -248,7 +286,9 @@ public class BlankClient extends JComponent implements Runnable {
                 SwingUtilities.invokeLater(() -> loginIf = true);
                 consumerBool = false;
                 content.remove(consumerOrProduerPanel);
-        
+                displayStoreNumberPanel();
+                content.revalidate();
+                content.repaint();
                 SwingWorker<Void, Void> worker = new SwingWorker<>() {
                     @Override
                     protected Void doInBackground() throws Exception {
@@ -262,7 +302,7 @@ public class BlankClient extends JComponent implements Runnable {
                 worker.execute();
             }
         });
-    }   
+    }
 
     public void sendDataToServer(String data) throws IOException {
         writer.println(data);
@@ -330,12 +370,14 @@ public class BlankClient extends JComponent implements Runnable {
                                 content.revalidate();
                                 content.repaint();
                                 latch.await();
-                                //SwingUtilities.invokeLater(() -> {});
-                                if (consumerBool) {
-                                    sendDataToServer(userInfo[0] + " " + userInfo[1] + " " + "Consumer");
-                                } else {
-                                    sendDataToServer(userInfo[0] + " " + userInfo[1] + " " + "Producer");
-                                }   
+                                SwingUtilities.invokeLater(() -> {
+                                    System.out.println(consumerBool);
+                                });
+                                // if (consumerBool) {
+                                //     sendDataToServer(userInfo[0] + " " + userInfo[1] + " " + "Consumer");
+                                // } else {
+                                //     sendDataToServer(userInfo[0] + " " + userInfo[1] + " " + "Producer");
+                                // }
                                 // if (consumerBool) {
                                 //     sendDataToServer(userInfo[0] + " " + userInfo[1] + " " + "Consumer");
                                 // } else {
