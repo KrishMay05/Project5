@@ -229,7 +229,7 @@ public class BlankClient extends JComponent implements Runnable {
                 content.remove(storeInfoPanel);
                 latch.countDown();
                 try {
-                    sendDataToServer(userInfo[0] + " " + userInfo[1] + " Producer" + l);
+                    sendDataToServer("SIGNUP" + userInfo[0] + " " + userInfo[1] + " Producer" + l);
                 } catch (IOException e1) {}
                 displayWelcomePanel();
                 content.revalidate();
@@ -268,7 +268,7 @@ public class BlankClient extends JComponent implements Runnable {
                     @Override
                     protected Void doInBackground() throws Exception {
                         try {
-                            sendDataToServer(userInfo[0] + " " + userInfo[1] + " Consumer");
+                            sendDataToServer("SIGNUP" + userInfo[0] + " " + userInfo[1] + " Consumer");
                         } catch (IOException e1) {
                             e1.printStackTrace();
                         }

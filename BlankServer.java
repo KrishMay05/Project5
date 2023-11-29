@@ -16,6 +16,20 @@ public class BlankServer {
         try {
             ServerSocket serverSocket = new ServerSocket(portNumber);
             while (true) {
+                /*
+                 * LOGIN
+                 * SIGNUP
+                 * SEARCHUSER 
+                 * SENDMESSAGE
+                 * BLOCK
+                 * MANAGESEND 
+                 * MANAGEEDIT 
+                 * MANAGEDELETE 
+                 * MANAGEREAD 
+                 * MANAGEEXPORT 
+                 * MANAGEIMPORT 
+                 * EXIT
+                 */
                 String line;
                 Socket clientSocket = serverSocket.accept();
                 BufferedReader br = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -29,15 +43,48 @@ public class BlankServer {
                     pw.close();
                     return;
                 }
-                String userType = br.readLine(); //reads "Consumer" or "Producer" and name/password
-                String[] userInfo = userType.split(" ");
-                System.out.println(Arrays.toString(userInfo));
-                if(userInfo[2].contains("Consumer")) {
-                    users.add(new Consumer(userInfo[0], userInfo[1]));
-                } else {
-                    users.add(new Seller(userInfo[0], userInfo[1],
-                        new ArrayList<>(Arrays.asList(Arrays.copyOfRange(userInfo, 2, userInfo.length - 1 )))));
+                if(line.contains("LOGIN")) {
+
                 }
+                if(line.contains("SIGNUP")) {
+                    String userType = br.readLine(); //reads "Consumer" or "Producer" and name/password
+                    String[] userInfo = userType.split(" ");
+                    System.out.println(Arrays.toString(userInfo));
+                    if(userInfo[2].contains("Consumer")) {
+                        users.add(new Consumer(userInfo[1], userInfo[2]));
+                    } else {
+                        users.add(new Seller(userInfo[1], userInfo[2],
+                            new ArrayList<>(Arrays.asList(Arrays.copyOfRange(userInfo, 3, userInfo.length - 1 )))));
+                    }
+                }
+                if(line.contains("SEARCHUSER")) {
+
+                }
+                if(line.contains("SENDMESSAGE")) {
+
+                }
+                if(line.contains("BLOCK")) {
+
+                }
+                if(line.contains("MANAGESEND")) {
+
+                }
+                if(line.contains("MANAGEEDIT")) {
+
+                }
+                if(line.contains("MANAGEDELETE")) {
+
+                }
+                if(line.contains("MANAGEREAD")) {
+
+                }
+                if(line.contains("MANAGEEXPORT")) {
+
+                }
+                if(line.contains("MANAGEIMPORT")) {
+
+                }
+                
             }
             
         } catch (Exception e) {
