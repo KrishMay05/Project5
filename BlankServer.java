@@ -30,8 +30,6 @@ public class BlankServer {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            
         }
         
     }

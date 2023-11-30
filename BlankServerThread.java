@@ -24,45 +24,45 @@ public class BlankServerThread extends Thread {
             pw = new PrintWriter(clientSocket.getOutputStream());
             String line;
 
+            while ((line = br.readLine()) != null) {
+                System.out.println(line); //reads "hello server" currently
+                if (line.contains("EXIT")) {
+                    exit(line);
+                    return;
+                }
+                if (line.contains("LOGIN")) {
+                    login(line);
+                }
+                if (line.contains("SIGNUP")) {
+                    signup(line);
+                }
+                if (line.contains("SEARCHUSER")) {
 
-            line = br.readLine();
-            System.out.println(line); //reads "hello server" currently
-            if (line.contains("EXIT")) {
-                exit(line);
-                return;
-            }
-            if (line.contains("LOGIN")) {
-                login();
-            }
-            if (line.contains("SIGNUP")) {
-                signup();
-            }
-            if (line.contains("SEARCHUSER")) {
+                }
+                if (line.contains("SENDMESSAGE")) {
 
-            }
-            if (line.contains("SENDMESSAGE")) {
+                }
+                if (line.contains("BLOCK")) {
 
-            }
-            if (line.contains("BLOCK")) {
+                }
+                if (line.contains("MANAGESEND")) {
 
-            }
-            if (line.contains("MANAGESEND")) {
+                }
+                if (line.contains("MANAGEEDIT")) {
 
-            }
-            if (line.contains("MANAGEEDIT")) {
+                }
+                if (line.contains("MANAGEDELETE")) {
 
-            }
-            if (line.contains("MANAGEDELETE")) {
+                }
+                if (line.contains("MANAGEREAD")) {
 
-            }
-            if (line.contains("MANAGEREAD")) {
+                }
+                if (line.contains("MANAGEEXPORT")) {
 
-            }
-            if (line.contains("MANAGEEXPORT")) {
+                }
+                if (line.contains("MANAGEIMPORT")) {
 
-            }
-            if (line.contains("MANAGEIMPORT")) {
-
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -70,9 +70,10 @@ public class BlankServerThread extends Thread {
             
     }
 
-    private void signup() {
+    private void signup(String line) {
+        System.out.println("Signup");
         try {
-            String userType = br.readLine(); //reads "Consumer" or "Producer" and name/password
+            String userType = line; //reads "Consumer" or "Producer" and name/password
             String[] userInfo = userType.split(" ");
             System.out.println(Arrays.toString(userInfo));
             if (userInfo[2].contains("Consumer")) {
@@ -86,10 +87,11 @@ public class BlankServerThread extends Thread {
         }
     }
 
-    private void login() {
+    private void login(String line) {
+        System.out.println("Login");
         try {
-            String username = br.readLine();
-            String password = br.readLine();
+            String username = line.split(" ")[1];
+            String password = line.split(" ")[2];
             boolean a = false;
             for (User user : users) {
                 if (password.equals(user.getPassword()) && username.equals(user.getName())) {
