@@ -70,7 +70,13 @@ public class BlankClient extends JComponent implements Runnable {
                 try {
                     socket = new Socket("localhost", 2020);
                     writer = new PrintWriter(socket.getOutputStream());
-                    sendDataToServer("EXIT");
+                    int reply = JOptionPane.showConfirmDialog(null, "Would You Like To Delete ALL DATA?"
+                            , "Delete Info?", JOptionPane.YES_NO_OPTION);
+                    if (reply == JOptionPane.YES_OPTION) {
+                        sendDataToServer("EXITDELETE");
+                    } else {
+                        sendDataToServer("EXITSAVE");
+                    }
                 } catch (Exception e2) {}
                 JOptionPane.showMessageDialog(null, "Thank you for using the Blank Messaging",
                         "BlankMessaging", JOptionPane.INFORMATION_MESSAGE);

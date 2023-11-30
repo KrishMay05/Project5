@@ -36,11 +36,20 @@ public class BlankServer {
                 PrintWriter pw = new PrintWriter(clientSocket.getOutputStream());
                 line = br.readLine();
                 System.out.println(line); //reads "hello server" currently
-                if (line.equals("EXIT")) {
+                if (line.contains("EXIT")) {
                     clientSocket.close();
                     serverSocket.close();
                     br.close();
                     pw.close();
+                    if (line.contains("DELETE")) {
+                        for (User alpha: users) {
+                            if (alpha instanceof Seller) {
+                                ((Seller)alpha).deleteAllFiles();
+                            } else {
+                                ((Consumer)alpha).deleteAllFiles();
+                            }
+                        }
+                    }
                     return;
                 }
                 if (line.contains("LOGIN")) {
