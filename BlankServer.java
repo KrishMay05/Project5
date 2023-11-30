@@ -53,7 +53,20 @@ public class BlankServer {
                     return;
                 }
                 if (line.contains("LOGIN")) {
-
+                    String userInfo[] = line.split(" ");
+                    boolean a = false;
+                    for (User user : users) {
+                        if (userInfo[2].equals(user.getPassword()) && userInfo[1].equals(user.getName())) {
+                            a = true;
+                        }
+                    }
+                    if (a) {
+                        pw.println("True");
+                        pw.flush();
+                    } else {
+                        pw.println("False");
+                        pw.flush();
+                    }
                 }
                 if (line.contains("SIGNUP")) {
                     String userType = br.readLine(); //reads "Consumer" or "Producer" and name/password
