@@ -1,6 +1,7 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -103,11 +104,13 @@ public class BlankClient extends JComponent implements Runnable {
 
     public void displayWelcomePanel() {
         JLabel label = new JLabel("Welcome, would you like access to Blank Messaging?");
-        label.setHorizontalAlignment(JLabel.CENTER);
+        label.setFont(new Font("Serif", Font.PLAIN, 25));
         enterSystemButton = new JButton("Yes");
         enterSystemButton.addActionListener(actionListener);
+        enterSystemButton.setFont(new Font("Serif", Font.PLAIN, 25));
         exitSystemButton = new JButton("No");
         exitSystemButton.addActionListener(actionListener);
+        exitSystemButton.setFont(new Font("Serif", Font.PLAIN, 25));
         welcomePanel = new JPanel();
         label.setForeground(Color.WHITE);
         welcomePanel.setBackground(Color.BLACK);
@@ -121,10 +124,13 @@ public class BlankClient extends JComponent implements Runnable {
     public void displayLoginSignUpPanel() {
         JLabel label = new JLabel("Welcome, would you like access to login or signup?");
         label.setHorizontalAlignment(JLabel.CENTER);
+        label.setFont(new Font("Serif", Font.PLAIN, 25));
         loginButton = new JButton("Login");
         loginButton.addActionListener(actionListener);
+        loginButton.setFont(new Font("Serif", Font.PLAIN, 25));
         signUpButton = new JButton("Signup");
         signUpButton.addActionListener(actionListener);
+        signUpButton.setFont(new Font("Serif", Font.PLAIN, 25));
 
         loginSignUpPanel = new JPanel();
         label.setForeground(Color.WHITE);
@@ -139,14 +145,20 @@ public class BlankClient extends JComponent implements Runnable {
     public void displaySignUpPanel() {
         submitNewInfo = new JButton("Submit Info");
         submitNewInfo.addActionListener(actionListener);
+        submitNewInfo.setFont(new Font("Serif", Font.PLAIN, 25));
         usernameField = new JTextField(20);
         usernameField.setBackground(Color.lightGray);
+        usernameField.setFont(new Font("Serif", Font.PLAIN, 25));
         passwordField = new JTextField( 20);
         passwordField.setBackground(Color.lightGray);
+        passwordField.setFont(new Font("Serif", Font.PLAIN, 25));
 
         JLabel userNameDisplay = new JLabel("Please Eneter Your Email[Must contain @]: ");
+        userNameDisplay.setFont(new Font("Serif", Font.PLAIN, 25));
         JLabel userPasswordDisplay = new JLabel("Please Eneter Your Password: ");
+        userPasswordDisplay.setFont(new Font("Serif", Font.PLAIN, 25));
         JLabel userInstructions = new JLabel("Hit This Button When You Are Done");
+        userInstructions.setFont(new Font("Serif", Font.PLAIN, 25));
         userInstructions.isPreferredSizeSet();
         signUpPanel = new JPanel();
         signUpPanel.setLayout(new GridLayout(3, 2));
@@ -181,8 +193,10 @@ public class BlankClient extends JComponent implements Runnable {
     public void displayStoreNumberPanel() {
         numStoreButton = new JButton("Submit Info");
         numStoreButton.addActionListener(actionListener);
+        numStoreButton.setFont(new Font("Serif", Font.PLAIN, 25));
         Integer[] choices = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
         JComboBox<Integer> numberDropdownMenu = new JComboBox<Integer>(choices);
+        numberDropdownMenu.setFont(new Font("Serif", Font.PLAIN, 25));
         storeNumberPanel = new JPanel();
         storeNumberPanel.setLayout(new GridLayout(3, 2));
         storeNumberPanel.setBackground(Color.BLACK);
@@ -205,14 +219,16 @@ public class BlankClient extends JComponent implements Runnable {
     
     public void displayStoreInfoPanel(int storeNum) {
         submitStore = new JButton("Submit Store");
-        
+        submitStore.setFont(new Font("Serif", Font.PLAIN, 25));
         JLabel storeNameDisplay = new JLabel("Please Enter The Name of The Store: ");
+        storeNameDisplay.setFont(new Font("Serif", Font.PLAIN, 25));
         storeInfoPanel = new JPanel();
         storeInfoPanel.setLayout(new GridLayout(storeNum + 2, 1));
         ArrayList<JTextField> storeText = new ArrayList<>();
         for ( int i = 0; i < storeNum; i++) {
             storeText.add(new JTextField(20));
             storeText.get(i).setBackground(Color.lightGray);
+            storeText.get(i).setFont(new Font("Serif", Font.PLAIN, 25));
             storeInfoPanel.add(storeText.get(i));
         }
         storeNameDisplay.setForeground(Color.WHITE);
@@ -254,6 +270,8 @@ public class BlankClient extends JComponent implements Runnable {
         Producer = new JButton("Producer");
         Consumer.addActionListener(actionListener);
         Producer.addActionListener(actionListener);
+        Consumer.setFont(new Font("Serif", Font.PLAIN, 25));
+        Producer.setFont(new Font("Serif", Font.PLAIN, 25));
     
         consumerOrProduerPanel = new JPanel();
         consumerOrProduerPanel.setLayout(new GridLayout(1, 2));
