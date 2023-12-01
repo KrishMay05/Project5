@@ -79,8 +79,9 @@ public class BlankServerThread extends Thread {
             if (userInfo[2].contains("Consumer")) {
                 users.add(new Consumer(userInfo[1], userInfo[2]));
             } else {
-                users.add(new Seller(userInfo[1], userInfo[2],
+                users.add(new Seller(userInfo[0].replaceAll("SIGNUP", ""), userInfo[1],
                     new ArrayList<>(Arrays.asList(Arrays.copyOfRange(userInfo, 3, userInfo.length - 1 )))));
+                    System.out.println(new ArrayList<>(Arrays.asList(Arrays.copyOfRange(userInfo, 3, userInfo.length ))));
             }
         } catch (Exception e) {
             e.printStackTrace();
