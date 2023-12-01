@@ -29,7 +29,7 @@ public class Database implements Iterable<User> {
                 if (line == null) {
                     break;
                 }
-
+                //TODO: we get an error here when we try to read in the users.txt file
                 BufferedReader userFileReader = new BufferedReader(new FileReader(line));
                 if (line.contains("Producer")) {
                     String name = userFileReader.readLine();

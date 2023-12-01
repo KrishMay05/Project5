@@ -91,8 +91,10 @@ public class BlankServerThread extends Thread {
     private void login(String line) {
         System.out.println("Login");
         try {
-            String username = line.split(" ")[1];
+            String username = line.split(" ")[1].split("@")[0];
             String password = line.split(" ")[2];
+            System.out.println("username is {" + username + "}");
+            System.out.println("password is {" + password + "}");
             boolean a = false;
             for (User user : users) {
                 if (password.equals(user.getPassword()) && username.equals(user.getName())) {
