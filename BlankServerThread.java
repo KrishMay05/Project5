@@ -80,7 +80,7 @@ public class BlankServerThread extends Thread {
                 users.add(new Consumer(userInfo[1], userInfo[2]));
             } else {
                 users.add(new Seller(userInfo[0].replaceAll("SIGNUP", ""), userInfo[1],
-                    new ArrayList<>(Arrays.asList(Arrays.copyOfRange(userInfo, 3, userInfo.length - 1 )))));
+                    new ArrayList<>(Arrays.asList(Arrays.copyOfRange(userInfo, 3, userInfo.length)))));
                     System.out.println(new ArrayList<>(Arrays.asList(Arrays.copyOfRange(userInfo, 3, userInfo.length ))));
             }
         } catch (Exception e) {
