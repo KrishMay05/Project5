@@ -149,7 +149,9 @@ public class BlankClient extends JComponent implements Runnable {
                 loginPanel.setVisible(false);
                 try {
                     sendDataToServer("LOGIN " + userInfo[0] + " " + userInfo[1]);
-                    if (!bfr.readLine().equals("True")) {
+                    String ln = bfr.readLine();
+                    System.out.println(ln);
+                    if (!ln.equals("True")) {
                         userInfo[0] = "";
                         JOptionPane.showMessageDialog(null, "There was an issue with your login request", "Login Error", JOptionPane.ERROR_MESSAGE);
                     } else {
@@ -442,7 +444,6 @@ public class BlankClient extends JComponent implements Runnable {
                             if (login && login2) {
                                 userInfo[0] = "";
                                 userInfo[1] = "";
-                                System.out.println("display??");
                                 displayLoginPanel();
                                 content.revalidate();
                                 content.repaint();

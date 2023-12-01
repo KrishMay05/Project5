@@ -1,5 +1,8 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Iterator;
+
 /**
  * Database
  *
@@ -16,6 +19,37 @@ import java.util.Iterator;
 public class Database implements Iterable<User> {
     private ArrayList<User> users = new ArrayList<>();
 
+
+    public Database() {
+        // read in all users to the database from the txt files
+        try {
+            BufferedReader userReader = new BufferedReader(new FileReader("users.txt"));
+            while (userReader != null) {
+                String line = userReader.readLine();
+                if (line == null) {
+                    break;
+                }
+
+                BufferedReader userFileReader = new BufferedReader(new FileReader(line));
+                if (line.contains("Producer")) {
+                    String name = userFileReader.readLine();
+                    String password = userFileReader.readLine();
+                    Seller seller = new Seller(name, password, new ArrayList<String>(), new ArrayList<String>(), true);
+                    users.add(seller);
+                } else if (line.contains("Consumer")) {
+                    String name = userFileReader.readLine();
+                    String password = userFileReader.readLine();
+                    Consumer consumer = new Consumer(name, password);
+                    users.add(consumer);
+                }
+                userFileReader.close();
+            }
+
+            userReader.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     // initits the databse
     public synchronized void add(User user) {

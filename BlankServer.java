@@ -8,6 +8,7 @@ public class BlankServer {
         int portNumber = 2020; 
         try {
             serverSocket = new ServerSocket(portNumber);
+
             while (true) {
                 /*
                  * LOGIN
