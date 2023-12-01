@@ -34,6 +34,16 @@ public class Database implements Iterable<User> {
                 if (line.contains("Producer")) {
                     String name = userFileReader.readLine();
                     String password = userFileReader.readLine();
+                    String[] blocked = userFileReader.readLine().split(" ");
+                    String[] stores = userFileReader.readLine().split(" ");
+                    ArrayList<String> blockedList = new ArrayList<>();
+                    ArrayList<String> storeList = new ArrayList<>();
+                    for (String block : blocked) {
+                        blockedList.add(block);
+                    }
+                    for (String store : stores) {
+                        storeList.add(store);
+                    }
                     Seller seller = new Seller(name, password, new ArrayList<String>(), new ArrayList<String>(), true);
                     users.add(seller);
                 } else if (line.contains("Consumer")) {
