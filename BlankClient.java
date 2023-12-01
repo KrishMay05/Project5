@@ -35,6 +35,7 @@ public class BlankClient extends JComponent implements Runnable {
     private JButton loginButton;
     private JButton signUpButton;
     private JButton submitNewInfo;
+    private JButton submitLoginInfo;
     private JButton Consumer;
     private JButton Producer;
     private JButton submitStore;
@@ -43,10 +44,10 @@ public class BlankClient extends JComponent implements Runnable {
     private JPanel loginSignUpPanel;
     private JPanel signUpPanel;
     private JPanel storeInfoPanel;
+    private JPanel loginPanel;
     // private JPanel consumerProducerPanel;
     private JPanel consumerOrProduerPanel;
     private JPanel storeNumberPanel;
-    private JPanel loginPanel;
     private PrintWriter writer;
     private Socket socket;
     private BufferedReader bfr;
@@ -54,9 +55,12 @@ public class BlankClient extends JComponent implements Runnable {
     private boolean buttonClick = false;
     private boolean login = false;
     private boolean loginIf = false;
+    private boolean login2 = false;
     private boolean consumerBool = true;
     private JTextField usernameField;
     private JTextField passwordField;
+    private JTextField usernameFieldLog;
+    private JTextField passwordFieldLog;
     private String userInfo[] = {"", ""};
     private CountDownLatch latch = new CountDownLatch(1);
 
@@ -88,6 +92,7 @@ public class BlankClient extends JComponent implements Runnable {
             }
             if (e.getSource() == loginButton) {
                 loginSignUpPanel.setVisible(false);
+                SwingUtilities.invokeLater(() -> login2 = true);
                 SwingUtilities.invokeLater(() -> login = true);
                 SwingUtilities.invokeLater(() -> buttonClick = true);
                 SwingUtilities.invokeLater(() -> loginIf = true);
@@ -95,12 +100,67 @@ public class BlankClient extends JComponent implements Runnable {
             if (e.getSource() == signUpButton) {
                 loginSignUpPanel.setVisible(false);
                 SwingUtilities.invokeLater(() -> login = false);
+                SwingUtilities.invokeLater(() -> login2 = false);
                 SwingUtilities.invokeLater(() -> buttonClick = true);
                 SwingUtilities.invokeLater(() -> loginIf = true);
                 
             }
         }
     };
+
+    public void displayLoginPanel() {
+        submitLoginInfo = new JButton("Submit Info");
+        submitLoginInfo.addActionListener(actionListener);
+        submitLoginInfo.setFont(new Font("Serif", Font.PLAIN, 25));
+        usernameFieldLog = new JTextField(20);
+        usernameFieldLog.setBackground(Color.lightGray);
+        usernameFieldLog.setFont(new Font("Serif", Font.PLAIN, 25));
+        passwordFieldLog = new JTextField( 20);
+        passwordFieldLog.setBackground(Color.lightGray);
+        passwordFieldLog.setFont(new Font("Serif", Font.PLAIN, 25));
+
+        JLabel userNameDisplay = new JLabel("Email: ");
+        userNameDisplay.setFont(new Font("Serif", Font.PLAIN, 25));
+        JLabel userPasswordDisplay = new JLabel("Password: ");
+        userPasswordDisplay.setFont(new Font("Serif", Font.PLAIN, 25));
+        JLabel userInstructions = new JLabel("");
+        userInstructions.setFont(new Font("Serif", Font.PLAIN, 25));
+        userInstructions.isPreferredSizeSet();
+        loginPanel = new JPanel();
+        loginPanel.setLayout(new GridLayout(3, 2));
+
+        userNameDisplay.setForeground(Color.WHITE);
+        userPasswordDisplay.setForeground(Color.WHITE);
+        userInstructions.setForeground(Color.WHITE);
+        loginPanel.setBackground(Color.BLACK);
+        loginPanel.add(userNameDisplay);
+        loginPanel.add(usernameFieldLog);
+        loginPanel.add(userPasswordDisplay);
+        loginPanel.add(passwordFieldLog);
+        loginPanel.add(userInstructions);
+        loginPanel.add(submitLoginInfo);
+        content.add(loginPanel, BorderLayout.CENTER);
+        submitLoginInfo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                userInfo[0] = usernameFieldLog.getText();
+                userInfo[1] = passwordFieldLog.getText();
+                System.out.println(userInfo[0] + userInfo[1]);
+                loginPanel.setVisible(false);
+                try {
+                    sendDataToServer("LOGIN " + userInfo[0] + " " + userInfo[1]);
+                    if (!bfr.readLine().equals("True")) {
+                        userInfo[0] = "";
+                        JOptionPane.showMessageDialog(null, "There was an issue with your login request", "Login Error", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "You have successfully logged in", "Login Success", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                } catch (IOException e1) {}
+                latch.countDown();
+                
+            }
+        });
+    }
     
 
     public void displayWelcomePanel() {
@@ -143,54 +203,6 @@ public class BlankClient extends JComponent implements Runnable {
         content.add(loginSignUpPanel, BorderLayout.CENTER);
     } 
 
-    public void displayLoginPanel() {
-        submitNewInfo = new JButton("Submit Info");
-        submitNewInfo.addActionListener(actionListener);
-        submitNewInfo.setFont(new Font("Serif", Font.PLAIN, 25));
-        usernameField = new JTextField(20);
-        usernameField.setBackground(Color.lightGray);
-        usernameField.setFont(new Font("Serif", Font.PLAIN, 25));
-        passwordField = new JTextField( 20);
-        passwordField.setBackground(Color.lightGray);
-        passwordField.setFont(new Font("Serif", Font.PLAIN, 25));
-
-        JLabel userNameDisplay = new JLabel("Email: ");
-        userNameDisplay.setFont(new Font("Serif", Font.PLAIN, 25));
-        JLabel userPasswordDisplay = new JLabel("Password: ");
-        userPasswordDisplay.setFont(new Font("Serif", Font.PLAIN, 25));
-        JLabel userInstructions = new JLabel("");
-        userInstructions.setFont(new Font("Serif", Font.PLAIN, 25));
-        userInstructions.isPreferredSizeSet();
-        loginPanel = new JPanel();
-        loginPanel.setLayout(new GridLayout(3, 2));
-
-        userNameDisplay.setForeground(Color.WHITE);
-        userPasswordDisplay.setForeground(Color.WHITE);
-        userInstructions.setForeground(Color.WHITE);
-        loginPanel.setBackground(Color.BLACK);
-        loginPanel.add(userNameDisplay);
-        loginPanel.add(usernameField);
-        loginPanel.add(userPasswordDisplay);
-        loginPanel.add(passwordField);
-        loginPanel.add(userInstructions);
-        loginPanel.add(submitNewInfo);
-        content.add(loginPanel, BorderLayout.CENTER);
-        submitNewInfo.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Assign the text input to the variable when the button is pressed
-                if (!usernameField.getText().contains("@")) {
-                    JOptionPane.showMessageDialog(null, "Please enter an Email", "Email only", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    userInfo[0] = usernameField.getText();
-                    userInfo[1] = passwordField.getText();
-                    loginPanel.setVisible(false);
-                    latch.countDown();
-                }
-            }
-        });
-    }
-
     public void displaySignUpPanel() {
         submitNewInfo = new JButton("Submit Info");
         submitNewInfo.addActionListener(actionListener);
@@ -229,7 +241,9 @@ public class BlankClient extends JComponent implements Runnable {
                 // Assign the text input to the variable when the button is pressed
                 if (!usernameField.getText().contains("@")) {
                     JOptionPane.showMessageDialog(null, "PLEASE PUT AN EMAIL", "EMAIL", JOptionPane.ERROR_MESSAGE);
-                } else {
+                } else if ((passwordField.getText().isBlank())) {
+                    JOptionPane.showMessageDialog(null, "Password Can't be Empty", "password", JOptionPane.ERROR_MESSAGE);
+                }else {
                     userInfo[0] = usernameField.getText();
                     userInfo[1] = passwordField.getText();
                     signUpPanel.setVisible(false);
@@ -300,7 +314,7 @@ public class BlankClient extends JComponent implements Runnable {
                 content.remove(storeInfoPanel);
                 latch.countDown();
                 try {
-                    sendDataToServer("SIGNUP " + userInfo[0] + " " + userInfo[1] + " Producer" + l);
+                    sendDataToServer("SIGNUP" + userInfo[0] + " " + userInfo[1] + " Producer" + l);
                 } catch (IOException e1) {}
                 displayWelcomePanel();
                 content.revalidate();
@@ -335,13 +349,13 @@ public class BlankClient extends JComponent implements Runnable {
                 SwingUtilities.invokeLater(() -> login = true);
                 SwingUtilities.invokeLater(() -> buttonClick = true);
                 SwingUtilities.invokeLater(() -> loginIf = true);
-                consumerBool = true;
+                SwingUtilities.invokeLater(() -> consumerBool = true);
                 content.remove(consumerOrProduerPanel);
                 SwingWorker<Void, Void> worker = new SwingWorker<>() {
                     @Override
                     protected Void doInBackground() throws Exception {
                         try {
-                            sendDataToServer("SIGNUP " + userInfo[0] + " " + userInfo[1] + " Consumer");
+                            sendDataToServer("SIGNUP" + userInfo[0] + " " + userInfo[1] + " Consumer");
                         } catch (IOException e1) {
                             e1.printStackTrace();
                         }
@@ -365,7 +379,7 @@ public class BlankClient extends JComponent implements Runnable {
                 SwingUtilities.invokeLater(() -> login = true);
                 SwingUtilities.invokeLater(() -> buttonClick = true);
                 SwingUtilities.invokeLater(() -> loginIf = true);
-                consumerBool = false;
+                SwingUtilities.invokeLater(() -> consumerBool = false);
                 content.remove(consumerOrProduerPanel);
                 displayStoreNumberPanel();
                 content.revalidate();
@@ -390,7 +404,6 @@ public class BlankClient extends JComponent implements Runnable {
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
         SwingUtilities.invokeLater(new BlankClient());
     }// main method
-
     public void run() {
         frame = new JFrame("BlankMessaging");
         content = frame.getContentPane();
@@ -426,14 +439,15 @@ public class BlankClient extends JComponent implements Runnable {
                         if (loginIf) {
                             loginIf = false;
                             content.remove(loginSignUpPanel);
-                            if (login) {
-                                // Handle login logic
-                                
+                            if (login && login2) {
+                                userInfo[0] = "";
+                                userInfo[1] = "";
+                                System.out.println("display??");
                                 displayLoginPanel();
                                 content.revalidate();
                                 content.repaint();
                                 latch.await();
-                                while (!userInfo[0].contains("@")) {
+                                while (userInfo[0].equals("")) {
                                     userInfo[0] = "";
                                     displayLoginPanel();
                                     content.revalidate();
@@ -442,16 +456,8 @@ public class BlankClient extends JComponent implements Runnable {
                                 }
                                 content.remove(loginPanel);
                                 System.out.println(userInfo[0] + " " + userInfo[1]);
-
-                                sendDataToServer("LOGIN " + userInfo[0] + " " + userInfo[1]);
-
-                                if(bfr.readLine().equals("OK")) {
-                                    JOptionPane.showMessageDialog(null, "You have successfully logged in", "Login Success", JOptionPane.INFORMATION_MESSAGE);
-                                } else {
-                                    JOptionPane.showMessageDialog(null, "There was an issue with your login request", "Login Error", JOptionPane.ERROR_MESSAGE);
-                                }
-
-
+                            } else if (login) {
+                                System.out.println("Dummy");
                             } else {
                                 userInfo[0] = "";
                                 displaySignUpPanel();
@@ -471,17 +477,8 @@ public class BlankClient extends JComponent implements Runnable {
                                 content.revalidate();
                                 content.repaint();
                                 latch.await();
-                                SwingUtilities.invokeLater(() -> {
-                                    System.out.println(consumerBool);
-                                });
                             }
                             SwingUtilities.invokeLater(() -> login = false);
-                        }
-
-                        if (consumerBool) {
-                            // Handle consumer logic
-                        } else {
-                            // Handle producer logic
                         }
                     }
                 } catch (ConnectException a) {
