@@ -91,7 +91,7 @@ public class BlankServerThread extends Thread {
     private void login(String line) {
         System.out.println("Login");
         try {
-            String username = line.split(" ")[1].split("@")[0];
+            String username = line.split(" ")[1];
             String password = line.split(" ")[2];
             System.out.println("username is {" + username + "}");
             System.out.println("password is {" + password + "}");
