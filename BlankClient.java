@@ -146,19 +146,22 @@ public class BlankClient extends JComponent implements Runnable {
                 userInfo[0] = usernameFieldLog.getText();
                 userInfo[1] = passwordFieldLog.getText();
                 System.out.println(userInfo[0] + userInfo[1]);
-                loginPanel.setVisible(false);
                 try {
                     sendDataToServer("LOGIN " + userInfo[0] + " " + userInfo[1]);
                     String ln = bfr.readLine();
                     System.out.println(ln);
                     if (!ln.equals("True")) {
                         userInfo[0] = "";
+                        userInfo[1] = "";
                         JOptionPane.showMessageDialog(null, "There was an issue with your login request", "Login Error", JOptionPane.ERROR_MESSAGE);
+                        
                     } else {
                         JOptionPane.showMessageDialog(null, "You have successfully logged in", "Login Success", JOptionPane.INFORMATION_MESSAGE);
+                        loginPanel.setVisible(false);
+                        latch.countDown();
                     }
                 } catch (IOException e1) {}
-                latch.countDown();
+                // latch.countDown();
                 
             }
         });
@@ -245,7 +248,7 @@ public class BlankClient extends JComponent implements Runnable {
                     JOptionPane.showMessageDialog(null, "PLEASE PUT AN EMAIL", "EMAIL", JOptionPane.ERROR_MESSAGE);
                 } else if ((passwordField.getText().isBlank())) {
                     JOptionPane.showMessageDialog(null, "Password Can't be Empty", "password", JOptionPane.ERROR_MESSAGE);
-                }else {
+                } else {
                     userInfo[0] = usernameField.getText();
                     userInfo[1] = passwordField.getText();
                     signUpPanel.setVisible(false);
