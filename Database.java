@@ -6,30 +6,31 @@ import java.util.Iterator;
 /**
  * Database
  *
- * This class manages the list of user and implements search and unique user methods 
+ * This class manages the list of user and implements search and unique user
+ * methods
  * as well as other methods
  *
- * <p>Purdue University -- CS18000 -- Fall 2023</p>
+ * <p>
+ * Purdue University -- CS18000 -- Fall 2023
+ * </p>
  *
  * @author Krish Patel, Josh Rubow, Aun Ali, Hersh Tripathi
  * @version Nov 12 23
  */
 
-
 public class Database implements Iterable<User> {
     private ArrayList<User> users = new ArrayList<>();
-
 
     public Database() {
         // read in all users to the database from the txt files
         try {
-            BufferedReader userReader = new BufferedReader(new FileReader("users.txt"));
+            BufferedReader userReader = new BufferedReader(new FileReader("users5.txt"));
             while (userReader != null) {
                 String line = userReader.readLine();
                 if (line == null) {
                     break;
                 }
-                //TODO: we get an error here when we try to read in the users.txt file
+                // TODO: we get an error here when we try to read in the users.txt file
                 BufferedReader userFileReader = new BufferedReader(new FileReader(line));
                 if (line.contains("Producer")) {
                     String name = userFileReader.readLine();
@@ -66,7 +67,8 @@ public class Database implements Iterable<User> {
         users.add(user);
     }
 
-    // This method searches through all users in the database and returns an ArrayList of users whose names
+    // This method searches through all users in the database and returns an
+    // ArrayList of users whose names
     // matched the search term
     public ArrayList<User> search(String name, User senderName) {
         ArrayList<User> results = new ArrayList<>();
@@ -80,15 +82,13 @@ public class Database implements Iterable<User> {
         }
 
         return results;
-    } 
-
+    }
 
     // makes it so the databse object is iterable
     @Override
     public Iterator<User> iterator() {
         return users.iterator();
     }
-
 
     // this method checks if the given parameter is alread in the database or not
     public boolean isUniqueUsername(String name) {
