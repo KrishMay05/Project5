@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -25,12 +26,8 @@ public class Database implements Iterable<User> {
         // read in all users to the database from the txt files
         try {
             BufferedReader userReader = new BufferedReader(new FileReader("users5.txt"));
-            while (userReader != null) {
-                String line = userReader.readLine();
-                if (line == null) {
-                    break;
-                }
-                // TODO: we get an error here when we try to read in the users.txt file
+            String line = userReader.readLine();
+            while (line != null) {
                 BufferedReader userFileReader = new BufferedReader(new FileReader(line));
                 if (line.contains("Producer")) {
                     String name = userFileReader.readLine();
@@ -50,10 +47,16 @@ public class Database implements Iterable<User> {
                 } else if (line.contains("Consumer")) {
                     String name = userFileReader.readLine();
                     String password = userFileReader.readLine();
-                    Consumer consumer = new Consumer(name, password);
+                    String[] blocked = userFileReader.readLine().split(" ");
+                    ArrayList<String> blockedList = new ArrayList<>();
+                    for (String block : blocked) {
+                        System.out.println(block);
+                    }
+                    Consumer consumer = new Consumer(name, password, blockedList, true);
                     users.add(consumer);
                 }
                 userFileReader.close();
+                line = userReader.readLine();
             }
 
             userReader.close();
