@@ -77,7 +77,7 @@ public class BlankServerThread extends Thread {
             String[] userInfo = userType.split(" ");
             System.out.println(Arrays.toString(userInfo));
             if (userInfo[2].contains("Consumer")) {
-                users.add(new Consumer(userInfo[1], userInfo[2]));
+                users.add(new Consumer(userInfo[0].replaceAll("SIGNUP", ""), userInfo[1]));
             } else {
                 users.add(new Seller(userInfo[0].replaceAll("SIGNUP", ""), userInfo[1],
                     new ArrayList<>(Arrays.asList(Arrays.copyOfRange(userInfo, 3, userInfo.length)))));
@@ -90,6 +90,7 @@ public class BlankServerThread extends Thread {
 
     private void login(String line) {
         System.out.println("Login");
+        System.out.println(line);
         try {
             String username = line.split(" ")[1];
             String password = line.split(" ")[2];
