@@ -63,6 +63,7 @@ public class BlankClient extends JComponent implements Runnable {
     private JTextField passwordFieldLog;
     private String userInfo[] = {"", ""};
     private CountDownLatch latch = new CountDownLatch(1);
+    private CountDownLatch latchlogin = new CountDownLatch(1);
 
     ActionListener actionListener = new ActionListener() {
         @Override
@@ -71,6 +72,8 @@ public class BlankClient extends JComponent implements Runnable {
                 welcomePanel.setVisible(false);
                 SwingUtilities.invokeLater(() -> currentIf = true);
                 SwingUtilities.invokeLater(() -> buttonClick = true);
+                talkin();
+                
             }
             if (e.getSource() == exitSystemButton) {
                 try {
@@ -158,11 +161,10 @@ public class BlankClient extends JComponent implements Runnable {
                     } else {
                         JOptionPane.showMessageDialog(null, "You have successfully logged in", "Login Success", JOptionPane.INFORMATION_MESSAGE);
                         loginPanel.setVisible(false);
-                        latch.countDown();
+                        latchlogin.countDown();
                     }
                 } catch (IOException e1) {}
-                // latch.countDown();
-                
+
             }
         });
     }
@@ -420,6 +422,21 @@ public class BlankClient extends JComponent implements Runnable {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
         displayWelcomePanel();
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                try {
+                    if (bfr != null) bfr.close();
+                    if (writer != null) writer.close();
+                    if (socket != null) socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    } // run
+
+    public void talkin() {
         SwingWorker<Void, Void> worker = new SwingWorker<>() {
             @Override
             protected Void doInBackground() throws Exception {
@@ -450,18 +467,20 @@ public class BlankClient extends JComponent implements Runnable {
                                 displayLoginPanel();
                                 content.revalidate();
                                 content.repaint();
-                                latch.await();
+                                latchlogin.await();
+                                latchlogin = new CountDownLatch(1);
                                 while (userInfo[0].equals("")) {
                                     userInfo[0] = "";
                                     displayLoginPanel();
                                     content.revalidate();
                                     content.repaint();
-                                    latch.await();
+                                    latchlogin.await();
+                                    latchlogin = new CountDownLatch(1);
                                 }
                                 content.remove(loginPanel);
                                 System.out.println(userInfo[0] + " " + userInfo[1]);
                             } else if (login) {
-                                System.out.println("Dummy");
+                                System.out.println();
                             } else {
                                 userInfo[0] = "";
                                 displaySignUpPanel();
@@ -507,18 +526,5 @@ public class BlankClient extends JComponent implements Runnable {
             }
         };
         worker.execute();
-        
-        frame.addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-                try {
-                    if (bfr != null) bfr.close();
-                    if (writer != null) writer.close();
-                    if (socket != null) socket.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    } // run
+    }
 }
