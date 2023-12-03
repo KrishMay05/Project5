@@ -61,7 +61,7 @@ public class BlankClient extends JComponent implements Runnable {
     private JTextField passwordField;
     private JTextField usernameFieldLog;
     private JTextField passwordFieldLog;
-
+    private String conditional = null;
     private String userInfo[] = {"", ""};
     private CountDownLatch latch;
     // private CountDownLatch latchlogin = new CountDownLatch(1);
@@ -71,7 +71,7 @@ public class BlankClient extends JComponent implements Runnable {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == enterSystemButton) {
                 welcomePanel.setVisible(false);
-
+                latch = new CountDownLatch(1);
                 SwingUtilities.invokeLater(() -> currentIf = true);
                 SwingUtilities.invokeLater(() -> buttonClick = true);
                 talkin();
@@ -97,7 +97,8 @@ public class BlankClient extends JComponent implements Runnable {
             }
             if (e.getSource() == loginButton) {
                 System.out.println("log" + latch.getCount());
-                latch.countDown();
+                conditional = "Works";
+                // latch.countDown();
                 loginSignUpPanel.setVisible(false);
                 SwingUtilities.invokeLater(() -> login2 = true);
                 SwingUtilities.invokeLater(() -> login = true);
@@ -107,7 +108,8 @@ public class BlankClient extends JComponent implements Runnable {
             }
             if (e.getSource() == signUpButton) {
                 System.out.println("sign" + latch.getCount());
-                latch.countDown();
+                // latch.countDown();
+                conditional = "Works";
                 loginSignUpPanel.setVisible(false);
                 SwingUtilities.invokeLater(() -> login = true);
                 SwingUtilities.invokeLater(() -> login2 = false);
@@ -469,50 +471,55 @@ public class BlankClient extends JComponent implements Runnable {
                             displayLoginSignUpPanel();
                             content.revalidate();
                             content.repaint();
-                            latch.await();
-                            if (loginIf) {
-                            loginIf = false;
-                            content.removeAll();
-                            content.revalidate();
-                            content.repaint();
-                            if (login && login2) {
-                                login = false;
-                                login2 = false;
-                                userInfo[0] = "";
-                                userInfo[1] = "";
-                                displayLoginPanel();
-                                content.revalidate();
-                                content.repaint();
-                                latch.await();
-                                content.removeAll();
-                                content.revalidate();
-                                content.repaint();
-                                System.out.println(userInfo[0] + " " + userInfo[1]);
-                            } else if (login) {
-                                login = false;
-                            //     System.out.println();
-                            // } else {
-                                userInfo[0] = "";
-                                System.out.println("here again");
-                                System.out.println("usklsdjfl " + userInfo[0]);
-                                displaySignUpPanel();
-                                content.revalidate();
-                                content.repaint();
-                                latch.await();
-                                
-                                content.removeAll();
-                                content.revalidate();
-                                content.repaint();
-                                System.out.println(userInfo[0]+" "+userInfo[1]);
-                                displayCoSPanel();
-                                content.revalidate();
-                                content.repaint();
-                                latch.await();
+                            // latch.await();
+                            if (!(conditional == null)) {
+                                if (loginIf) {
+                                    conditional = null;
+                                    loginIf = false;
+                                    content.removeAll();
+                                    content.revalidate();
+                                    content.repaint();
+                                    if (login && login2) {
+                                        login = false;
+                                        login2 = false;
+                                        userInfo[0] = "";
+                                        userInfo[1] = "";
+                                        displayLoginPanel();
+                                        content.revalidate();
+                                        content.repaint();
+                                        latch.await();
+                                        content.removeAll();
+                                        content.revalidate();
+                                        content.repaint();
+                                        System.out.println(userInfo[0] + " " + userInfo[1]);
+                                    } else if (login) {
+                                        login = false;
+                                    //     System.out.println();
+                                    // } else {
+                                        userInfo[0] = "";
+                                        System.out.println("here again");
+                                        System.out.println("usklsdjfl " + userInfo[0]);
+                                        displaySignUpPanel();
+                                        content.revalidate();
+                                        content.repaint();
+                                        latch.await();
+                                        
+                                        content.removeAll();
+                                        content.revalidate();
+                                        content.repaint();
+                                        System.out.println(userInfo[0]+" "+userInfo[1]);
+                                        displayCoSPanel();
+                                        content.revalidate();
+                                        content.repaint();
+                                        latch.await();
+                                    }
+                                }
                             }
-                        }
-        
-                    
                             SwingUtilities.invokeLater(() -> login = false);
+                            login = false;
+                            login2 = false;
+                            loginIf = false;
+                            // SwingUtilities.invokeLater(() -> loginIf = false);
                         }
                     }
                 } catch (ConnectException a) {
