@@ -378,17 +378,15 @@ public class BlankClient extends JComponent implements Runnable {
                 content.revalidate();
                 content.repaint();
                 try {
-                    sendDataToServer("SIGNUP" + userInfo[0] + " " + userInfo[1] + " Consumer");
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-                latch.countDown();
+                    sendDataToServer("SIGNUP" + userInfo[0] + " " + userInfo[1] + " Consumer");;
+                } catch (IOException e1) {}
+                
                 displayWelcomePanel();
                 content.revalidate();
                 content.repaint();
-                
             }
         });
+        
         Producer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
