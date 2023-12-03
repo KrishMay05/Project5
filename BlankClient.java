@@ -61,15 +61,17 @@ public class BlankClient extends JComponent implements Runnable {
     private JTextField passwordField;
     private JTextField usernameFieldLog;
     private JTextField passwordFieldLog;
+
     private String userInfo[] = {"", ""};
-    private CountDownLatch latch = new CountDownLatch(1);
-    private CountDownLatch latchlogin = new CountDownLatch(1);
+    private CountDownLatch latch;
+    // private CountDownLatch latchlogin = new CountDownLatch(1);
 
     ActionListener actionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == enterSystemButton) {
                 welcomePanel.setVisible(false);
+
                 SwingUtilities.invokeLater(() -> currentIf = true);
                 SwingUtilities.invokeLater(() -> buttonClick = true);
                 talkin();
@@ -94,24 +96,31 @@ public class BlankClient extends JComponent implements Runnable {
                 SwingUtilities.invokeLater(() -> buttonClick = false);
             }
             if (e.getSource() == loginButton) {
+                System.out.println("log" + latch.getCount());
+                latch.countDown();
                 loginSignUpPanel.setVisible(false);
                 SwingUtilities.invokeLater(() -> login2 = true);
                 SwingUtilities.invokeLater(() -> login = true);
                 SwingUtilities.invokeLater(() -> buttonClick = true);
                 SwingUtilities.invokeLater(() -> loginIf = true);
+                
             }
             if (e.getSource() == signUpButton) {
+                System.out.println("sign" + latch.getCount());
+                latch.countDown();
                 loginSignUpPanel.setVisible(false);
-                SwingUtilities.invokeLater(() -> login = false);
+                SwingUtilities.invokeLater(() -> login = true);
                 SwingUtilities.invokeLater(() -> login2 = false);
                 SwingUtilities.invokeLater(() -> buttonClick = true);
                 SwingUtilities.invokeLater(() -> loginIf = true);
+                
                 
             }
         }
     };
 
     public void displayLoginPanel() {
+        latch = new CountDownLatch(1);
         submitLoginInfo = new JButton("Submit Info");
         submitLoginInfo.addActionListener(actionListener);
         submitLoginInfo.setFont(new Font("Serif", Font.PLAIN, 25));
@@ -161,7 +170,7 @@ public class BlankClient extends JComponent implements Runnable {
                     } else {
                         JOptionPane.showMessageDialog(null, "You have successfully logged in", "Login Success", JOptionPane.INFORMATION_MESSAGE);
                         loginPanel.setVisible(false);
-                        latchlogin.countDown();
+                        latch.countDown();
                     }
                 } catch (IOException e1) {}
 
@@ -190,6 +199,7 @@ public class BlankClient extends JComponent implements Runnable {
     } // displayWelcomePanel
 
     public void displayLoginSignUpPanel() {
+        latch = new CountDownLatch(1);
         JLabel label = new JLabel("Welcome, would you like access to login or signup?");
         label.setHorizontalAlignment(JLabel.CENTER);
         label.setFont(new Font("Serif", Font.PLAIN, 25));
@@ -211,6 +221,7 @@ public class BlankClient extends JComponent implements Runnable {
     } 
 
     public void displaySignUpPanel() {
+        latch = new CountDownLatch(1);
         submitNewInfo = new JButton("Submit Info");
         submitNewInfo.addActionListener(actionListener);
         submitNewInfo.setFont(new Font("Serif", Font.PLAIN, 25));
@@ -261,6 +272,7 @@ public class BlankClient extends JComponent implements Runnable {
     }
 
     public void displayStoreNumberPanel() {
+        latch = new CountDownLatch(1);
         numStoreButton = new JButton("Submit Info");
         numStoreButton.addActionListener(actionListener);
         numStoreButton.setFont(new Font("Serif", Font.PLAIN, 25));
@@ -278,7 +290,9 @@ public class BlankClient extends JComponent implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 storeNumberPanel.setVisible(false);
-                content.remove(storeNumberPanel);
+                content.removeAll();
+                content.revalidate();
+                content.repaint();
                 displayStoreInfoPanel(numberDropdownMenu.getSelectedIndex() + 1);
                 latch.countDown();
             }
@@ -318,7 +332,9 @@ public class BlankClient extends JComponent implements Runnable {
                     l += " " + storeText.get(i).getText().replace(" ", "_");
                 }
                 storeInfoPanel.setVisible(false);
-                content.remove(storeInfoPanel);
+                content.removeAll();
+                content.revalidate();
+                content.repaint();
                 latch.countDown();
                 try {
                     sendDataToServer("SIGNUP" + userInfo[0] + " " + userInfo[1] + " Producer" + l);
@@ -336,6 +352,7 @@ public class BlankClient extends JComponent implements Runnable {
     
     
     public void displayCoSPanel() {
+        latch = new CountDownLatch(1);
         Consumer = new JButton("Consumer");
         Producer = new JButton("Producer");
         Consumer.addActionListener(actionListener);
@@ -357,26 +374,19 @@ public class BlankClient extends JComponent implements Runnable {
                 SwingUtilities.invokeLater(() -> buttonClick = true);
                 SwingUtilities.invokeLater(() -> loginIf = true);
                 SwingUtilities.invokeLater(() -> consumerBool = true);
-                content.remove(consumerOrProduerPanel);
-                SwingWorker<Void, Void> worker = new SwingWorker<>() {
-                    @Override
-                    protected Void doInBackground() throws Exception {
-                        try {
-                            sendDataToServer("SIGNUP" + userInfo[0] + " " + userInfo[1] + " Consumer");
-                        } catch (IOException e1) {
-                            e1.printStackTrace();
-                        }
-                        latch.countDown();
-                        return null;
-                    }
-                    @Override
-                    protected void done() {
-                        displayWelcomePanel();
-                        content.revalidate();
-                        content.repaint();
-                    }
-                };
-                worker.execute();
+                content.removeAll();
+                content.revalidate();
+                content.repaint();
+                try {
+                    sendDataToServer("SIGNUP" + userInfo[0] + " " + userInfo[1] + " Consumer");
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+                latch.countDown();
+                displayWelcomePanel();
+                content.revalidate();
+                content.repaint();
+                
             }
         });
         Producer.addActionListener(new ActionListener() {
@@ -387,7 +397,9 @@ public class BlankClient extends JComponent implements Runnable {
                 SwingUtilities.invokeLater(() -> buttonClick = true);
                 SwingUtilities.invokeLater(() -> loginIf = true);
                 SwingUtilities.invokeLater(() -> consumerBool = false);
-                content.remove(consumerOrProduerPanel);
+                content.removeAll();
+                content.revalidate();
+                content.repaint();
                 displayStoreNumberPanel();
                 content.revalidate();
                 content.repaint();
@@ -450,57 +462,58 @@ public class BlankClient extends JComponent implements Runnable {
                             sendDataToServer("Hello, server!");
                             SwingUtilities.invokeLater(() -> currentIf = false);
                         }
+
                         if (buttonClick) {
                             buttonClick = false;
-                            content.remove(welcomePanel);
+                            content.removeAll();
+                            content.revalidate();
+                            content.repaint();
                             displayLoginSignUpPanel();
                             content.revalidate();
                             content.repaint();
-                        }
-        
-                        if (loginIf) {
+                            latch.await();
+                            if (loginIf) {
                             loginIf = false;
-                            content.remove(loginSignUpPanel);
+                            content.removeAll();
+                            content.revalidate();
+                            content.repaint();
                             if (login && login2) {
+                                login = false;
+                                login2 = false;
                                 userInfo[0] = "";
                                 userInfo[1] = "";
                                 displayLoginPanel();
                                 content.revalidate();
                                 content.repaint();
-                                latchlogin.await();
-                                latchlogin = new CountDownLatch(1);
-                                while (userInfo[0].equals("")) {
-                                    userInfo[0] = "";
-                                    displayLoginPanel();
-                                    content.revalidate();
-                                    content.repaint();
-                                    latchlogin.await();
-                                    latchlogin = new CountDownLatch(1);
-                                }
-                                content.remove(loginPanel);
+                                latch.await();
+                                content.removeAll();
+                                content.revalidate();
+                                content.repaint();
                                 System.out.println(userInfo[0] + " " + userInfo[1]);
                             } else if (login) {
-                                System.out.println();
-                            } else {
+                                login = false;
+                            //     System.out.println();
+                            // } else {
                                 userInfo[0] = "";
+                                System.out.println("here again");
+                                System.out.println("usklsdjfl " + userInfo[0]);
                                 displaySignUpPanel();
                                 content.revalidate();
                                 content.repaint();
                                 latch.await();
-                                while (!userInfo[0].contains("@")) {
-                                    userInfo[0] = "";
-                                    displaySignUpPanel();
-                                    content.revalidate();
-                                    content.repaint();
-                                    latch.await();
-                                }
-                                content.remove(signUpPanel);
+                                
+                                content.removeAll();
+                                content.revalidate();
+                                content.repaint();
                                 System.out.println(userInfo[0]+" "+userInfo[1]);
                                 displayCoSPanel();
                                 content.revalidate();
                                 content.repaint();
                                 latch.await();
                             }
+                        }
+        
+                    
                             SwingUtilities.invokeLater(() -> login = false);
                         }
                     }
