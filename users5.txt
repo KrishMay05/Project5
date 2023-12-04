@@ -1,3 +1,0 @@
-Consumerd@.txt
-Consumerfd@.txt
-Consumerfds@.txt

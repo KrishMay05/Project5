@@ -40,6 +40,7 @@ public class BlankClient extends JComponent implements Runnable {
     private JButton Producer;
     private JButton submitStore;
     private JButton numStoreButton;
+    private JButton loginOptionButton;
     private JPanel welcomePanel;
     private JPanel loginSignUpPanel;
     private JPanel signUpPanel;
@@ -48,6 +49,7 @@ public class BlankClient extends JComponent implements Runnable {
     // private JPanel consumerProducerPanel;
     private JPanel consumerOrProduerPanel;
     private JPanel storeNumberPanel;
+    private JPanel loginOptionPanel;
     private PrintWriter writer;
     private Socket socket;
     private BufferedReader bfr;
@@ -420,6 +422,65 @@ public class BlankClient extends JComponent implements Runnable {
         writer.flush();
     }
 
+    public void displayLoginOptionPanel() {
+        latch = new CountDownLatch(1);
+        loginOptionButton = new JButton("Submit Info");
+        loginOptionButton.addActionListener(actionListener);
+        loginOptionButton.setFont(new Font("Serif", Font.PLAIN, 25));
+        String[] choices = { "Send(1)", "Edit(2)", "Delete(3)", "Read(4)", 
+            "Export(5)", "Import(6)", "Exit(7)" };
+        JComboBox<String> stringDropdownMenu = new JComboBox<String>(choices);
+        stringDropdownMenu.setFont(new Font("Serif", Font.PLAIN, 25));
+        loginOptionPanel = new JPanel();
+        loginOptionPanel.setLayout(new GridLayout(3, 2));
+        loginOptionPanel.setBackground(Color.BLACK);
+        loginOptionPanel.add(stringDropdownMenu);
+        loginOptionPanel.add(loginOptionButton);
+            content.add(loginOptionPanel, BorderLayout.CENTER);
+    
+        loginOptionButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loginOptionPanel.setVisible(false);
+                content.removeAll();
+                content.revalidate();
+                content.repaint();
+                switch (stringDropdownMenu.getSelectedIndex()) {
+                    case 0:
+                        
+                        break;
+                    case 1:
+                        
+                        break;
+                    case 2:
+                        
+                        break;
+                    case 3:
+                        
+                        break;
+                    case 4:
+                        
+                        break;
+                    case 5:
+                        
+                        break;
+                    case 6:
+                        content.removeAll();
+                        content.revalidate();
+                        content.repaint();
+                        displayWelcomePanel();
+                        content.revalidate();
+                        content.repaint();
+                        break;
+                    default:
+                        break;
+                }
+                latch.countDown();
+            }
+        });
+        content.revalidate();
+        content.repaint();
+    }
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
         SwingUtilities.invokeLater(new BlankClient());
     }// main method
@@ -489,6 +550,9 @@ public class BlankClient extends JComponent implements Runnable {
                                         content.repaint();
                                         latch.await();
                                         content.removeAll();
+                                        content.revalidate();
+                                        content.repaint();
+                                        displayLoginOptionPanel();
                                         content.revalidate();
                                         content.repaint();
                                         System.out.println(userInfo[0] + " " + userInfo[1]);
