@@ -449,24 +449,42 @@ public class BlankClient extends JComponent implements Runnable {
                     switch (stringDropdownMenu.getSelectedIndex()) {
                         // Send Message
                         case 0:
-                            JTextField messageStore = new JTextField("Enter Store to Send Message:");
+                            content.setBackground(getBackground());
+                            JTextField messageStore = new JTextField("Enter Store to Message:");
                             messageStore.setFont(new Font("Serif", Font.PLAIN, 25));
                             messageStore.setForeground(Color.WHITE);
                             messageStore.setBackground(Color.BLACK);
                             messageStore.setEditable(false);
-                            messageStore.setHorizontalAlignment(JTextField.CENTER); 
-                            JTextField messageText = new JTextField(20);
-                            messageText.setFont(new Font("Serif", Font.PLAIN, 25));
-                            messageText.setHorizontalAlignment(JTextField.CENTER); 
-                            messageText.setBackground(Color.lightGray);
-                            JButton submitStoreInfo = new JButton("Submit");
+
+                            JTextField storeText = new JTextField(5);
+                            storeText.setFont(new Font("Serif", Font.PLAIN, 25));
+                            storeText.setBackground(Color.lightGray);
+
+                            JTextField messageBox = new JTextField("Enter Message:");
+                            messageBox.setFont(new Font("Serif", Font.PLAIN, 25));
+                            messageBox.setBackground(Color.BLACK);
+                            messageBox.setForeground(Color.WHITE);
+                            messageBox.setEditable(false);
+
+                            JTextField message = new JTextField(5);
+                            message.setFont(new Font("Serif", Font.PLAIN, 25));
+                            message.setBackground(Color.lightGray);
+
+                            JTextField placeHolder = new JTextField("");
+                            placeHolder.setBackground(Color.BLACK);
+                            placeHolder.setEditable(false);
+
+                            JButton submitStoreInfo = new JButton("Submit Info");
                             submitStoreInfo.setFont(new Font("Serif", Font.PLAIN, 25));
 
                             JPanel messagePanel = new JPanel();
-                            messagePanel.setLayout(new GridLayout(3, 1));
+                            messagePanel.setLayout(new GridLayout(3, 2));
                             messagePanel.setBackground(Color.BLACK);
                             messagePanel.add(messageStore);
-                            messagePanel.add(messageText);
+                            messagePanel.add(storeText);
+                            messagePanel.add(messageBox);
+                            messagePanel.add(message);
+                            messagePanel.add(placeHolder);
                             messagePanel.add(submitStoreInfo);
 
                             content.add(messagePanel, BorderLayout.CENTER);
@@ -475,7 +493,7 @@ public class BlankClient extends JComponent implements Runnable {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
                                     try {
-                                        sendDataToServer("SENDMESSAGE " + messageText.getText());
+                                        sendDataToServer("SENDMESSAGE " + storeText.getText() + " " + message.getText());
                                         content.removeAll();
                                         content.revalidate();
                                         content.repaint();

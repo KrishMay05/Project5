@@ -40,7 +40,7 @@ public class BlankServerThread extends Thread {
 
                 }
                 if (line.contains("SENDMESSAGE")) {
-
+                    
                 }
                 if (line.contains("BLOCK")) {
 
