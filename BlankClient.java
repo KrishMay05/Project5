@@ -445,37 +445,75 @@ public class BlankClient extends JComponent implements Runnable {
                 content.removeAll();
                 content.revalidate();
                 content.repaint();
-                switch (stringDropdownMenu.getSelectedIndex()) {
-                    case 0:
-                        
-                        break;
-                    case 1:
-                        
-                        break;
-                    case 2:
-                        
-                        break;
-                    case 3:
-                        
-                        break;
-                    case 4:
-                        
-                        break;
-                    case 5:
-                        
-                        break;
-                    case 6:
-                        content.removeAll();
-                        content.revalidate();
-                        content.repaint();
-                        displayWelcomePanel();
-                        content.revalidate();
-                        content.repaint();
-                        break;
-                    default:
-                        break;
-                }
+                try {
+                    switch (stringDropdownMenu.getSelectedIndex()) {
+                        // Send Message
+                        case 0:
+                            JTextField messageStore = new JTextField("Enter Store to Send Message:");
+                            messageStore.setFont(new Font("Serif", Font.PLAIN, 25));
+                            messageStore.setForeground(Color.WHITE);
+                            messageStore.setBackground(Color.BLACK);
+                            messageStore.setEditable(false);
+                            messageStore.setHorizontalAlignment(JTextField.CENTER); 
+                            JTextField messageText = new JTextField(20);
+                            messageText.setFont(new Font("Serif", Font.PLAIN, 25));
+                            messageText.setHorizontalAlignment(JTextField.CENTER); 
+                            messageText.setBackground(Color.lightGray);
+                            JButton submitStoreInfo = new JButton("Submit");
+                            submitStoreInfo.setFont(new Font("Serif", Font.PLAIN, 25));
+
+                            JPanel messagePanel = new JPanel();
+                            messagePanel.setLayout(new GridLayout(3, 1));
+                            messagePanel.setBackground(Color.BLACK);
+                            messagePanel.add(messageStore);
+                            messagePanel.add(messageText);
+                            messagePanel.add(submitStoreInfo);
+
+                            content.add(messagePanel, BorderLayout.CENTER);
+                            content.setVisible(true);
+                            submitStoreInfo.addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    try {
+                                        sendDataToServer("SENDMESSAGE " + messageText.getText());
+                                        content.removeAll();
+                                        content.revalidate();
+                                        content.repaint();
+                                        displayLoginOptionPanel();
+                                        content.revalidate();
+                                        content.repaint();
+                                    } catch (IOException e1) {}
+                                }
+                            });
+                            break;
+                        case 1:
+                            sendDataToServer("MANAGEEDIT");
+                            break;
+                        case 2:
+                            sendDataToServer("MANAGEDELETE");
+                            break;
+                        case 3:
+                            sendDataToServer("MANAGEREAD");
+                            break;
+                        case 4:
+                            sendDataToServer("MANAGEEXPORT");
+                            break;
+                        case 5:
+                            sendDataToServer("MANAGEIMPORT");
+                            break;
+                        case 6:
+                            content.removeAll();
+                            content.revalidate();
+                            content.repaint();
+                            displayWelcomePanel();
+                            content.revalidate();
+                            content.repaint();
+                            break;
+                        default:
+                            break;
+                    }
                 latch.countDown();
+                } catch (IOException e1) {}
             }
         });
         content.revalidate();
