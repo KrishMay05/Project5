@@ -654,6 +654,7 @@ public class BlankClient extends JComponent implements Runnable {
                         case 1:
                             sendDataToServer("MANAGEEDIT " + " " + messageDropdownMenu.getSelectedItem() + " " +
                             userInfo[0]);
+                            //displayConversation();
                             //displayEditPanel
                             break;
                         case 2:
@@ -677,6 +678,49 @@ public class BlankClient extends JComponent implements Runnable {
                 }
             }
         });
+    }
+
+    public void selectEditMessage() {
+        content.setBackground(getBackground());
+
+        String[] lineNums = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "exit"};
+        JComboBox<String> lineNumsDropdown = new JComboBox<String>(lineNums);
+        lineNumsDropdown.setFont(new Font("Serif", Font.PLAIN, 25));
+        JLabel editBox = new JLabel("Please Select the Number of the Message you'd like to Edit");
+        editBox.setFont(new Font("Serif", Font.PLAIN, 25));
+        editBox.setForeground(Color.WHITE);
+
+
+        JTextField editInstructions = new JTextField("Enter the Edited message");
+        editInstructions.setFont(new Font("Serif", Font.PLAIN, 25));
+        editInstructions.setBackground(Color.BLACK);
+        editInstructions.setForeground(Color.WHITE);
+        editInstructions.setEditable(false);
+
+        JTextField editInput = new JTextField(5);
+        editInput.setFont(new Font("Serif", Font.PLAIN, 25));
+        editInput.setBackground(Color.lightGray);
+
+        JTextField placeHolder = new JTextField("");
+        placeHolder.setBackground(Color.BLACK);
+        placeHolder.setEditable(false);
+
+        JButton submitMessageSelection = new JButton("Submit Info");
+        submitMessageSelection.setFont(new Font("Serif", Font.PLAIN, 25));
+
+        JPanel displayConversationPanel = new JPanel();
+        displayConversationPanel.setLayout(new GridLayout(3, 2));
+        displayConversationPanel.setBackground(Color.BLACK);
+
+        displayConversationPanel.add(editBox);
+        displayConversationPanel.add(lineNumsDropdown);
+        displayConversationPanel.add(editInstructions);
+        displayConversationPanel.add(editInput);
+        displayConversationPanel.add(placeHolder);
+        displayConversationPanel.add(submitMessageSelection);
+
+        content.add(displayConversationPanel, BorderLayout.CENTER);
+        content.setVisible(true);
     }
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
         SwingUtilities.invokeLater(new BlankClient());
