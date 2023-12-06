@@ -450,15 +450,14 @@ public class BlankClient extends JComponent implements Runnable {
                         // Send Message
                         case 0:
                             content.setBackground(getBackground());
-                            JTextField messageStore = new JTextField("Enter Store to Message:");
-                            messageStore.setFont(new Font("Serif", Font.PLAIN, 25));
-                            messageStore.setForeground(Color.WHITE);
-                            messageStore.setBackground(Color.BLACK);
-                            messageStore.setEditable(false);
+                            // TODO: change this so you can read the full list of available stores
+                            String[] stores = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"};
+                            JComboBox<String> storeDropdownMenu = new JComboBox<String>(stores);
+                            storeDropdownMenu.setFont(new Font("Serif", Font.PLAIN, 25));
+                            JLabel storeBox = new JLabel("Please Select a Store");
+                            storeBox.setFont(new Font("Serif", Font.PLAIN, 25));
+                            storeBox.setForeground(Color.WHITE);
 
-                            JTextField storeText = new JTextField(5);
-                            storeText.setFont(new Font("Serif", Font.PLAIN, 25));
-                            storeText.setBackground(Color.lightGray);
 
                             JTextField messageBox = new JTextField("Enter Message:");
                             messageBox.setFont(new Font("Serif", Font.PLAIN, 25));
@@ -480,8 +479,9 @@ public class BlankClient extends JComponent implements Runnable {
                             JPanel messagePanel = new JPanel();
                             messagePanel.setLayout(new GridLayout(3, 2));
                             messagePanel.setBackground(Color.BLACK);
-                            messagePanel.add(messageStore);
-                            messagePanel.add(storeText);
+                            
+                            messagePanel.add(storeBox);
+                            messagePanel.add(storeDropdownMenu);
                             messagePanel.add(messageBox);
                             messagePanel.add(message);
                             messagePanel.add(placeHolder);
@@ -493,7 +493,8 @@ public class BlankClient extends JComponent implements Runnable {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
                                     try {
-                                        sendDataToServer("SENDMESSAGE " + storeText.getText() + " " + message.getText());
+                                        sendDataToServer("SENDMESSAGE " + " " + storeDropdownMenu.getSelectedItem() + 
+                                            " " + message.getText());
                                         content.removeAll();
                                         content.revalidate();
                                         content.repaint();

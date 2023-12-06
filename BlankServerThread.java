@@ -40,7 +40,25 @@ public class BlankServerThread extends Thread {
 
                 }
                 if (line.contains("SENDMESSAGE")) {
-                    
+                    // if the messaging user is a consumer, print all stores
+                    if (line.contains("Consumer")) {
+                        for (User alpha: users) {
+                            if (alpha instanceof Seller) {
+                                for (String store: ((Seller)alpha).getStores()) {
+                                    // pw.println(store);
+                                    // pw.flush();
+                                }
+                            }
+                        }
+                    } else {
+                        // if the messaging user is a seller, print all consumers
+                        for (User alpha: users) {
+                            if (alpha instanceof Consumer) {
+                                // pw.println(alpha.getName());
+                                // pw.flush();
+                            }
+                        }
+                    }
                 }
                 if (line.contains("BLOCK")) {
 
