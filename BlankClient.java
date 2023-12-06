@@ -172,7 +172,7 @@ public class BlankClient extends JComponent implements Runnable {
                         userInfo[1] = "";
                         JOptionPane.showMessageDialog(null, "There was an issue with your login request", "Login Error", JOptionPane.ERROR_MESSAGE);
                     } else {
-                        ln.replace("True", "");
+                        ln = ln.replace("True", "");
                         ln += " exit";
                         System.out.println(ln);
                         storesOrConsumers = ln.split(" ");
@@ -654,25 +654,31 @@ public class BlankClient extends JComponent implements Runnable {
                     content.revalidate();
                     content.repaint();
                     //TODO display the message log itself
-                    switch (actionType) {
-                        case 1:
-                            sendDataToServer("MANAGEEDIT " + " " + messageDropdownMenu.getSelectedItem() + " " +
-                            userInfo[0]);
-                            //displayConversation();
-                            //displayEditPanel
-                            break;
-                        case 2:
-                            sendDataToServer("MANAGEDELETE " + " " + messageDropdownMenu.getSelectedItem() + " " + userInfo[0]);
-                            //displayDeletePanel
-                            break;
-                        case 3:
-                            sendDataToServer("MANAGEREAD " + " " + messageDropdownMenu.getSelectedItem() + " " + userInfo[0]);
-                            //displayReadPanel
-                            break;
-                        case 4:
-                            sendDataToServer("MANAGEEXPORT " + " " + messageDropdownMenu.getSelectedItem() + " " + userInfo[0]);
-                            //displayExportPanel, might not even need that and can just do a JOptionPanel
-                            break;
+                    if (messageDropdownMenu.getSelectedItem().equals("exit")) {
+                        displayLoginOptionPanel();
+                        content.revalidate();
+                        content.repaint();
+                    } else {
+                        switch (actionType) {
+                            case 1:
+                                sendDataToServer("MANAGEEDIT " + " " + messageDropdownMenu.getSelectedItem() + " " +
+                                userInfo[0]);
+                                //displayConversation();
+                                //displayEditPanel
+                                break;
+                            case 2:
+                                sendDataToServer("MANAGEDELETE " + " " + messageDropdownMenu.getSelectedItem() + " " + userInfo[0]);
+                                //displayDeletePanel
+                                break;
+                            case 3:
+                                sendDataToServer("MANAGEREAD " + " " + messageDropdownMenu.getSelectedItem() + " " + userInfo[0]);
+                                //displayReadPanel
+                                break;
+                            case 4:
+                                sendDataToServer("MANAGEEXPORT " + " " + messageDropdownMenu.getSelectedItem() + " " + userInfo[0]);
+                                //displayExportPanel, might not even need that and can just do a JOptionPanel
+                                break;
+                        }
                     }
                     displayLoginOptionPanel();
                     content.revalidate();
