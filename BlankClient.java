@@ -516,24 +516,24 @@ public class BlankClient extends JComponent implements Runnable {
                             });
                             break;
                         case 1:
-                            displayMessageSelection();
+                            displayMessageSelection(1);
                             //TODO: need to mess with logic so it can go to secondary panel
-                            sendDataToServer("MANAGEEDIT");
+                            //sendDataToServer("MANAGEEDIT");
                             break;
                         case 2:
-                            displayMessageSelection();
+                            displayMessageSelection(2);
                             //TODO: need to mess with logic so it can go to secondary panel
-                            sendDataToServer("MANAGEDELETE");
+                            //sendDataToServer("MANAGEDELETE");
                             break;
                         case 3:
-                            displayMessageSelection();
+                            displayMessageSelection(3);
                             //TODO: need to mess with logic so it can go to secondary panel
-                            sendDataToServer("MANAGEREAD");
+                            //sendDataToServer("MANAGEREAD");
                             break;
                         case 4:
-                            displayMessageSelection();
+                            displayMessageSelection(4);
                             //TODO: need to mess with logic so it can go to secondary panel
-                            sendDataToServer("MANAGEEXPORT");
+                            //sendDataToServer("MANAGEEXPORT");
                             break;
                         case 5:
                             JPanel importPanel = new JPanel();
@@ -602,14 +602,16 @@ public class BlankClient extends JComponent implements Runnable {
                             break;
                     }
                 latch.countDown();
-                } catch (IOException e1) {}
+                } catch (Exception e1) {
+
+                }
             }
         });
         content.revalidate();
         content.repaint();
     }
 
-    public void displayMessageSelection() {
+    public void displayMessageSelection(int actionType) {
         content.setBackground(getBackground());
         //TODO: get messages for specific user from server
         //TODO make a case for if there are no messages
@@ -644,11 +646,29 @@ public class BlankClient extends JComponent implements Runnable {
         submitPickedMessage.addActionListener(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
                 try {
-                    sendDataToServer("MANAGEREAD " + " " + messageDropdownMenu.getSelectedItem() + userInfo[0]);
                     content.removeAll();
                     content.revalidate();
                     content.repaint();
                     //TODO display the message log itself
+                    switch (actionType) {
+                        case 1:
+                            sendDataToServer("MANAGEEDIT " + " " + messageDropdownMenu.getSelectedItem() + " " +
+                            userInfo[0]);
+                            //displayEditPanel
+                            break;
+                        case 2:
+                            sendDataToServer("MANAGEDELETE " + " " + messageDropdownMenu.getSelectedItem() + " " + userInfo[0]);
+                            //displayDeletePanel
+                            break;
+                        case 3:
+                            sendDataToServer("MANAGEREAD " + " " + messageDropdownMenu.getSelectedItem() + " " + userInfo[0]);
+                            //displayReadPanel
+                            break;
+                        case 4:
+                            sendDataToServer("MANAGEEXPORT " + " " + messageDropdownMenu.getSelectedItem() + " " + userInfo[0]);
+                            //displayExportPanel, might not even need that and can just do a JOptionPanel
+                            break;
+                    }
                     displayLoginOptionPanel();
                     content.revalidate();
                     content.repaint();
