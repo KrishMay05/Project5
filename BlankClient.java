@@ -502,20 +502,30 @@ public class BlankClient extends JComponent implements Runnable {
                                         displayLoginOptionPanel();
                                         content.revalidate();
                                         content.repaint();
-                                    } catch (IOException e1) {}
+                                    } catch (IOException e1) {
+
+                                    }
                                 }
                             });
                             break;
                         case 1:
+                            displayMessageSelection();
+                            //TODO: need to mess with logic so it can go to secondary panel
                             sendDataToServer("MANAGEEDIT");
                             break;
                         case 2:
+                            displayMessageSelection();
+                            //TODO: need to mess with logic so it can go to secondary panel
                             sendDataToServer("MANAGEDELETE");
                             break;
                         case 3:
+                            displayMessageSelection();
+                            //TODO: need to mess with logic so it can go to secondary panel
                             sendDataToServer("MANAGEREAD");
                             break;
                         case 4:
+                            displayMessageSelection();
+                            //TODO: need to mess with logic so it can go to secondary panel
                             sendDataToServer("MANAGEEXPORT");
                             break;
                         case 5:
@@ -590,6 +600,56 @@ public class BlankClient extends JComponent implements Runnable {
         });
         content.revalidate();
         content.repaint();
+    }
+
+    public void displayMessageSelection() {
+        content.setBackground(getBackground());
+        //TODO: get messages for specific user from server
+        //TODO make a case for if there are no messages
+        String[] messages = {"ExampleMessage1", "ExampleMessage2", "ExampleMessage3",
+                "ExampleMessage4"};
+        JComboBox<String> messageDropdownMenu = new JComboBox<String>(messages);
+        messageDropdownMenu.setFont(new Font("Serif", Font.PLAIN, 25));
+        JLabel pickMessageBox = new JLabel("Please Select a Conversation you want to preform the " +
+                "designated action on.");
+        pickMessageBox.setFont(new Font("Serif", Font.PLAIN, 25));
+        pickMessageBox.setForeground(Color.WHITE);
+
+        JTextField readPlaceHolder = new JTextField("");
+        readPlaceHolder.setBackground(Color.BLACK);
+        readPlaceHolder.setEditable(false);
+
+        JButton submitPickedMessage = new JButton("Submit Info");
+        submitPickedMessage.setFont(new Font("Serif", Font.PLAIN, 25));
+
+        JPanel readPanel = new JPanel();
+        readPanel.setLayout(new GridLayout(2, 2));
+        readPanel.setBackground(Color.BLACK);
+
+        readPanel.add(pickMessageBox);
+        readPanel.add(messageDropdownMenu);
+        readPanel.add(readPlaceHolder);
+        readPanel.add(submitPickedMessage);
+
+        content.add(readPanel, BorderLayout.CENTER);
+        content.setVisible(true);
+
+        submitPickedMessage.addActionListener(new ActionListener() {
+            @Override public void actionPerformed(ActionEvent e) {
+                try {
+                    sendDataToServer("MANAGEREAD " + " " + messageDropdownMenu.getSelectedItem() + userInfo[0]);
+                    content.removeAll();
+                    content.revalidate();
+                    content.repaint();
+                    //TODO display the message log itself
+                    displayLoginOptionPanel();
+                    content.revalidate();
+                    content.repaint();
+                } catch (IOException el) {
+
+                }
+            }
+        });
     }
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
         SwingUtilities.invokeLater(new BlankClient());
