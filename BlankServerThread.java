@@ -10,6 +10,7 @@ public class BlankServerThread extends Thread {
     private Database users;
     private BufferedReader br;
     private PrintWriter pw;
+    private User loggedUser; // User that is logged in
 
 
     public BlankServerThread(Socket clientSocket, Database users) {
@@ -115,6 +116,8 @@ public class BlankServerThread extends Thread {
     private void login(String line) {
         System.out.println("Login");
         System.out.println(line);
+        String consumers = "";
+        String sellers = ""; 
         try {
             String username = line.split(" ")[1];
             String password = line.split(" ")[2];
@@ -124,11 +127,33 @@ public class BlankServerThread extends Thread {
             for (User user : users) {
                 if (password.equals(user.getPassword()) && username.equals(user.getName())) {
                     a = true;
+                    if (user instanceof Consumer) {
+                        loggedUser = (Consumer) user;
+                    } else {
+                        loggedUser = (Seller) user;
+                    }
+                } else {
+                    if (user instanceof Consumer) {
+                        consumers += " " + user.getName();
+                    } else {
+                        Seller temp = (Seller) user;
+                        for (String d: temp.getStores()) {
+                            sellers += " " + d;
+                        }
+                    }
                 }
             }
+            System.out.println();
+            System.out.println(consumers);
+            System.out.println(sellers);
             if (a) {
-                pw.println("True");
-                pw.flush();
+                if (loggedUser instanceof Consumer) {
+                    pw.println("True" + sellers);
+                    pw.flush();
+                } else {
+                    pw.println("True" + consumers);
+                    pw.flush();
+                }
             } else {
                 pw.println("False");
                 pw.flush();

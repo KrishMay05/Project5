@@ -66,6 +66,7 @@ public class BlankClient extends JComponent implements Runnable {
     private String conditional = null;
     private String userInfo[] = {"", ""};
     private CountDownLatch latch;
+    private String storesOrConsumers[];
     // private CountDownLatch latchlogin = new CountDownLatch(1);
 
     ActionListener actionListener = new ActionListener() {
@@ -166,12 +167,15 @@ public class BlankClient extends JComponent implements Runnable {
                     sendDataToServer("LOGIN " + userInfo[0] + " " + userInfo[1]);
                     String ln = bfr.readLine();
                     System.out.println(ln);
-                    if (!ln.equals("True")) {
+                    if (!ln.contains("True")) {
                         userInfo[0] = "";
                         userInfo[1] = "";
                         JOptionPane.showMessageDialog(null, "There was an issue with your login request", "Login Error", JOptionPane.ERROR_MESSAGE);
-                        
                     } else {
+                        ln.replace("True", "");
+                        ln += " exit";
+                        System.out.println(ln);
+                        storesOrConsumers = ln.split(" ");
                         JOptionPane.showMessageDialog(null, "You have successfully logged in", "Login Success", JOptionPane.INFORMATION_MESSAGE);
                         loginPanel.setVisible(false);
                         latch.countDown();
@@ -451,7 +455,7 @@ public class BlankClient extends JComponent implements Runnable {
                         case 0:
                             content.setBackground(getBackground());
                             // TODO: change this so you can read the full list of available stores
-                            String[] stores = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "exit"};
+                            String[] stores = storesOrConsumers;
                             JComboBox<String> storeDropdownMenu = new JComboBox<String>(stores);
                             storeDropdownMenu.setFont(new Font("Serif", Font.PLAIN, 25));
                             JLabel storeBox = new JLabel("Please Select a Store");
@@ -540,7 +544,7 @@ public class BlankClient extends JComponent implements Runnable {
                             importPanel.setLayout(new GridLayout(3, 2));
                             importPanel.setBackground(Color.BLACK);
 
-                            String[] receivers = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"};
+                            String[] receivers = storesOrConsumers;
                             JComboBox<String> receiverDropdownMenu = new JComboBox<String>(receivers);
                             receiverDropdownMenu.setFont(new Font("Serif", Font.PLAIN, 25));
                             JLabel receiver = new JLabel("Enter the Receiver's Name:");
