@@ -40,6 +40,7 @@ public class BlankServerThread extends Thread {
 
                 }
                 if (line.contains("SENDMESSAGE")) {
+                    // SENDMESSAGE Receiver Sender Message
                     // if the messaging user is a consumer, print all stores
                     if (line.contains("Consumer")) {
                         for (User alpha: users) {
@@ -79,6 +80,11 @@ public class BlankServerThread extends Thread {
 
                 }
                 if (line.contains("MANAGEIMPORT")) {
+                    // MANAGEIMPORT Receiver Sender File
+                    String[] info = line.split(" ");
+                    String receiver = info[1];
+                    String sender = info[2];
+                    String file = info[3];
 
                 }
             }

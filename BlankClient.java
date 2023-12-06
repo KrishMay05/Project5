@@ -494,7 +494,8 @@ public class BlankClient extends JComponent implements Runnable {
                                 public void actionPerformed(ActionEvent e) {
                                     try {
                                         sendDataToServer("SENDMESSAGE " + " " + storeDropdownMenu.getSelectedItem() + 
-                                            " " + message.getText());
+                                        " " + userInfo[0] + " " + message.getText());
+                                        JOptionPane.showMessageDialog(null, "Message Sent", "Message Sent", JOptionPane.INFORMATION_MESSAGE);
                                         content.removeAll();
                                         content.revalidate();
                                         content.repaint();
@@ -518,7 +519,59 @@ public class BlankClient extends JComponent implements Runnable {
                             sendDataToServer("MANAGEEXPORT");
                             break;
                         case 5:
-                            sendDataToServer("MANAGEIMPORT");
+                            JPanel importPanel = new JPanel();
+                            importPanel.setLayout(new GridLayout(3, 2));
+                            importPanel.setBackground(Color.BLACK);
+
+                            String[] receivers = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"};
+                            JComboBox<String> receiverDropdownMenu = new JComboBox<String>(receivers);
+                            receiverDropdownMenu.setFont(new Font("Serif", Font.PLAIN, 25));
+                            JLabel receiver = new JLabel("Enter the Receiver's Name:");
+                            receiver.setFont(new Font("Serif", Font.PLAIN, 25));
+                            receiver.setForeground(Color.WHITE);
+
+                            JLabel importLabel = new JLabel("Please Enter The File Name");
+                            importLabel.setFont(new Font("Serif", Font.PLAIN, 25));
+                            importLabel.setForeground(Color.WHITE);
+
+                            JTextField importField = new JTextField(20);
+                            importField.setBackground(Color.lightGray);
+                            importField.setFont(new Font("Serif", Font.PLAIN, 25));
+
+                            JButton placeholder = new JButton("");
+                            placeholder.setBackground(Color.BLACK);
+                            placeholder.setForeground(Color.BLACK);
+                            placeholder.setVisible(false);
+
+                            JButton importButton = new JButton("Submit Info");
+                            importButton.setFont(new Font("Serif", Font.PLAIN, 25));
+
+                            importPanel.add(receiver);
+                            importPanel.add(receiverDropdownMenu);
+                            importPanel.add(importLabel);
+                            importPanel.add(importField);
+                            importPanel.add(placeholder);
+                            importPanel.add(importButton);
+                            content.add(importPanel, BorderLayout.CENTER);
+
+
+                            importButton.addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    try {
+                                        JOptionPane.showMessageDialog(null, "File Imported", "File Imported", JOptionPane.INFORMATION_MESSAGE);
+                                        sendDataToServer("MANAGEIMPORT" + " " + receiverDropdownMenu.getSelectedItem() + 
+                                        " " + userInfo[0] + " " + importField.getText()); 
+                                        content.removeAll();
+                                        content.revalidate();
+                                        content.repaint();
+                                        displayLoginOptionPanel();
+                                        content.revalidate();
+                                        content.repaint();
+                                    } catch (Exception e1) {
+                                }
+                            }
+                        });
                             break;
                         case 6:
                             content.removeAll();
