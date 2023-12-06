@@ -451,7 +451,7 @@ public class BlankClient extends JComponent implements Runnable {
                         case 0:
                             content.setBackground(getBackground());
                             // TODO: change this so you can read the full list of available stores
-                            String[] stores = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"};
+                            String[] stores = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "exit"};
                             JComboBox<String> storeDropdownMenu = new JComboBox<String>(stores);
                             storeDropdownMenu.setFont(new Font("Serif", Font.PLAIN, 25));
                             JLabel storeBox = new JLabel("Please Select a Store");
@@ -492,18 +492,25 @@ public class BlankClient extends JComponent implements Runnable {
                             submitStoreInfo.addActionListener(new ActionListener() {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
-                                    try {
-                                        sendDataToServer("SENDMESSAGE " + " " + storeDropdownMenu.getSelectedItem() + 
-                                        " " + userInfo[0] + " " + message.getText());
-                                        JOptionPane.showMessageDialog(null, "Message Sent", "Message Sent", JOptionPane.INFORMATION_MESSAGE);
-                                        content.removeAll();
-                                        content.revalidate();
-                                        content.repaint();
-                                        displayLoginOptionPanel();
-                                        content.revalidate();
-                                        content.repaint();
-                                    } catch (IOException e1) {
-
+                                    if (storeDropdownMenu.getSelectedItem().equals( "exit" )) {
+                                            content.removeAll();
+                                            content.revalidate();
+                                            content.repaint();
+                                            displayLoginOptionPanel();
+                                            content.revalidate();
+                                            content.repaint();
+                                    } else {
+                                        try {
+                                            sendDataToServer("SENDMESSAGE " + " " + storeDropdownMenu.getSelectedItem() + 
+                                            " " + userInfo[0] + " " + message.getText());
+                                            JOptionPane.showMessageDialog(null, "Message Sent", "Message Sent", JOptionPane.INFORMATION_MESSAGE);
+                                            content.removeAll();
+                                            content.revalidate();
+                                            content.repaint();
+                                            displayLoginOptionPanel();
+                                            content.revalidate();
+                                            content.repaint();
+                                        } catch (IOException e1) {}
                                     }
                                 }
                             });
