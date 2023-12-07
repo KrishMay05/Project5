@@ -78,6 +78,7 @@ public class Database implements Iterable<User> {
         for (User u : users) {
 
             if (u.getName().contains(name)) {
+                System.out.println(u.getName());
                 if (!u.getBlocked().contains(senderName.getName()) && !u.getClass().equals(senderName.getClass())) {
                     results.add(u);
                 }

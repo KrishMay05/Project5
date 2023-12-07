@@ -117,11 +117,13 @@ public class BlankServerThread extends Thread {
         String results = "";
         for (User u : users) {
             if (u.getName().equals(split[1])) {
-                for ( User us : users.search(split[2], u)) {
+                for (User us : users.search(split[2], u)) {
                     results += us.getName() + " ";
                 }
             }
         }
+        System.out.println("TEST");
+        System.out.println(results);
         pw.print(results);
         pw.println();
 
