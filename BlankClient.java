@@ -431,8 +431,8 @@ public class BlankClient extends JComponent implements Runnable {
         loginOptionButton = new JButton("Submit Info");
         loginOptionButton.addActionListener(actionListener);
         loginOptionButton.setFont(new Font("Serif", Font.PLAIN, 25));
-        String[] choices = { "Send(1)", "Edit(2)", "Delete(3)", "Read(4)", 
-            "Export(5)", "Import(6)", "Exit(7)" };
+        String[] choices = {"Send(1)", "Edit(2)", "Delete(3)", "Read(4)",
+            "Export(5)", "Import(6)", "Search(7)", "Exit(8)"};
         JComboBox<String> stringDropdownMenu = new JComboBox<String>(choices);
         stringDropdownMenu.setFont(new Font("Serif", Font.PLAIN, 25));
         loginOptionPanel = new JPanel();
@@ -514,7 +514,8 @@ public class BlankClient extends JComponent implements Runnable {
                                             displayLoginOptionPanel();
                                             content.revalidate();
                                             content.repaint();
-                                        } catch (IOException e1) {}
+                                        } catch (IOException e1) {
+                                        }
                                     }
                                 }
                             });
@@ -581,8 +582,8 @@ public class BlankClient extends JComponent implements Runnable {
                                 public void actionPerformed(ActionEvent e) {
                                     try {
                                         JOptionPane.showMessageDialog(null, "File Imported", "File Imported", JOptionPane.INFORMATION_MESSAGE);
-                                        sendDataToServer("MANAGEIMPORT" + " " + receiverDropdownMenu.getSelectedItem() + 
-                                        " " + userInfo[0] + " " + importField.getText()); 
+                                        sendDataToServer("MANAGEIMPORT" + " " + receiverDropdownMenu.getSelectedItem() +
+                                        " " + userInfo[0] + " " + importField.getText());
                                         content.removeAll();
                                         content.revalidate();
                                         content.repaint();
@@ -590,11 +591,56 @@ public class BlankClient extends JComponent implements Runnable {
                                         content.revalidate();
                                         content.repaint();
                                     } catch (Exception e1) {
+                                    }
                                 }
-                            }
-                        });
+                            });
                             break;
                         case 6:
+                            //TODO: SEARCH IMPLMENTATION
+                            JPanel searchPanel = new JPanel();
+                            searchPanel.setLayout(new GridLayout(2, 2));
+                            searchPanel.setBackground(Color.BLACK);
+
+                            JLabel searchLabel = new JLabel("Please Enter The User you're looking for.");
+                            searchLabel.setFont(new Font("Serif", Font.PLAIN, 25));
+                            searchLabel.setForeground(Color.WHITE);
+
+                            JTextField searchField = new JTextField(20);
+                            searchField.setBackground(Color.lightGray);
+                            searchField.setFont(new Font("Serif", Font.PLAIN, 25));
+
+                            JButton searchPlaceHolder = new JButton("");
+                            searchPlaceHolder.setBackground(Color.BLACK);
+                            searchPlaceHolder.setForeground(Color.BLACK);
+                            searchPlaceHolder.setVisible(false);
+
+                            JButton searchButton = new JButton("Submit Info");
+                            searchButton.setFont(new Font("Serif", Font.PLAIN, 25));
+
+                            searchPanel.add(searchLabel);
+                            searchPanel.add(searchField);
+                            searchPanel.add(searchPlaceHolder);
+                            searchPanel.add(searchButton);
+                            content.add(searchPanel, BorderLayout.CENTER);
+                            content.setVisible(true);
+
+                            searchButton.addActionListener(new ActionListener() {
+                                @Override public void actionPerformed(ActionEvent e) {
+                                    try {
+                                        sendDataToServer("SEARCH" + " " + userInfo[0] + " "
+                                                + searchField.getText());
+                                        content.removeAll();
+                                        content.revalidate();
+                                        content.repaint();
+                                        displayLoginOptionPanel();
+                                        content.revalidate();
+                                        content.repaint();
+                                    } catch (Exception e1) {
+                                    }
+                                }
+                            });
+                            break;
+                        case 7:
                             content.removeAll();
                             content.revalidate();
                             content.repaint();
