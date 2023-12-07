@@ -1,2 +1,0 @@
-ProducerSeller@.txt
-ConsumerConsumer@.txt

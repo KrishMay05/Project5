@@ -43,6 +43,7 @@ public class BlankServerThread extends Thread {
                 if (line.contains("SENDMESSAGE")) {
                     // SENDMESSAGE Receiver Sender Message
                     // if the messaging user is a consumer, print all stores
+                    int i = 0;
                     if (loggedUser instanceof Seller) {
                         System.out.println("SELLER");
                         for (User alpha: users) {
@@ -53,7 +54,10 @@ public class BlankServerThread extends Thread {
                                     if ( Sel instanceof Consumer) {
                                         System.out.println(((Consumer) Sel).getName());
                                         if (((Consumer) Sel).getName().contains(information[2].replace(" ", ""))) {
-                                            ((Seller) loggedUser).sendMessage(((Consumer) Sel).cF(), information[3], ((Consumer) Sel).name);
+                                            if (i == 0) {
+                                                ((Seller) loggedUser).sendMessage(((Consumer) Sel).cF(), information[3], ((Consumer) Sel).name);
+                                                i++;
+                                            }
                                         }
                                     }
 
@@ -68,12 +72,14 @@ public class BlankServerThread extends Thread {
                         for (User alpha: users) {
                             if (alpha instanceof Consumer) {
                                 String information[] = line.split(" ");
-                                System.out.println("THIS IS NO. @ " + information[2]);
+                                System.out.println("THIS IS NO. @ " + information[1]);
                                 for (User Sel: users) {
                                     if ( Sel instanceof Seller) {
-                                        if (((Seller) Sel).getStores().contains(information[2].replace(" ", ""))) {
-                                            System.out.println("Does Work");
-                                            ((Consumer) loggedUser).sendMessage(((Seller) Sel).sF(), information[3], ((Seller) Sel).name);
+                                        if (((Seller) Sel).getStores().contains(information[1].replace(" ", ""))) {
+                                            if (i == 0) {
+                                                ((Consumer) loggedUser).sendMessage(((Seller) Sel).sF(), information[3], ((Seller) Sel).name);
+                                                i++;
+                                            }
                                         }
                                     }
 
