@@ -43,18 +43,41 @@ public class BlankServerThread extends Thread {
                 if (line.contains("SENDMESSAGE")) {
                     // SENDMESSAGE Receiver Sender Message
                     // if the messaging user is a consumer, print all stores
-                    if (line.contains("Consumer")) {
+                    if (loggedUser instanceof Seller) {
+                        System.out.println("SELLER");
                         for (User alpha: users) {
                             if (alpha instanceof Seller) {
                                 String information[] = line.split(" ");
                                 System.out.println("THIS IS NO. @ " + information[2]);
-                                // if (((Seller) alpha).getStores().contains(line))
+                                for (User Sel: users) {
+                                    if ( Sel instanceof Consumer) {
+                                        System.out.println(((Consumer) Sel).getName());
+                                        if (((Consumer) Sel).getName().contains(information[2].replace(" ", ""))) {
+                                            ((Seller) loggedUser).sendMessage(((Consumer) Sel).cF(), information[3], ((Consumer) Sel).name);
+                                        }
+                                    }
+
+                                }
+                                // pw.println(alpha.getName());
+                                // pw.flush();
                             }
                         }
                     } else {
                         // if the messaging user is a seller, print all consumers
+                        System.out.println("Consumer");
                         for (User alpha: users) {
                             if (alpha instanceof Consumer) {
+                                String information[] = line.split(" ");
+                                System.out.println("THIS IS NO. @ " + information[2]);
+                                for (User Sel: users) {
+                                    if ( Sel instanceof Seller) {
+                                        if (((Seller) Sel).getStores().contains(information[2].replace(" ", ""))) {
+                                            System.out.println("Does Work");
+                                            ((Consumer) loggedUser).sendMessage(((Seller) Sel).sF(), information[3], ((Seller) Sel).name);
+                                        }
+                                    }
+
+                                }
                                 // pw.println(alpha.getName());
                                 // pw.flush();
                             }
@@ -117,15 +140,14 @@ public class BlankServerThread extends Thread {
         String results = "";
         for (User u : users) {
             if (u.getName().equals(split[1])) {
-                for (User us : users.search(split[2], u)) {
+                for ( User us : users.search(split[2], u)) {
                     results += us.getName() + " ";
                 }
             }
         }
-        System.out.println("TEST");
-        System.out.println(results);
         pw.print(results);
         pw.println();
+        pw.flush();
 
         
     }
