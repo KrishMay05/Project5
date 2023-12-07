@@ -505,7 +505,7 @@ public class BlankClient extends JComponent implements Runnable {
                                             content.repaint();
                                     } else {
                                         try {
-                                            sendDataToServer("SENDMESSAGE " + " " + storeDropdownMenu.getSelectedItem() + 
+                                            sendDataToServer("SENDMESSAGEConsumer" + " " + storeDropdownMenu.getSelectedItem() +
                                             " " + userInfo[0] + " " + message.getText());
                                             JOptionPane.showMessageDialog(null, "Message Sent", "Message Sent", JOptionPane.INFORMATION_MESSAGE);
                                             content.removeAll();
@@ -632,6 +632,11 @@ public class BlankClient extends JComponent implements Runnable {
                                         content.removeAll();
                                         content.revalidate();
                                         content.repaint();
+                                        bfr.readLine();
+                                        System.out.println();
+
+
+
                                         displayLoginOptionPanel();
                                         content.revalidate();
                                         content.repaint();
