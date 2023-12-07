@@ -20,7 +20,7 @@ public class BlankServerThread extends Thread {
         this.users = users;
     }
     public void run() {
-        System.out.println("Server Thread is running");
+        // System.out.println("Server Thread is running");
         updateUsers();
         try {
             br = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -28,7 +28,7 @@ public class BlankServerThread extends Thread {
             String line;
 
             while ((line = br.readLine()) != null) {
-                System.out.println(line); //reads "hello server" currently
+                // System.out.println(line); //reads "hello server" currently
                 if (line.contains("EXIT")) {
                     exit(line);
                     return;
@@ -47,19 +47,19 @@ public class BlankServerThread extends Thread {
                     // if the messaging user is a consumer, print all stores
                     int i = 0;
                     if (loggedUser instanceof Seller) {
-                        System.out.println("SELLER");
+                        // System.out.println("SELLER");
                         for (User alpha: users) {
                             if (alpha instanceof Seller) {
                                 String information[] = line.split(" ");
-                                System.out.println("THIS IS NO. @ " + information[2]);
+                                // System.out.println("THIS IS NO. @ " + information[2]);
                                 for (User Sel: users) {
                                     if ( Sel instanceof Consumer) {
-                                        System.out.println(((Consumer) Sel).getName());
+                                        // System.out.println(((Consumer) Sel).getName());
                                         if (((Consumer) Sel).getName().contains(information[1].
                                             replace(" ", ""))) {
-                                            System.out.println("This seems to work");
+                                            // System.out.println("This seems to work");
                                             if (i == 0) {
-                                                System.out.println("Send Message, Check File");
+                                                // System.out.println("Send Message, Check File");
                                                 ((Seller) loggedUser).sendMessage(((Consumer) Sel).cF(), 
                                                     (Arrays.toString(Arrays.copyOfRange( information, 3, 
                                                     information.length  ))).replace("[","").
@@ -76,11 +76,11 @@ public class BlankServerThread extends Thread {
                         }
                     } else {
                         // if the messaging user is a seller, print all consumers
-                        System.out.println("Consumer");
+                        // System.out.println("Consumer");
                         for (User alpha: users) {
                             if (alpha instanceof Consumer) {
                                 String information[] = line.split(" ");
-                                System.out.println("THIS IS NO. @ " + information[1]);
+                                // System.out.println("THIS IS NO. @ " + information[1]);
                                 for (User Sel: users) {
                                     if ( Sel instanceof Seller) {
                                         if (((Seller) Sel).getStores().contains(information[1]
@@ -115,7 +115,62 @@ public class BlankServerThread extends Thread {
 
                 }
                 if (line.contains("MANAGEREAD")) {
+                    System.out.println(line);
+                    int i = 0;
+                    if (loggedUser instanceof Seller) {
+                        // System.out.println("SELLER");
+                        for (User alpha: users) {
+                            if (alpha instanceof Seller) {
+                                String information[] = line.split(" ");
+                                // System.out.println("THIS IS NO. @ " + information[2]);
+                                for (User Sel: users) {
+                                    if ( Sel instanceof Consumer) {
+                                        // System.out.println(((Consumer) Sel).getName());
+                                        if (((Consumer) Sel).getName().contains(information[1].
+                                            replace(" ", ""))) {
+                                            // System.out.println("This seems to work");
+                                            if (i == 0) {
+                                                // System.out.println("Send Message, Check File");
+                                                System.out.println(((Seller) loggedUser).printTextsLineNumbers(((Consumer) Sel).cF()).toString());
+                                                pw.println(((Seller) loggedUser).printTextsLineNumbers(((Consumer) Sel).cF()).toString());
+                                                pw.flush();
+                                                i++;
+                                            }
+                                        }
+                                    }
 
+                                }
+                                // pw.println(alpha.getName());
+                                // pw.flush();
+                            }
+                        }
+                    } else {
+                        // if the messaging user is a seller, print all consumers
+                        // System.out.println("Consumer");
+                        for (User alpha: users) {
+                            if (alpha instanceof Consumer) {
+                                String information[] = line.split(" ");
+                                // System.out.println("THIS IS NO. @ " + information[1]);
+                                for (User Sel: users) {
+                                    if ( Sel instanceof Seller) {
+                                        if (((Seller) Sel).getStores().contains(information[1]
+                                            .replace(" ", ""))) {
+                                            if (i == 0) {
+                                                System.out.println(((Consumer) loggedUser).printTextsLineNumbers(((Seller) Sel).sF()).toString());
+                                                pw.println(((Consumer) loggedUser).printTextsLineNumbers(((Seller) Sel).sF()).toString());
+                                                pw.flush();
+                                                i++;
+                                            }
+                                        }
+                                    }
+
+                                }
+                                // pw.println(alpha.getName());
+                                // pw.flush();
+                            }
+                        }
+                    }
+                }
                 }
                 if (line.contains("MANAGEEXPORT")) {
 
@@ -128,25 +183,24 @@ public class BlankServerThread extends Thread {
                     String file = info[3];
 
                 }
-            }
-        } catch (Exception e) {
+            } catch (Exception e) {
             e.printStackTrace();
         }
             
     }
 
     private void signup(String line) {
-        System.out.println("Signup");
+        // System.out.println("Signup");
         try {
             String userType = line; //reads "Consumer" or "Producer" and name/password
             String[] userInfo = userType.split(" ");
-            System.out.println(Arrays.toString(userInfo));
+            // System.out.println(Arrays.toString(userInfo));
             if (userInfo[2].contains("Consumer")) {
                 users.add(new Consumer(userInfo[0].replaceAll("SIGNUP", ""), userInfo[1]));
             } else {
                 users.add(new Seller(userInfo[0].replaceAll("SIGNUP", ""), userInfo[1],
                     new ArrayList<>(Arrays.asList(Arrays.copyOfRange(userInfo, 3, userInfo.length)))));
-                    System.out.println(new ArrayList<>(Arrays.asList(Arrays.copyOfRange(userInfo, 3, userInfo.length ))));
+                    // System.out.println(new ArrayList<>(Arrays.asList(Arrays.copyOfRange(userInfo, 3, userInfo.length ))));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -171,15 +225,15 @@ public class BlankServerThread extends Thread {
     }
 
     private void login(String line) {
-        System.out.println("Login");
-        System.out.println(line);
+        // System.out.println("Login");
+        // System.out.println(line);
         String consumers = "";
         String sellers = ""; 
         try {
             String username = line.split(" ")[1];
             String password = line.split(" ")[2];
-            System.out.println("username is {" + username + "}");
-            System.out.println("password is {" + password + "}");
+            // System.out.println("username is {" + username + "}");
+            // System.out.println("password is {" + password + "}");
             boolean a = false;
             for (User user : users) {
                 if (password.equals(user.getPassword()) && username.equals(user.getName())) {
@@ -200,9 +254,9 @@ public class BlankServerThread extends Thread {
                     }
                 }
             }
-            System.out.println();
-            System.out.println(consumers);
-            System.out.println(sellers);
+            // System.out.println();
+            // System.out.println(consumers);
+            // System.out.println(sellers);
             if (a) {
                 if (loggedUser instanceof Consumer) {
                     pw.println("True" + sellers);
@@ -253,7 +307,7 @@ public class BlankServerThread extends Thread {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Issue reading file");
+            // System.out.println("Issue reading file");
         }
 
         for (int i = 0; i < userFileNames.size(); i++) {

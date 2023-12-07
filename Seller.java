@@ -55,9 +55,9 @@ public class Seller extends User {
         super.printTexts(name + sell +  ".txt" );
     }
 
-    public void printTextsLineNumbers(String sell) {
+    public ArrayList<String> printTextsLineNumbers(String sell) {
         // rec name = consumer.cF()
-        super.printTextsLineNumbers(name + sell +  ".txt" );
+        return super.printTextsLineNumbers(name + sell +  ".txt" );
     }
 
     public void editMessage(String reciver, int lineNum, String message) {

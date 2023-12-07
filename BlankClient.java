@@ -670,8 +670,7 @@ public class BlankClient extends JComponent implements Runnable {
         content.setBackground(getBackground());
         //TODO: get messages for specific user from server
         //TODO make a case for if there are no messages
-        String[] messages = {"ExampleMessage1", "ExampleMessage2", "ExampleMessage3",
-                "ExampleMessage4"};
+        String[] messages = storesOrConsumers;
         JComboBox<String> messageDropdownMenu = new JComboBox<String>(messages);
         messageDropdownMenu.setFont(new Font("Serif", Font.PLAIN, 25));
         JLabel pickMessageBox = new JLabel("Please Select a Conversation you want to preform the " +
@@ -723,6 +722,15 @@ public class BlankClient extends JComponent implements Runnable {
                                 break;
                             case 3:
                                 sendDataToServer("MANAGEREAD " + " " + messageDropdownMenu.getSelectedItem() + " " + userInfo[0]);
+                                System.out.println("WE ARE IN READ");
+                                String line = bfr.readLine();
+                                System.out.println(line);
+                                String Convo = "";
+                                while (line != null) {
+                                    Convo += line + "\n";
+                                    line = bfr.readLine();
+                                }
+                                System.out.println(Convo);
                                 //displayReadPanel
                                 break;
                             case 4:

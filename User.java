@@ -289,19 +289,21 @@ public class User {
     }
 
     // prints all the text messages in a certain file with the line numbers
-    public void printTextsLineNumbers(String chatfile) {
+    public ArrayList<String> printTextsLineNumbers(String chatfile) {
         System.out.println("Here are all the messages in this chat: ");
+        ArrayList<String> temp = new ArrayList<>();
         try (BufferedReader br = new BufferedReader( new FileReader( chatfile ))) { 
             String line;
             int count = 0;
-            System.out.println();
             while ((line = br.readLine()) != null) {
-                System.out.println("(" + (count + 1) + ") " + line);
+                temp.add("(" + (count + 1) + ") " + line);
                 count++;
             }
-            System.out.println();
+            return temp;
         } catch (Exception e) {
-            System.out.println("Error");
+            temp.add("EMPTY");
+            return temp;
+            
         }
     }
 
