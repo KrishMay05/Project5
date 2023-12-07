@@ -500,7 +500,7 @@ public class BlankClient extends JComponent implements Runnable {
                                             content.removeAll();
                                             content.revalidate();
                                             content.repaint();
-                                            displayLoginOptionPanel();
+                                            displayWelcomePanel();
                                             content.revalidate();
                                             content.repaint();
                                     } else {
