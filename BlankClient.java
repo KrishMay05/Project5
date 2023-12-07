@@ -167,7 +167,7 @@ public class BlankClient extends JComponent implements Runnable {
                     sendDataToServer("LOGIN " + userInfo[0] + " " + userInfo[1]);
                     String ln = bfr.readLine();
                     System.out.println(ln);
-                    if (!ln.contains("True ")) {
+                    if (!ln.contains("True")) {
                         userInfo[0] = "";
                         userInfo[1] = "";
                         JOptionPane.showMessageDialog(null, "There was an issue with your login request", "Login Error", JOptionPane.ERROR_MESSAGE);
