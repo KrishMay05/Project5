@@ -59,7 +59,7 @@ public class BlankServerThread extends Thread {
                                             System.out.println("This seems to work");
                                             if (i == 0) {
                                                 System.out.println("Send Message, Check File");
-                                                ((Seller) loggedUser).sendMessage(((Consumer) Sel).cF(), Arrays.copyOfRange( information, 3, information.length - 1 ).toString(), ((Consumer) Sel).name);
+                                                ((Seller) loggedUser).sendMessage(((Consumer) Sel).cF(), (Arrays.toString(Arrays.copyOfRange( information, 3, information.length  ))).replace("[","").replace("]", ""), ((Consumer) Sel).name);
                                                 i++;
                                             }
                                         }
@@ -81,7 +81,7 @@ public class BlankServerThread extends Thread {
                                     if ( Sel instanceof Seller) {
                                         if (((Seller) Sel).getStores().contains(information[1].replace(" ", ""))) {
                                             if (i == 0) {
-                                                ((Consumer) loggedUser).sendMessage(((Seller) Sel).sF(), Arrays.copyOfRange( information, 3, information.length - 1 ).toString(), ((Seller) Sel).name);
+                                                ((Consumer) loggedUser).sendMessage(((Seller) Sel).sF(), (Arrays.toString(Arrays.copyOfRange( information, 3, information.length ))).replace("[","").replace("]", ""), ((Seller) Sel).name);
                                                 i++;
                                             }
                                         }
