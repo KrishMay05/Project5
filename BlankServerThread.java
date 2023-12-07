@@ -55,11 +55,15 @@ public class BlankServerThread extends Thread {
                                 for (User Sel: users) {
                                     if ( Sel instanceof Consumer) {
                                         System.out.println(((Consumer) Sel).getName());
-                                        if (((Consumer) Sel).getName().contains(information[1].replace(" ", ""))) {
+                                        if (((Consumer) Sel).getName().contains(information[1].
+                                            replace(" ", ""))) {
                                             System.out.println("This seems to work");
                                             if (i == 0) {
                                                 System.out.println("Send Message, Check File");
-                                                ((Seller) loggedUser).sendMessage(((Consumer) Sel).cF(), (Arrays.toString(Arrays.copyOfRange( information, 3, information.length  ))).replace("[","").replace("]", ""), ((Consumer) Sel).name);
+                                                ((Seller) loggedUser).sendMessage(((Consumer) Sel).cF(), 
+                                                    (Arrays.toString(Arrays.copyOfRange( information, 3, 
+                                                    information.length  ))).replace("[","").
+                                                    replace("]", ""), ((Consumer) Sel).name);
                                                 i++;
                                             }
                                         }
@@ -79,9 +83,13 @@ public class BlankServerThread extends Thread {
                                 System.out.println("THIS IS NO. @ " + information[1]);
                                 for (User Sel: users) {
                                     if ( Sel instanceof Seller) {
-                                        if (((Seller) Sel).getStores().contains(information[1].replace(" ", ""))) {
+                                        if (((Seller) Sel).getStores().contains(information[1]
+                                            .replace(" ", ""))) {
                                             if (i == 0) {
-                                                ((Consumer) loggedUser).sendMessage(((Seller) Sel).sF(), (Arrays.toString(Arrays.copyOfRange( information, 3, information.length ))).replace("[","").replace("]", ""), ((Seller) Sel).name);
+                                                ((Consumer) loggedUser).sendMessage(((Seller) Sel).sF(), 
+                                                    (Arrays.toString(Arrays.copyOfRange( information, 3, 
+                                                    information.length ))).replace("[","").
+                                                    replace("]", ""), ((Seller) Sel).name);
                                                 i++;
                                             }
                                         }
