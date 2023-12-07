@@ -37,8 +37,8 @@ public class BlankServerThread extends Thread {
                 if (line.contains("SIGNUP")) {
                     signup(line);
                 }
-                if (line.contains("SEARCHUSER")) {
-
+                if (line.contains("SEARCH")) {
+                    search(line);
                 }
                 if (line.contains("SENDMESSAGE")) {
                     // SENDMESSAGE Receiver Sender Message
@@ -46,10 +46,9 @@ public class BlankServerThread extends Thread {
                     if (line.contains("Consumer")) {
                         for (User alpha: users) {
                             if (alpha instanceof Seller) {
-                                for (String store: ((Seller)alpha).getStores()) {
-                                    // pw.println(store);
-                                    // pw.flush();
-                                }
+                                String information[] = line.split(" ");
+                                System.out.println("THIS IS NO. @ " + information[2]);
+                                // if (((Seller) alpha).getStores().contains(line))
                             }
                         }
                     } else {
@@ -111,6 +110,22 @@ public class BlankServerThread extends Thread {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void search(String line ) {
+        String[] split = line.split(" ");
+        String results = "";
+        for (User u : users) {
+            if (u.getName().equals(split[1])) {
+                for ( User us : users.search(split[2], u)) {
+                    results += us.getName() + " ";
+                }
+            }
+        }
+        pw.print(results);
+        pw.println();
+
+        
     }
 
     private void login(String line) {
