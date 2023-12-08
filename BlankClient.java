@@ -88,8 +88,8 @@ public class BlankClient extends JComponent implements Runnable {
                 try {
                     socket = new Socket("localhost", 2020);
                     writer = new PrintWriter(socket.getOutputStream());
-                    int reply = JOptionPane.showConfirmDialog(null, "Would You Like To Delete ALL DATA?"
-                            , "Delete Info?", JOptionPane.YES_NO_OPTION);
+                    int reply = JOptionPane.showConfirmDialog(null, 
+                "Would You Like To Delete ALL DATA?", "Delete Info?", JOptionPane.YES_NO_OPTION);
                     if (reply == JOptionPane.YES_OPTION) {
                         sendDataToServer("EXITDELETE");
                     } else {
@@ -184,13 +184,16 @@ public class BlankClient extends JComponent implements Runnable {
                     if (!ln.contains("True")) {
                         userInfo[0] = "";
                         userInfo[1] = "";
-                        JOptionPane.showMessageDialog(null, "There was an issue with your login request", "Login Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, 
+                            "There was an issue with your login request", "Login Error", 
+                            JOptionPane.ERROR_MESSAGE);
                     } else {
                         ln = ln.replace("True", "");
                         ln += " exit";
                         //System.out.println(ln);
                         storesOrConsumers = ln.split(" ");
-                        JOptionPane.showMessageDialog(null, "You have successfully logged in", "Login Success", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "You have successfully logged in", 
+                            "Login Success", JOptionPane.INFORMATION_MESSAGE);
                         loginPanel.setVisible(false);
                         latch.countDown();
                     }
@@ -280,9 +283,11 @@ public class BlankClient extends JComponent implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 // Assign the text input to the variable when the button is pressed
                 if (!usernameField.getText().contains("@")) {
-                    JOptionPane.showMessageDialog(null, "PLEASE PUT AN EMAIL", "EMAIL", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "PLEASE PUT AN EMAIL", "EMAIL", 
+                        JOptionPane.ERROR_MESSAGE);
                 } else if ((passwordField.getText().isBlank())) {
-                    JOptionPane.showMessageDialog(null, "Password Can't be Empty", "password", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Password Can't be Empty", 
+                        "password", JOptionPane.ERROR_MESSAGE);
                 } else {
                     userInfo[0] = usernameField.getText();
                     userInfo[1] = passwordField.getText();
@@ -521,7 +526,8 @@ public class BlankClient extends JComponent implements Runnable {
                                         try {
                                             sendDataToServer("SENDMESSAGE" + " " + storeDropdownMenu.getSelectedItem() +
                                             " " + userInfo[0] + " " + message.getText());
-                                            JOptionPane.showMessageDialog(null, "Message Sent", "Message Sent", JOptionPane.INFORMATION_MESSAGE);
+                                            JOptionPane.showMessageDialog(null, "Message Sent", 
+                                                "Message Sent", JOptionPane.INFORMATION_MESSAGE);
                                             content.removeAll();
                                             content.revalidate();
                                             content.repaint();
@@ -595,7 +601,8 @@ public class BlankClient extends JComponent implements Runnable {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
                                     try {
-                                        JOptionPane.showMessageDialog(null, "File Imported", "File Imported", JOptionPane.INFORMATION_MESSAGE);
+                                        JOptionPane.showMessageDialog(null, "File Imported", 
+                                        "File Imported", JOptionPane.INFORMATION_MESSAGE);
                                         sendDataToServer("MANAGEIMPORT" + " " + receiverDropdownMenu.getSelectedItem() +
                                         " " + userInfo[0] + " " + importField.getText());
                                         content.removeAll();
@@ -732,11 +739,13 @@ public class BlankClient extends JComponent implements Runnable {
                                 //displayEditPanel
                                 break;
                             case 2:
-                                sendDataToServer("MANAGEDELETE " + " " + messageDropdownMenu.getSelectedItem() + " " + userInfo[0]);
+                                sendDataToServer("MANAGEDELETE " + " " + messageDropdownMenu.getSelectedItem() + " " + 
+                                    userInfo[0]);
                                 //displayDeletePanel
                                 break;
                             case 3:
-                                sendDataToServer("MANAGEREAD " + " " + messageDropdownMenu.getSelectedItem() + " " + userInfo[0]);
+                                sendDataToServer("MANAGEREAD " + " " + messageDropdownMenu.getSelectedItem() + " " + 
+                                    userInfo[0]);
                                 //System.out.println("WE ARE IN READ");
                                 String ln = bfr.readLine();
                                 ln = ln.replace(", ", "<br>");
@@ -747,7 +756,8 @@ public class BlankClient extends JComponent implements Runnable {
                                 //displayReadPanel
                                 break;
                             case 4:
-                                sendDataToServer("MANAGEEXPORT " + " " + messageDropdownMenu.getSelectedItem() + " " + userInfo[0]);
+                                sendDataToServer("MANAGEEXPORT " + " " + messageDropdownMenu.getSelectedItem() + " " + 
+                                    userInfo[0]);
                                 //displayExportPanel, might not even need that and can just do a JOptionPanel
                                 break;
                         }

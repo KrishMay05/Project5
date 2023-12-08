@@ -61,8 +61,10 @@ public class BlankServerThread extends Thread {
                                             if (i == 0) {
                                                 // System.out.println("Send Message, Check File");
                                                 ((Seller) loggedUser).sendMessage(((Consumer) Sel).cF(), 
-                                                String.join(" ", Arrays.copyOfRange(information, 3, information.length)).replace("[","").
-                                                    replace("]", "").replaceAll(","," "), ((Consumer) Sel).name);
+                                                String.join(" ", Arrays.copyOfRange(information, 3, 
+                                                    information.length)).replace("["
+                                                        ,"").replace("]", "").
+                                                        replaceAll(","," "), ((Consumer) Sel).name);
                                                 i++;
                                             }
                                         }
@@ -214,7 +216,8 @@ public class BlankServerThread extends Thread {
                                         if (((Seller) Sel).getStores().contains(information[2]
                                             .replace(" ", ""))) {
                                             if (i == 0) {
-                                                String message = ((Consumer) loggedUser).printTextsLineNumbers(((Seller) Sel).getName()).toString();
+                                                String message = ((Consumer) loggedUser).printTextsLineNumbers((
+                                                        (Seller) Sel).getName()).toString();
                                                 message = message.substring(1, message.length());
                                                 System.out.println(message);
                                                 pw.print(message);
