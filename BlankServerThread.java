@@ -53,7 +53,7 @@ public class BlankServerThread extends Thread {
                                 String information[] = line.split(" ");
                                 // System.out.println("THIS IS NO. @ " + information[2]);
                                 for (User Sel: users) {
-                                    if ( Sel instanceof Consumer) {
+                                    if ( Sel instanceof Consumer) { 
                                         // System.out.println(((Consumer) Sel).getName());
                                         if (((Consumer) Sel).getName().contains(information[1].
                                             replace(" ", ""))) {
@@ -61,9 +61,8 @@ public class BlankServerThread extends Thread {
                                             if (i == 0) {
                                                 // System.out.println("Send Message, Check File");
                                                 ((Seller) loggedUser).sendMessage(((Consumer) Sel).cF(), 
-                                                    (Arrays.toString(Arrays.copyOfRange( information, 3, 
-                                                    information.length  ))).replace("[","").
-                                                    replace("]", ""), ((Consumer) Sel).name);
+                                                String.join(" ", Arrays.copyOfRange(information, 3, information.length)).replace("[","").
+                                                    replace("]", "").replaceAll(","," "), ((Consumer) Sel).name);
                                                 i++;
                                             }
                                         }
@@ -87,9 +86,8 @@ public class BlankServerThread extends Thread {
                                             .replace(" ", ""))) {
                                             if (i == 0) {
                                                 ((Consumer) loggedUser).sendMessage(((Seller) Sel).sF(), 
-                                                    (Arrays.toString(Arrays.copyOfRange( information, 3, 
-                                                    information.length ))).replace("[","").
-                                                    replace("]", ""), ((Seller) Sel).name);
+                                                String.join(" ", Arrays.copyOfRange(information, 3, information.length)).replace("[","").
+                                                    replace("]", "").replaceAll(","," "), ((Seller) Sel).name);
                                                 i++;
                                             }
                                         }
