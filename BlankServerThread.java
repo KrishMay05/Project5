@@ -126,12 +126,12 @@ public class BlankServerThread extends Thread {
                                 for (User Sel: users) {
                                     if ( Sel instanceof Consumer) {
                                         // System.out.println(((Consumer) Sel).getName());
-                                        if (((Consumer) Sel).getName().contains(information[1].
+                                        System.out.println(information[1]);
+                                        if (((Consumer) Sel).getName().contains(information[2].
                                             replace(" ", ""))) {
                                             // System.out.println("This seems to work");
                                             if (i == 0) {
-                                                // System.out.println("Send Message, Check File");
-                                                System.out.println(((Seller) loggedUser).printTextsLineNumbers(((Consumer) Sel).cF()).toString());
+                                                System.out.println(((Seller) loggedUser).printTextsLineNumbers(((Consumer) Sel).getName()).toString());
                                                 pw.println(((Seller) loggedUser).printTextsLineNumbers(((Consumer) Sel).cF()).toString());
                                                 pw.flush();
                                                 i++;
@@ -153,10 +153,11 @@ public class BlankServerThread extends Thread {
                                 // System.out.println("THIS IS NO. @ " + information[1]);
                                 for (User Sel: users) {
                                     if ( Sel instanceof Seller) {
-                                        if (((Seller) Sel).getStores().contains(information[1]
+                                        System.out.println(information[1]);
+                                        if (((Seller) Sel).getStores().contains(information[2]
                                             .replace(" ", ""))) {
                                             if (i == 0) {
-                                                System.out.println(((Consumer) loggedUser).printTextsLineNumbers(((Seller) Sel).sF()).toString());
+                                                System.out.println(((Consumer) loggedUser).printTextsLineNumbers(((Seller) Sel).getName()).toString());
                                                 pw.println(((Consumer) loggedUser).printTextsLineNumbers(((Seller) Sel).sF()).toString());
                                                 pw.flush();
                                                 i++;

@@ -723,12 +723,12 @@ public class BlankClient extends JComponent implements Runnable {
                             case 3:
                                 sendDataToServer("MANAGEREAD " + " " + messageDropdownMenu.getSelectedItem() + " " + userInfo[0]);
                                 System.out.println("WE ARE IN READ");
-                                String line = bfr.readLine();
-                                System.out.println(line);
+                                String line1 = bfr.readLine();
+                                System.out.println(line1);
                                 String Convo = "";
-                                while (line != null) {
-                                    Convo += line + "\n";
-                                    line = bfr.readLine();
+                                while (line1 != null) {
+                                    Convo += line1 + "\n";
+                                    line1 = bfr.readLine();
                                 }
                                 System.out.println(Convo);
                                 //displayReadPanel

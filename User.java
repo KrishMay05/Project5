@@ -290,7 +290,6 @@ public class User {
 
     // prints all the text messages in a certain file with the line numbers
     public ArrayList<String> printTextsLineNumbers(String chatfile) {
-        System.out.println("Here are all the messages in this chat: ");
         ArrayList<String> temp = new ArrayList<>();
         try (BufferedReader br = new BufferedReader( new FileReader( chatfile ))) { 
             String line;
