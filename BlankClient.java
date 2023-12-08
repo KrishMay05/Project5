@@ -766,13 +766,14 @@ public class BlankClient extends JComponent implements Runnable {
         JScrollPane scrollPane = new JScrollPane(label);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
         backFromMessageButton = new JButton("Back");
         backFromMessageButton.addActionListener(actionListener);
         backFromMessageButton.setFont(new Font("Serif", Font.PLAIN, 25));
 
         messagePanel = new JPanel();
-        label.setForeground(Color.WHITE);
+       //label.setForeground(Color.WHITE);
         messagePanel.setBackground(Color.BLACK);
         messagePanel.setLayout(new GridLayout(2, 1));
         messagePanel.add(scrollPane); // Add the scroll pane instead of the label directly
