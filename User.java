@@ -295,6 +295,7 @@ public class User {
             String line;
             int count = 0;
             while ((line = br.readLine()) != null) {
+                System.out.println(line);
                 temp.add("(" + (count + 1) + ") " + line);
                 count++;
             }

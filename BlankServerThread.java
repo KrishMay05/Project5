@@ -129,8 +129,11 @@ public class BlankServerThread extends Thread {
                                             replace(" ", ""))) {
                                             // System.out.println("This seems to work");
                                             if (i == 0) {
-                                                System.out.println(((Seller) loggedUser).printTextsLineNumbers(((Consumer) Sel).getName()).toString());
-                                                pw.println(((Seller) loggedUser).printTextsLineNumbers(((Consumer) Sel).cF()).toString());
+                                                String message = ((Seller) loggedUser).printTextsLineNumbers(((Consumer) Sel).getName()).toString();
+                                                message = message.substring(1, message.length());
+                                                System.out.println(message);
+                                                pw.print(message);
+                                                pw.println();
                                                 pw.flush();
                                                 i++;
                                             }
@@ -155,8 +158,11 @@ public class BlankServerThread extends Thread {
                                         if (((Seller) Sel).getStores().contains(information[2]
                                             .replace(" ", ""))) {
                                             if (i == 0) {
-                                                System.out.println(((Consumer) loggedUser).printTextsLineNumbers(((Seller) Sel).getName()).toString());
-                                                pw.println(((Consumer) loggedUser).printTextsLineNumbers(((Seller) Sel).sF()).toString());
+                                                String message = ((Consumer) loggedUser).printTextsLineNumbers(((Seller) Sel).getName()).toString();
+                                                message = message.substring(1, message.length());
+                                                System.out.println(message);
+                                                pw.print(message);
+                                                pw.println();
                                                 pw.flush();
                                                 i++;
                                             }

@@ -23,6 +23,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
@@ -40,12 +41,14 @@ public class BlankClient extends JComponent implements Runnable {
     private JButton Producer;
     private JButton submitStore;
     private JButton numStoreButton;
+    private JButton backFromMessageButton;
     private JButton loginOptionButton;
     private JPanel welcomePanel;
     private JPanel loginSignUpPanel;
     private JPanel signUpPanel;
     private JPanel storeInfoPanel;
     private JPanel loginPanel;
+    private JPanel messagePanel; 
     // private JPanel consumerProducerPanel;
     private JPanel consumerOrProduerPanel;
     private JPanel storeNumberPanel;
@@ -120,6 +123,16 @@ public class BlankClient extends JComponent implements Runnable {
                 SwingUtilities.invokeLater(() -> loginIf = true);
                 
                 
+            }
+            if (e.getSource() == backFromMessageButton) {
+                messagePanel.setVisible(false);
+                content.removeAll();
+                content.revalidate();
+                content.repaint();
+                displayLoginOptionPanel();
+                content.revalidate();
+                content.repaint();
+
             }
         }
     };
@@ -634,9 +647,6 @@ public class BlankClient extends JComponent implements Runnable {
                                         content.repaint();
                                         String s = bfr.readLine();
                                         System.out.println(s);
-
-
-
                                         displayLoginOptionPanel();
                                         content.revalidate();
                                         content.repaint();
@@ -723,14 +733,12 @@ public class BlankClient extends JComponent implements Runnable {
                             case 3:
                                 sendDataToServer("MANAGEREAD " + " " + messageDropdownMenu.getSelectedItem() + " " + userInfo[0]);
                                 System.out.println("WE ARE IN READ");
-                                String line = bfr.readLine();
-                                System.out.println(line);
-                                String Convo = "";
-                                while (line != null) {
-                                    Convo += line + "\n";
-                                    line = bfr.readLine();
-                                }
-                                System.out.println(Convo);
+                                String ln = bfr.readLine();
+                                ln = ln.replace(", ", "<br>");
+                                content.removeAll();
+                                content.revalidate();
+                                content.repaint();
+                                displaySpecificMessagePanel(ln);
                                 //displayReadPanel
                                 break;
                             case 4:
@@ -739,16 +747,39 @@ public class BlankClient extends JComponent implements Runnable {
                                 break;
                         }
                     }
-                    displayLoginOptionPanel();
-                    content.revalidate();
-                    content.repaint();
+                    // displayLoginOptionPanel();
+                    // content.revalidate();
+                    // content.repaint();
                 } catch (IOException el) {
 
                 }
             }
         });
     }
+    public void displaySpecificMessagePanel(String message) {
+        latch = new CountDownLatch(1);
 
+        JLabel label = new JLabel("<html>" + message + "</html>");
+        label.setHorizontalAlignment(JLabel.LEFT);
+        label.setFont(new Font("Serif", Font.PLAIN, 25));
+
+        JScrollPane scrollPane = new JScrollPane(label);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        backFromMessageButton = new JButton("Back");
+        backFromMessageButton.addActionListener(actionListener);
+        backFromMessageButton.setFont(new Font("Serif", Font.PLAIN, 25));
+
+        messagePanel = new JPanel();
+        label.setForeground(Color.WHITE);
+        messagePanel.setBackground(Color.BLACK);
+        messagePanel.setLayout(new GridLayout(2, 1));
+        messagePanel.add(scrollPane); // Add the scroll pane instead of the label directly
+        messagePanel.add(backFromMessageButton);
+
+        content.add(messagePanel, BorderLayout.CENTER);
+    }
     public void selectEditMessage() {
         content.setBackground(getBackground());
 
