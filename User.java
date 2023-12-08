@@ -339,13 +339,15 @@ public class User {
     public void editMessage(String file, String name2, int lineNum, String newMessage, String file2) {
     // file = file name that is being edited, name = name of the sender or editor, LineNum = # of line that is deleted
     // newMessage =  new edited message, file2 = name of the other file that is also being edited 
+        System.out.println("EDITMESSAGESTUFF");
         DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
         Date date = new Date();
         String time = dateFormat.format(date);
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
             String line;
             String oldMessage = "";
-            lineNum--;
+            // lineNum--;
+            
             int x = 0;
             ArrayList<String> lines = new ArrayList<>();
             while ((line = br.readLine()) != null) {

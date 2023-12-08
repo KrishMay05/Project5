@@ -1,2 +1,0 @@
-Consumera@.txt
-Producerb@.txt

@@ -107,6 +107,62 @@ public class BlankServerThread extends Thread {
 
                 }
                 if (line.contains("MANAGEEDIT")) {
+                    System.out.println(line);
+                    int i = 0;
+                    if (loggedUser instanceof Seller) {
+                        // System.out.println("SELLER");
+                        for (User alpha: users) {
+                            if (alpha instanceof Seller) {
+                                String information[] = line.split(" ");
+                                // System.out.println("THIS IS NO. @ " + information[2]);
+                                for (User Sel: users) {
+                                    if ( Sel instanceof Consumer) {
+                                        // System.out.println(((Consumer) Sel).getName());
+                                        System.out.println(information[1]);
+                                        if (((Consumer) Sel).getName().contains(information[1].
+                                            replace(" ", ""))) {
+                                            // System.out.println("This seems to work");
+                                            if (i == 0) {
+                                                ((Seller) loggedUser).editMessage(((Consumer) Sel).getName()
+                                                    , Integer.parseInt(information[2]), Arrays.toString(
+                                                    Arrays.copyOfRange(information, 3, information.length)));
+                                                i++;
+                                            }
+                                        }
+                                    }
+
+                                }
+                            }
+                        }
+                    } else {
+                        // if the messaging user is a seller, print all consumers
+                        // System.out.println("Consumer");
+                        for (User alpha: users) {
+                            if (alpha instanceof Consumer) {
+                                String information[] = line.split(" ");
+                                // System.out.println("THIS IS NO. @ " + information[1]);
+                                for (User Sel: users) {
+                                    if ( Sel instanceof Seller) {
+                                        System.out.println(information[1]);
+                                        if (((Seller) Sel).getStores().contains(information[1]
+                                            .replace(" ", ""))) {
+                                            if (i == 0) {
+                                                System.out.println(((Consumer) loggedUser).getName());
+                                                ((Consumer) loggedUser).editMessage(((Seller) Sel).getName()
+                                                    , Integer.parseInt(information[2]), Arrays.toString(
+                                                    Arrays.copyOfRange(information, 3, information.length)));
+                                                i++;
+                                            }
+                                        }
+                                    }
+
+                                }
+                                // pw.println(alpha.getName());
+                                // pw.flush();
+                            }
+                        }
+                    }
+
 
                 }
                 if (line.contains("MANAGEDELETE")) {

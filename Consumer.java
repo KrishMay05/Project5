@@ -43,7 +43,7 @@ public class Consumer extends User {
 
     // formats the message file name and calls the super method
     public ArrayList<String> printTextsLineNumbers(String recName) {
-         return super.printTextsLineNumbers(name + recName + ".txt" );
+        return super.printTextsLineNumbers(name + recName + ".txt" );
     }
 
     // formats the consumer File parameters and calls the super method

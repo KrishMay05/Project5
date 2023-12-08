@@ -23,7 +23,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
@@ -43,12 +42,14 @@ public class BlankClient extends JComponent implements Runnable {
     private JButton numStoreButton;
     private JButton backFromMessageButton;
     private JButton loginOptionButton;
+    private JButton editButton;
     private JPanel welcomePanel;
     private JPanel loginSignUpPanel;
     private JPanel signUpPanel;
     private JPanel storeInfoPanel;
     private JPanel loginPanel;
     private JPanel messagePanel; 
+    private JPanel editPanel;
     // private JPanel consumerProducerPanel;
     private JPanel consumerOrProduerPanel;
     private JPanel storeNumberPanel;
@@ -102,7 +103,7 @@ public class BlankClient extends JComponent implements Runnable {
                 SwingUtilities.invokeLater(() -> buttonClick = false);
             }
             if (e.getSource() == loginButton) {
-                System.out.println("log" + latch.getCount());
+                //System.out.println("log" + latch.getCount());
                 conditional = "Works";
                 // latch.countDown();
                 loginSignUpPanel.setVisible(false);
@@ -113,7 +114,7 @@ public class BlankClient extends JComponent implements Runnable {
                 
             }
             if (e.getSource() == signUpButton) {
-                System.out.println("sign" + latch.getCount());
+                //System.out.println("sign" + latch.getCount());
                 // latch.countDown();
                 conditional = "Works";
                 loginSignUpPanel.setVisible(false);
@@ -175,11 +176,11 @@ public class BlankClient extends JComponent implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 userInfo[0] = usernameFieldLog.getText();
                 userInfo[1] = passwordFieldLog.getText();
-                System.out.println(userInfo[0] + userInfo[1]);
+                //System.out.println(userInfo[0] + userInfo[1]);
                 try {
                     sendDataToServer("LOGIN " + userInfo[0] + " " + userInfo[1]);
                     String ln = bfr.readLine();
-                    System.out.println(ln);
+                    //System.out.println(ln);
                     if (!ln.contains("True")) {
                         userInfo[0] = "";
                         userInfo[1] = "";
@@ -187,7 +188,7 @@ public class BlankClient extends JComponent implements Runnable {
                     } else {
                         ln = ln.replace("True", "");
                         ln += " exit";
-                        System.out.println(ln);
+                        //System.out.println(ln);
                         storesOrConsumers = ln.split(" ");
                         JOptionPane.showMessageDialog(null, "You have successfully logged in", "Login Success", JOptionPane.INFORMATION_MESSAGE);
                         loginPanel.setVisible(false);
@@ -646,7 +647,7 @@ public class BlankClient extends JComponent implements Runnable {
                                         content.revalidate();
                                         content.repaint();
                                         String s = bfr.readLine();
-                                        System.out.println(s);
+                                        //System.out.println(s);
                                         displayLoginOptionPanel();
                                         content.revalidate();
                                         content.repaint();
@@ -721,8 +722,12 @@ public class BlankClient extends JComponent implements Runnable {
                     } else {
                         switch (actionType) {
                             case 1:
-                                sendDataToServer("MANAGEEDIT " + " " + messageDropdownMenu.getSelectedItem() + " " +
-                                userInfo[0]);
+                                content.removeAll();
+                                content.revalidate();
+                                content.repaint();
+                                editMessagePanel((String) messageDropdownMenu.getSelectedItem());
+                                // sendDataToServer("MANAGEEDIT " + " " + messageDropdownMenu.getSelectedItem() + " " +
+                                // userInfo[0]);
                                 //displayConversation();
                                 //displayEditPanel
                                 break;
@@ -732,7 +737,7 @@ public class BlankClient extends JComponent implements Runnable {
                                 break;
                             case 3:
                                 sendDataToServer("MANAGEREAD " + " " + messageDropdownMenu.getSelectedItem() + " " + userInfo[0]);
-                                System.out.println("WE ARE IN READ");
+                                //System.out.println("WE ARE IN READ");
                                 String ln = bfr.readLine();
                                 ln = ln.replace(", ", "<br>");
                                 content.removeAll();
@@ -756,29 +761,75 @@ public class BlankClient extends JComponent implements Runnable {
             }
         });
     }
+
+    public void editMessagePanel(String name) {
+        latch = new CountDownLatch(1);
+        JLabel label = new JLabel("What Line Number Would You Like To Edit?");
+        label.setFont(new Font("Serif", Font.PLAIN, 25));
+        JLabel label2 = new JLabel("What would you like the new text to say?");
+        label2.setFont(new Font("Serif", Font.PLAIN, 25));
+        label2.setForeground(Color.WHITE);
+        JLabel empty = new JLabel("");
+        empty.setBackground(Color.BLACK);
+
+        editButton = new JButton("SubmitInfo");
+        editButton.addActionListener(actionListener);
+        editButton.setFont(new Font("Serif", Font.PLAIN, 25));
+        JTextField editField = new JTextField();
+        editField.setBackground(Color.WHITE);
+        editField.setEditable(true);
+        JTextField editField2 = new JTextField();
+        editField.setBackground(Color.WHITE);
+        editField.setEditable(true);
+
+        editPanel = new JPanel();
+        label.setForeground(Color.WHITE);
+        editPanel.setBackground(Color.BLACK);
+        editPanel.setLayout(new GridLayout(3, 2));
+        editPanel.add(label);
+        editPanel.add(editField);
+        editPanel.add(label2);
+        editPanel.add(editField2);
+        editPanel.add(empty);
+        editPanel.add(editButton);
+        content.add(editPanel, BorderLayout.CENTER);
+        editButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // System.out.println(editField.getText() + " text: " + editField2.getText());
+                int lineNum;
+                try {
+                    lineNum = Integer.parseInt(editField.getText());
+                    sendDataToServer("MANAGEEDIT " + name + " " + (lineNum - 1)+ " " + editField2.getText());
+                    content.removeAll();
+                    content.revalidate();
+                    content.repaint();
+                    displayLoginOptionPanel();
+                    content.revalidate();
+                    content.repaint();
+
+                } catch (Exception e2) {
+                    JOptionPane.showMessageDialog(null, "Please enter a number " +
+                        "in the first box!", "BlankMessaging", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+    }
+
     public void displaySpecificMessagePanel(String message) {
         latch = new CountDownLatch(1);
-
         JLabel label = new JLabel("<html>" + message + "</html>");
         label.setHorizontalAlignment(JLabel.LEFT);
         label.setFont(new Font("Serif", Font.PLAIN, 25));
-
-        JScrollPane scrollPane = new JScrollPane(label);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-
         backFromMessageButton = new JButton("Back");
         backFromMessageButton.addActionListener(actionListener);
         backFromMessageButton.setFont(new Font("Serif", Font.PLAIN, 25));
-
         messagePanel = new JPanel();
-       //label.setForeground(Color.WHITE);
+        label.setForeground(Color.WHITE);
         messagePanel.setBackground(Color.BLACK);
         messagePanel.setLayout(new GridLayout(2, 1));
-        messagePanel.add(scrollPane); // Add the scroll pane instead of the label directly
+        messagePanel.add(label);
         messagePanel.add(backFromMessageButton);
-
         content.add(messagePanel, BorderLayout.CENTER);
     }
     public void selectEditMessage() {
@@ -897,14 +948,14 @@ public class BlankClient extends JComponent implements Runnable {
                                         displayLoginOptionPanel();
                                         content.revalidate();
                                         content.repaint();
-                                        System.out.println(userInfo[0] + " " + userInfo[1]);
+                                        ////System.out.println(userInfo[0] + " " + userInfo[1]);
                                     } else if (login) {
                                         login = false;
-                                    //     System.out.println();
+                                    //     ////System.out.println();
                                     // } else {
                                         userInfo[0] = "";
-                                        System.out.println("here again");
-                                        System.out.println("usklsdjfl " + userInfo[0]);
+                                        ////System.out.println("here again");
+                                        ////System.out.println("usklsdjfl " + userInfo[0]);
                                         displaySignUpPanel();
                                         content.revalidate();
                                         content.repaint();
@@ -913,7 +964,7 @@ public class BlankClient extends JComponent implements Runnable {
                                         content.removeAll();
                                         content.revalidate();
                                         content.repaint();
-                                        System.out.println(userInfo[0]+" "+userInfo[1]);
+                                        ////System.out.println(userInfo[0]+" "+userInfo[1]);
                                         displayCoSPanel();
                                         content.revalidate();
                                         content.repaint();
