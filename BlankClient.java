@@ -780,10 +780,12 @@ public class BlankClient extends JComponent implements Runnable {
         JTextField editField = new JTextField();
         editField.setBackground(Color.WHITE);
         editField.setEditable(true);
+
+
         deletePanel = new JPanel();
         label.setForeground(Color.WHITE);
         deletePanel.setBackground(Color.BLACK);
-        deletePanel.setLayout(new GridLayout(2, 2));
+        deletePanel.setLayout(new GridLayout(3, 2));
         deletePanel.add(label);
         deletePanel.add(editField);
         deletePanel.add(empty);
@@ -795,9 +797,9 @@ public class BlankClient extends JComponent implements Runnable {
                 // System.out.println(editField.getText() + " text: " + editField2.getText());
                 int lineNum;
                 try {
-                    lineNum = Integer.parseInt(editField.getText());
-                    System.out.println("MANAGEDELETE " + name + " " + (lineNum));
-                    sendDataToServer("MANAGEDELETE " + name + " " + (lineNum ));
+                    lineNum = Integer.parseInt(editField.getText()) + 1;
+                    System.out.println(lineNum);
+                    sendDataToServer("MANAGEDELETE " + name + " " + lineNum);
                     content.removeAll();
                     content.revalidate();
                     content.repaint();
