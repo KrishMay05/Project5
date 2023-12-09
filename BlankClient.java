@@ -42,6 +42,7 @@ public class BlankClient extends JComponent implements Runnable {
     private JButton numStoreButton;
     private JButton backFromMessageButton;
     private JButton loginOptionButton;
+    private JButton deleteButton;
     private JButton editButton;
     private JPanel welcomePanel;
     private JPanel loginSignUpPanel;
@@ -50,6 +51,7 @@ public class BlankClient extends JComponent implements Runnable {
     private JPanel loginPanel;
     private JPanel messagePanel; 
     private JPanel editPanel;
+    private JPanel deletePanel;
     // private JPanel consumerProducerPanel;
     private JPanel consumerOrProduerPanel;
     private JPanel storeNumberPanel;
@@ -739,8 +741,10 @@ public class BlankClient extends JComponent implements Runnable {
                                 //displayEditPanel
                                 break;
                             case 2:
-                                sendDataToServer("MANAGEDELETE " + " " + messageDropdownMenu.getSelectedItem() + " " + 
-                                    userInfo[0]);
+                                content.removeAll();
+                                content.revalidate();
+                                content.repaint();
+                                deleteMessagePanel((String) messageDropdownMenu.getSelectedItem());
                                 //displayDeletePanel
                                 break;
                             case 3:
@@ -767,6 +771,54 @@ public class BlankClient extends JComponent implements Runnable {
                     // content.repaint();
                 } catch (IOException el) {
 
+                }
+            }
+        });
+    }
+    
+    public void deleteMessagePanel(String name) {
+        latch = new CountDownLatch(1);
+        JLabel label = new JLabel("What Line Number Would You Like To Delete?");
+        label.setFont(new Font("Serif", Font.PLAIN, 25));
+        JLabel empty = new JLabel("");
+        empty.setBackground(Color.BLACK);
+
+        deleteButton = new JButton("SubmitInfo");
+        deleteButton.addActionListener(actionListener);
+        deleteButton.setFont(new Font("Serif", Font.PLAIN, 25));
+        JTextField editField = new JTextField();
+        editField.setBackground(Color.WHITE);
+        editField.setEditable(true);
+
+
+        deletePanel = new JPanel();
+        label.setForeground(Color.WHITE);
+        deletePanel.setBackground(Color.BLACK);
+        deletePanel.setLayout(new GridLayout(3, 2));
+        deletePanel.add(label);
+        deletePanel.add(editField);
+        deletePanel.add(empty);
+        deletePanel.add(deleteButton);
+        content.add(deletePanel, BorderLayout.CENTER);
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // System.out.println(editField.getText() + " text: " + editField2.getText());
+                int lineNum;
+                try {
+                    lineNum = Integer.parseInt(editField.getText()) + 1;
+                    System.out.println(lineNum);
+                    sendDataToServer("MANAGEDELETE " + name + " " + lineNum);
+                    content.removeAll();
+                    content.revalidate();
+                    content.repaint();
+                    displayLoginOptionPanel();
+                    content.revalidate();
+                    content.repaint();
+
+                } catch (Exception e2) {
+                    JOptionPane.showMessageDialog(null, "Please enter a number " +
+                        "in the box!", "BlankMessaging", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
