@@ -104,8 +104,10 @@ public class BlankServerThread extends Thread {
                 }
                 if (line.contains("BLOCK")) {
                     //BLOCK Blockee Blocker
-                    //loggedUser.addBlockedUser();
                     System.out.println(line);
+                    String blockee = line.split(" ")[1];
+                    String blocker = loggedUser.getName();
+                    loggedUser.addBlockedUser(blocker, blockee);
 
                 }
                 if (line.contains("MANAGESEND")) {
