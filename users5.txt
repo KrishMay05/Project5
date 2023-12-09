@@ -1,4 +1,0 @@
-Consumerc@.txt
-Producerc@.txt
-Producerseller@.txt
-Producersel@.txt
