@@ -1,2 +1,4 @@
+s@c@.txt
+c@s@.txt
 c@s@.txt
 s@c@.txt

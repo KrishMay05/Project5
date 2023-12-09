@@ -107,15 +107,21 @@ public class BlankServerThread extends Thread {
                     }
                 }
                 if (line.contains("BLOCK")) {
-                    //BLOCK Blockee Blocker
+                    //BLOCK Blockee User/Store Blocker
 
-                    if (loggedUser instanceof Seller) {
 
-                    }
                     System.out.println(line);
-                    String blockee = line.split(" ")[1];
-                    String blocker = loggedUser.getName();
-                    loggedUser.addBlockedUser(blocker, blockee);
+                    if (loggedUser instanceof Consumer) {
+
+                    } else {
+                        //user is a Seller
+                        String otherUser = line.split(" ")[1];
+//                        System.out.println(otherUser);
+//                        System.out.println(loggedUser.getName());
+                        loggedUser.addBlockedUser("Producer" + loggedUser.getName() + ".txt",
+                                "Consumer" + otherUser + ".txt");
+                    }
+
 
                 }
                 if (line.contains("MANAGESEND")) {
@@ -302,8 +308,15 @@ public class BlankServerThread extends Thread {
                     }
                 }
                 if (line.contains("MANAGEEXPORT")) {
-                    //System.out.println("HELLO");
+                    //MANAGEEXPORT User/Store User
                     System.out.println(line);
+                    if (loggedUser instanceof Consumer) {
+
+                    } else {
+                        //user is a Seller
+                        String otherUser = line.split(" ")[1];
+                        System.out.println(otherUser);
+                    }
                     //loggedUser.exportFile(loggedUser.getName(), );
                 }
                 if (line.contains("MANAGEIMPORT")) {

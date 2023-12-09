@@ -471,8 +471,8 @@ public class BlankClient extends JComponent implements Runnable {
         loginOptionButton = new JButton("Submit Info");
         loginOptionButton.addActionListener(actionListener);
         loginOptionButton.setFont(new Font("Serif", Font.PLAIN, 25));
-        String[] choices = {"Send(1)", "Edit(2)", "Delete(3)", "Read(4)",
-            "Export(5)", "Import(6)", "Search(7)", "Block(8)", "Exit(9)"};
+        String[] choices = {"Send Message(1)", "Edit Message(2)", "Delete Message(3)", "Read Messages(4)",
+            "Export Conversation(5)", "Import Conversation(6)", "Search Users(7)", "Block Users(8)", "Exit(9)"};
         JComboBox<String> stringDropdownMenu = new JComboBox<String>(choices);
         stringDropdownMenu.setFont(new Font("Serif", Font.PLAIN, 25));
         loginOptionPanel = new JPanel();
@@ -500,7 +500,7 @@ public class BlankClient extends JComponent implements Runnable {
                             String[] stores = storesOrConsumers;
                             JComboBox<String> storeDropdownMenu = new JComboBox<String>(stores);
                             storeDropdownMenu.setFont(new Font("Serif", Font.PLAIN, 25));
-                            JLabel storeBox = new JLabel("Please Select a Store");
+                            JLabel storeBox = new JLabel("Please Select a User to Message");
                             storeBox.setFont(new Font("Serif", Font.PLAIN, 25));
                             storeBox.setForeground(Color.WHITE);
 
