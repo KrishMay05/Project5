@@ -73,6 +73,7 @@ public class BlankClient extends JComponent implements Runnable {
     private String userInfo[] = {"", ""};
     private CountDownLatch latch;
     private String storesOrConsumers[];
+    private JButton loginBack;
     // private CountDownLatch latchlogin = new CountDownLatch(1);
 
     ActionListener actionListener = new ActionListener() {
@@ -151,6 +152,8 @@ public class BlankClient extends JComponent implements Runnable {
         passwordFieldLog = new JTextField( 20);
         passwordFieldLog.setBackground(Color.lightGray);
         passwordFieldLog.setFont(new Font("Serif", Font.PLAIN, 25));
+        loginBack = new JButton("Back");
+        loginBack.setFont(new Font("Serif", Font.PLAIN, 25));
 
         JLabel userNameDisplay = new JLabel("Email: ");
         userNameDisplay.setFont(new Font("Serif", Font.PLAIN, 25));
@@ -170,9 +173,19 @@ public class BlankClient extends JComponent implements Runnable {
         loginPanel.add(usernameFieldLog);
         loginPanel.add(userPasswordDisplay);
         loginPanel.add(passwordFieldLog);
-        loginPanel.add(userInstructions);
+        //loginPanel.add(userInstructions);
+        loginPanel.add(loginBack);
         loginPanel.add(submitLoginInfo);
         content.add(loginPanel, BorderLayout.CENTER);
+
+        loginBack.addActionListener(new ActionListener() {
+            @Override public void actionPerformed(ActionEvent e) {
+                content.removeAll();
+                displayWelcomePanel();
+                content.repaint();
+                content.revalidate();
+            }
+        });
         submitLoginInfo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -259,9 +272,9 @@ public class BlankClient extends JComponent implements Runnable {
         passwordField.setBackground(Color.lightGray);
         passwordField.setFont(new Font("Serif", Font.PLAIN, 25));
 
-        JLabel userNameDisplay = new JLabel("Please Eneter Your Email[Must contain @]: ");
+        JLabel userNameDisplay = new JLabel("Please Enter Your Email[Must contain @]: ");
         userNameDisplay.setFont(new Font("Serif", Font.PLAIN, 25));
-        JLabel userPasswordDisplay = new JLabel("Please Eneter Your Password: ");
+        JLabel userPasswordDisplay = new JLabel("Please Enter Your Password: ");
         userPasswordDisplay.setFont(new Font("Serif", Font.PLAIN, 25));
         JLabel userInstructions = new JLabel("Hit This Button When You Are Done");
         userInstructions.setFont(new Font("Serif", Font.PLAIN, 25));
@@ -449,19 +462,27 @@ public class BlankClient extends JComponent implements Runnable {
 
     public void displayLoginOptionPanel() {
         latch = new CountDownLatch(1);
+        JLabel loginInstrucions = new JLabel("Select an Operation you would like to do");
+        loginInstrucions.setFont(new Font("Serif", Font.PLAIN, 25));
+        loginInstrucions.setBackground(Color.BLACK);
+        loginInstrucions.setForeground(Color.WHITE);
+
+
         loginOptionButton = new JButton("Submit Info");
         loginOptionButton.addActionListener(actionListener);
         loginOptionButton.setFont(new Font("Serif", Font.PLAIN, 25));
         String[] choices = {"Send(1)", "Edit(2)", "Delete(3)", "Read(4)",
-            "Export(5)", "Import(6)", "Search(7)", "Exit(8)"};
+            "Export(5)", "Import(6)", "Search(7)", "Block(8)", "Exit(9)"};
         JComboBox<String> stringDropdownMenu = new JComboBox<String>(choices);
         stringDropdownMenu.setFont(new Font("Serif", Font.PLAIN, 25));
         loginOptionPanel = new JPanel();
-        loginOptionPanel.setLayout(new GridLayout(3, 2));
         loginOptionPanel.setBackground(Color.BLACK);
+        loginOptionPanel.setLayout(new GridLayout(3, 3));
+
+        loginOptionPanel.add(loginInstrucions);
         loginOptionPanel.add(stringDropdownMenu);
         loginOptionPanel.add(loginOptionButton);
-            content.add(loginOptionPanel, BorderLayout.CENTER);
+        content.add(loginOptionPanel, BorderLayout.CENTER);
     
         loginOptionButton.addActionListener(new ActionListener() {
             @Override
@@ -666,6 +687,56 @@ public class BlankClient extends JComponent implements Runnable {
                             });
                             break;
                         case 7:
+                            //BLOCKING
+                            JPanel blockPanel = new JPanel();
+                            blockPanel.setLayout(new GridLayout(2, 2));
+                            blockPanel.setBackground(Color.BLACK);
+
+                            JLabel blockInst = new JLabel("Select a User to Block");
+                            blockInst.setFont(new Font("Serif", Font.PLAIN, 25));
+                            blockInst.setForeground(Color.WHITE);
+
+                            String[] messages = storesOrConsumers;
+                            JComboBox<String> blockDropdownMenu = new JComboBox<String>(messages);
+                            blockDropdownMenu.setFont(new Font("Serif", Font.PLAIN, 25));
+
+                            JTextField blockPlaceHolder = new JTextField("");
+                            blockPlaceHolder.setBackground(Color.BLACK);
+                            blockPlaceHolder.setEditable(false);
+
+                            JButton blockButton = new JButton("Submit Info");
+                            blockButton.setFont(new Font("Serif", Font.PLAIN, 25));
+
+                            blockPanel.add(blockInst);
+                            blockPanel.add(blockDropdownMenu);
+                            blockPanel.add(blockPlaceHolder);
+                            blockPanel.add(blockButton);
+                            content.add(blockPanel, BorderLayout.CENTER);
+                            content.setVisible(true);
+
+                            blockButton.addActionListener(new ActionListener() {
+                                @Override public void actionPerformed(ActionEvent e) {
+                                    try {
+                                        content.removeAll();
+                                        content.revalidate();
+                                        content.repaint();
+                                        sendDataToServer("BLOCK" + " " + blockDropdownMenu.getSelectedItem() + " " +
+                                                userInfo[0]);
+                                        JOptionPane.showMessageDialog(null,
+                                                "You have successfully Blocked this user",
+                                                "Block Success", JOptionPane.INFORMATION_MESSAGE);
+                                        displayLoginOptionPanel();
+                                        content.revalidate();
+                                        content.repaint();
+                                    } catch (IOException el) {
+
+                                    }
+                                }
+                            });
+
+
+                            break;
+                        case 8:
                             content.removeAll();
                             content.revalidate();
                             content.repaint();
