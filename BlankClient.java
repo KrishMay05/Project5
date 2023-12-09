@@ -676,8 +676,25 @@ public class BlankClient extends JComponent implements Runnable {
                                         content.removeAll();
                                         content.revalidate();
                                         content.repaint();
-                                        String s = bfr.readLine();
-                                        //System.out.println(s);
+                                        String searchReturn = bfr.readLine();
+                                        //System.out.println(searchReturn);
+                                        if (searchReturn.isEmpty()) {
+                                            JOptionPane.showMessageDialog(null,
+                                                    "No users matching your search were found",
+                                                    "Search Results", JOptionPane.INFORMATION_MESSAGE);
+                                        } else {
+                                            String[] searchReturnArray = searchReturn.split(" ");
+                                            String formattedResults = "";
+                                            for (String s : searchReturnArray) {
+                                                formattedResults += "\n" + s;
+                                            }
+                                            //System.out.println(formattedResults);
+                                            JOptionPane.showMessageDialog(null,
+                                                    "Here is a list of Users matching your search:" +
+                                                            formattedResults,
+                                                    "Search Results", JOptionPane.INFORMATION_MESSAGE);
+                                            displayLoginOptionPanel();
+                                        }
                                         displayLoginOptionPanel();
                                         content.revalidate();
                                         content.repaint();
@@ -878,7 +895,7 @@ public class BlankClient extends JComponent implements Runnable {
                 int lineNum;
                 try {
                     lineNum = Integer.parseInt(editField.getText()) + 1;
-                    System.out.println(lineNum);
+                    //System.out.println(lineNum);
                     sendDataToServer("MANAGEDELETE " + name + " " + lineNum);
                     content.removeAll();
                     content.revalidate();

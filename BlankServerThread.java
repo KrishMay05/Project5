@@ -104,6 +104,10 @@ public class BlankServerThread extends Thread {
                 }
                 if (line.contains("BLOCK")) {
                     //BLOCK Blockee Blocker
+
+                    if (loggedUser instanceof Seller) {
+
+                    }
                     System.out.println(line);
                     String blockee = line.split(" ")[1];
                     String blocker = loggedUser.getName();
