@@ -640,7 +640,6 @@ public class BlankClient extends JComponent implements Runnable {
                             });
                             break;
                         case 6:
-                            //TODO: SEARCH IMPLMENTATION
                             JPanel searchPanel = new JPanel();
                             searchPanel.setLayout(new GridLayout(2, 2));
                             searchPanel.setBackground(Color.BLACK);
@@ -848,7 +847,8 @@ public class BlankClient extends JComponent implements Runnable {
                                 //displayReadPanel
                                 break;
                             case 4:
-                                sendDataToServer("MANAGEEXPORT " + " " + messageDropdownMenu.getSelectedItem() + " " + 
+                                System.out.println("Got to export");
+                                sendDataToServer("MANAGEEXPORT " + messageDropdownMenu.getSelectedItem() + " " +
                                     userInfo[0]);
                                 //displayExportPanel, might not even need that and can just do a JOptionPanel
                                 break;
