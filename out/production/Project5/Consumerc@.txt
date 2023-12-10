@@ -1,5 +1,3 @@
 c@
 1
 
-c@s@.txt
-c@s@.txt

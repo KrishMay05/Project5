@@ -107,12 +107,26 @@ public class BlankServerThread extends Thread {
                     }
                 }
                 if (line.contains("BLOCK")) {
-                    //BLOCK Blockee User/Store Blocker
-
+                    //BLOCK BlockeeUser/Store Blocker
 
                     System.out.println(line);
-                    if (loggedUser instanceof Consumer) {
+                    String[] information = line.split(" ");
 
+                    if (loggedUser instanceof Consumer) {
+                        int i = 0;
+                        for (User sel : users) {
+                            if (sel instanceof Seller) {
+                                if (((Seller) sel).getStores().contains(information[1]
+                                        .replace(" ", ""))) {
+                                    if (i == 0) {
+                                        loggedUser.addBlockedUser("Consumer" + loggedUser.getName() + ".txt",
+                                                "Producer" + sel.getName() + ".txt");
+                                        i++;
+                                    }
+                                }
+                            }
+
+                        }
                     } else {
                         //user is a Seller
                         String otherUser = line.split(" ")[1];
