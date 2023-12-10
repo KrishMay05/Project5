@@ -347,22 +347,26 @@ public class BlankServerThread extends Thread {
                         //System.out.println(loggedUser.getName());
                         loggedUser.exportFile(loggedUser.getName(), otherUser);
                     }
-
-
-
-
-
-
-
                     //loggedUser.exportFile(loggedUser.getName(), );
                 }
                 if (line.contains("MANAGEIMPORT")) {
                     // MANAGEIMPORT Receiver Sender File
+                    System.out.println("the line is: " + line);
                     String[] info = line.split(" ");
                     String receiver = info[1];
-                    String sender = info[2];
-                    String file = info[3];
-
+                    String file = info[2];
+                    if (loggedUser instanceof Consumer) { //consumer importing message to seller
+                        for (User alpha : users) {
+                            if (alpha instanceof Seller) {
+                                if (((Seller) alpha).getStores().contains(receiver)) { //find seller given store name
+                                    ((Consumer)loggedUser).importFile(alpha.getName() + loggedUser.getName() + ".txt", alpha.getName(), file);   
+                                }
+                            }
+                        }
+                    } else {
+                        System.out.println("receiver is " + receiver);
+                        ((Seller) loggedUser).importFile(receiver + loggedUser.getName() + ".txt", receiver, file);
+                    }
                 }
             }
             } catch (Exception e) {

@@ -639,7 +639,7 @@ public class BlankClient extends JComponent implements Runnable {
                                         JOptionPane.showMessageDialog(null, "File Imported", 
                                         "File Imported", JOptionPane.INFORMATION_MESSAGE);
                                         sendDataToServer("MANAGEIMPORT" + " " + receiverDropdownMenu.getSelectedItem() +
-                                        " " + userInfo[0] + " " + importField.getText());
+                                            " " + importField.getText());
                                         content.removeAll();
                                         content.revalidate();
                                         content.repaint();
@@ -647,6 +647,7 @@ public class BlankClient extends JComponent implements Runnable {
                                         content.revalidate();
                                         content.repaint();
                                     } catch (Exception e1) {
+                                        e1.printStackTrace();
                                     }
                                 }
                             });
