@@ -106,6 +106,10 @@ public class BlankClient extends JComponent implements Runnable {
                 SwingUtilities.invokeLater(() -> buttonClick = false);
             }
             if (e.getSource() == loginButton) {
+                content.removeAll();
+                content.revalidate();
+                content.repaint();
+                latch = new CountDownLatch(1);
                 //System.out.println("log" + latch.getCount());
                 conditional = "Works";
                 // latch.countDown();
@@ -118,7 +122,7 @@ public class BlankClient extends JComponent implements Runnable {
             }
             if (e.getSource() == signUpButton) {
                 //System.out.println("sign" + latch.getCount());
-                // latch.countDown();
+                latch = new CountDownLatch(1);
                 conditional = "Works";
                 loginSignUpPanel.setVisible(false);
                 SwingUtilities.invokeLater(() -> login = true);
@@ -220,6 +224,10 @@ public class BlankClient extends JComponent implements Runnable {
     
 
     public void displayWelcomePanel() {
+        content.removeAll();
+        content.revalidate();
+        content.repaint();
+        latch = new CountDownLatch(1);
         JLabel label = new JLabel("Welcome, would you like access to Blank Messaging?");
         label.setFont(new Font("Serif", Font.PLAIN, 25));
         enterSystemButton = new JButton("Yes");
@@ -239,6 +247,9 @@ public class BlankClient extends JComponent implements Runnable {
     } // displayWelcomePanel
 
     public void displayLoginSignUpPanel() {
+        content.removeAll();
+        content.revalidate();
+        content.repaint();
         latch = new CountDownLatch(1);
         JLabel label = new JLabel("Welcome, would you like access to login or signup?");
         label.setHorizontalAlignment(JLabel.CENTER);
@@ -542,6 +553,7 @@ public class BlankClient extends JComponent implements Runnable {
                                             content.removeAll();
                                             content.revalidate();
                                             content.repaint();
+                                            latch = new CountDownLatch(1);
                                             displayWelcomePanel();
                                             content.revalidate();
                                             content.repaint();
@@ -847,9 +859,19 @@ public class BlankClient extends JComponent implements Runnable {
                                 //displayReadPanel
                                 break;
                             case 4:
-                                System.out.println("Got to export");
+                                //System.out.println("Got to export");
                                 sendDataToServer("MANAGEEXPORT " + messageDropdownMenu.getSelectedItem() + " " +
                                     userInfo[0]);
+                                JOptionPane.showMessageDialog(null,
+                                        "CSV File has been Exported", "Export Success",
+                                        JOptionPane.INFORMATION_MESSAGE);
+                                content.removeAll();
+                                content.revalidate();
+                                content.repaint();
+                                displayLoginOptionPanel();
+                                content.repaint();
+                                content.revalidate();
+
                                 //displayExportPanel, might not even need that and can just do a JOptionPanel
                                 break;
                         }

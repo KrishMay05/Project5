@@ -109,7 +109,7 @@ public class BlankServerThread extends Thread {
                 if (line.contains("BLOCK")) {
                     //BLOCK BlockeeUser/Store Blocker
 
-                    System.out.println(line);
+                    //System.out.println(line);
                     String[] information = line.split(" ");
 
                     if (loggedUser instanceof Consumer) {
@@ -142,7 +142,7 @@ public class BlankServerThread extends Thread {
 
                 }
                 if (line.contains("MANAGEEDIT")) {
-                    System.out.println(line);
+                    //System.out.println(line);
                     int i = 0;
                     if (loggedUser instanceof Seller) {
                         // System.out.println("SELLER");
@@ -323,14 +323,37 @@ public class BlankServerThread extends Thread {
                 }
                 if (line.contains("MANAGEEXPORT")) {
                     //MANAGEEXPORT User/Store User
-                    System.out.println(line);
-                    if (loggedUser instanceof Consumer) {
 
+                    String[] information = line.split(" ");
+
+                    if (loggedUser instanceof Consumer) {
+                        int i = 0;
+                        for (User sel : users) {
+                            if (sel instanceof Seller) {
+                                if (((Seller) sel).getStores().contains(information[1]
+                                        .replace(" ", ""))) {
+                                    if (i == 0) {
+                                        loggedUser.exportFile(loggedUser.getName(), sel.getName());
+                                        i++;
+                                    }
+                                }
+                            }
+
+                        }
                     } else {
                         //user is a Seller
                         String otherUser = line.split(" ")[1];
-                        System.out.println(otherUser);
+                        //System.out.println(otherUser);
+                        //System.out.println(loggedUser.getName());
+                        loggedUser.exportFile(loggedUser.getName(), otherUser);
                     }
+
+
+
+
+
+
+
                     //loggedUser.exportFile(loggedUser.getName(), );
                 }
                 if (line.contains("MANAGEIMPORT")) {
