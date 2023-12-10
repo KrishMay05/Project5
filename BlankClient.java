@@ -106,9 +106,9 @@ public class BlankClient extends JComponent implements Runnable {
                 SwingUtilities.invokeLater(() -> buttonClick = false);
             }
             if (e.getSource() == loginButton) {
-                content.removeAll();
-                content.revalidate();
-                content.repaint();
+                // content.removeAll();
+                // content.revalidate();
+                // content.repaint();
                 latch = new CountDownLatch(1);
                 //System.out.println("log" + latch.getCount());
                 conditional = "Works";
@@ -227,7 +227,7 @@ public class BlankClient extends JComponent implements Runnable {
         content.removeAll();
         content.revalidate();
         content.repaint();
-        latch = new CountDownLatch(1);
+        latch = new CountDownLatch( 0 );
         JLabel label = new JLabel("Welcome, would you like access to Blank Messaging?");
         label.setFont(new Font("Serif", Font.PLAIN, 25));
         enterSystemButton = new JButton("Yes");
@@ -250,7 +250,7 @@ public class BlankClient extends JComponent implements Runnable {
         content.removeAll();
         content.revalidate();
         content.repaint();
-        latch = new CountDownLatch(1);
+        latch = new CountDownLatch(0);
         JLabel label = new JLabel("Welcome, would you like access to login or signup?");
         label.setHorizontalAlignment(JLabel.CENTER);
         label.setFont(new Font("Serif", Font.PLAIN, 25));
@@ -553,7 +553,7 @@ public class BlankClient extends JComponent implements Runnable {
                                             content.removeAll();
                                             content.revalidate();
                                             content.repaint();
-                                            latch = new CountDownLatch(1);
+                                            // latch = new CountDownLatch(1);
                                             displayWelcomePanel();
                                             content.revalidate();
                                             content.repaint();
@@ -639,7 +639,7 @@ public class BlankClient extends JComponent implements Runnable {
                                         JOptionPane.showMessageDialog(null, "File Imported", 
                                         "File Imported", JOptionPane.INFORMATION_MESSAGE);
                                         sendDataToServer("MANAGEIMPORT" + " " + receiverDropdownMenu.getSelectedItem() +
-                                            " " + importField.getText());
+                                        " " + userInfo[0] + " " + importField.getText());
                                         content.removeAll();
                                         content.revalidate();
                                         content.repaint();
@@ -647,7 +647,6 @@ public class BlankClient extends JComponent implements Runnable {
                                         content.revalidate();
                                         content.repaint();
                                     } catch (Exception e1) {
-                                        e1.printStackTrace();
                                     }
                                 }
                             });
