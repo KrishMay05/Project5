@@ -41,13 +41,13 @@ Expected Result: Application shows message with the text replaced and EDITED lab
 
 Expected Result: Application notifies the user that the person has been blocked and doesn't permit messaging from either side
 
-
-
-
-
 **Test 5: Import File**
+1. User must have a file to import
+2. User must verify that both a Producer and a Consumer have been created
+3. User must be logged in
+4. User must select Option #6 in the dropdown menu and submit
+5. User must select the receiver's name from the dropdown menu and enter the file name they would like to import
+6. User must submit and select Option #4 in the dropdown menu
+7. User must read the conversation they imported to
 
-
-**Test 6: Export File**
-
-
+Expected Result: Application notifies the user that the file has been imported. The message should be viewable when reading the conversation. The lines from the imported file are added to the corresponding producer and consumer files.
