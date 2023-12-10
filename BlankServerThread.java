@@ -359,13 +359,36 @@ public class BlankServerThread extends Thread {
                         for (User alpha : users) {
                             if (alpha instanceof Seller) {
                                 if (((Seller) alpha).getStores().contains(receiver)) { //find seller given store name
+                                    System.out.println(alpha.getName() + loggedUser.getName() + ".txt");
                                     ((Consumer)loggedUser).importFile(alpha.getName() + loggedUser.getName() + ".txt", alpha.getName(), file);   
                                 }
                             }
                         }
                     } else {
-                        System.out.println("receiver is " + receiver);
-                        ((Seller) loggedUser).importFile(receiver + loggedUser.getName() + ".txt", receiver, file);
+                        for (User Sel : users) {
+                                if (Sel instanceof Consumer) {
+                                    // System.out.println(((Consumer) Sel).getName());
+                                    if (((Consumer) Sel).getName().contains(receiver.
+                                            replace(" ", ""))) {
+                                        // System.out.println("This seems to work");
+                                        int i = 0;
+                                        if (i == 0) {
+                                            // System.out.println("Send Message, Check File");
+                                            ((Seller) loggedUser).importFile(("Consumer" + loggedUser.getName() + ".txt"), receiver, file);
+                                            // ((Seller) loggedUser).sendMessage(((Consumer) Sel).cF(),
+                                            //         String.join(" ", Arrays.copyOfRange(information, 3,
+                                            //                         information.length)).replace("["
+                                            //                         , "").replace("]", "").
+                                            //                 replaceAll(",", " "), ((Consumer) Sel).name);
+                                            i++;
+                                        }
+                                    }
+                                }
+
+                            }
+                        // System.out.println("receiver is " + receiver);
+                        // System.out.println((receiver + loggedUser.getName() + ".txt"));
+                        // ((Seller) loggedUser).importFile((receiver + loggedUser.getName() + ".txt"), receiver.replace(" ", ""), file);
                     }
                 }
             }
