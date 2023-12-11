@@ -121,9 +121,9 @@ public class BlankClient extends JComponent implements Runnable {
                 SwingUtilities.invokeLater(() -> buttonClick = false);
             }
             if (e.getSource() == loginButton) {
-                // content.removeAll();
-                // content.revalidate();
-                // content.repaint();
+                content.removeAll();
+                content.revalidate();
+                content.repaint();
                 latch = new CountDownLatch(1);
                 // System.out.println("log" + latch.getCount());
                 conditional = "Works";
@@ -137,6 +137,9 @@ public class BlankClient extends JComponent implements Runnable {
             }
             if (e.getSource() == signUpButton) {
                 // System.out.println("sign" + latch.getCount());
+                content.removeAll();
+                content.revalidate();
+                content.repaint();
                 latch = new CountDownLatch(1);
                 conditional = "Works";
                 loginSignUpPanel.setVisible(false);
