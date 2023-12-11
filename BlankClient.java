@@ -287,7 +287,7 @@ public class BlankClient extends JComponent implements Runnable {
     }
 
     public void displaySignUpPanel() {
-        latch = new CountDownLatch(0);
+        latch = new CountDownLatch(1);
         submitNewInfo = new JButton("Submit Info");
         submitNewInfo.addActionListener(actionListener);
         submitNewInfo.setFont(new Font("Serif", Font.PLAIN, 25));
