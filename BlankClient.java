@@ -27,6 +27,19 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
+/**
+ * BlankClient.java
+ *
+ * This is the client side of our program, it runs
+ * a JPanel front end and takes the user input from
+ * it and sends it to BlankServer.java / BlankServerThread.java
+ * to do backend calculations.
+ * <p>Purdue University -- CS18000 -- Fall 2023</p>
+ *
+ * @author Krish Patel, Josh Rubow, Aun Ali, Hersh Tripathi
+ * @version Nov 12 23
+ */
+
 public class BlankClient extends JComponent implements Runnable {
     private JFrame frame;
     private Container content;
