@@ -121,10 +121,7 @@ public class BlankClient extends JComponent implements Runnable {
                 SwingUtilities.invokeLater(() -> buttonClick = false);
             }
             if (e.getSource() == loginButton) {
-                // content.removeAll();
-                // content.revalidate();
-                // content.repaint();
-                latch = new CountDownLatch(1);
+                // latch = new CountDownLatch(1);
                 // System.out.println("log" + latch.getCount());
                 conditional = "Works";
                 // latch.countDown();
@@ -133,24 +130,24 @@ public class BlankClient extends JComponent implements Runnable {
                 SwingUtilities.invokeLater(() -> login = true);
                 SwingUtilities.invokeLater(() -> buttonClick = true);
                 SwingUtilities.invokeLater(() -> loginIf = true);
+                
 
             }
             if (e.getSource() == signUpButton) {
                 // System.out.println("sign" + latch.getCount());
-                content.removeAll();
-                content.revalidate();
-                content.repaint();
-                latch = new CountDownLatch(1);
+                // latch = new CountDownLatch(1);
                 conditional = "Works";
                 loginSignUpPanel.setVisible(false);
                 SwingUtilities.invokeLater(() -> login = true);
                 SwingUtilities.invokeLater(() -> login2 = false);
                 SwingUtilities.invokeLater(() -> buttonClick = true);
                 SwingUtilities.invokeLater(() -> loginIf = true);
+                
 
             }
             if (e.getSource() == backFromMessageButton) {
                 messagePanel.setVisible(false);
+                latch = new CountDownLatch(0);
                 content.removeAll();
                 content.revalidate();
                 content.repaint();
@@ -211,31 +208,36 @@ public class BlankClient extends JComponent implements Runnable {
         submitLoginInfo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                userInfo[0] = usernameFieldLog.getText();
-                userInfo[1] = passwordFieldLog.getText();
-                // System.out.println(userInfo[0] + userInfo[1]);
-                try {
-                    sendDataToServer("LOGIN " + userInfo[0] + " " + userInfo[1]);
-                    String ln = bfr.readLine();
-                    // System.out.println(ln);
-                    if (!ln.contains("True")) {
-                        userInfo[0] = "";
-                        userInfo[1] = "";
-                        JOptionPane.showMessageDialog(null,
-                                "There was an issue with your login request", "Login Error",
-                                JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        ln = ln.replace("True", "");
-                        ln += " exit";
+                if (!usernameFieldLog.getText().isEmpty() && !passwordFieldLog.getText().isEmpty()) {
+                    userInfo[0] = usernameFieldLog.getText();
+                    userInfo[1] = passwordFieldLog.getText();
+                    // System.out.println(userInfo[0] + userInfo[1]);
+                    try {
+                        sendDataToServer("LOGIN " + userInfo[0] + " " + userInfo[1]);
+                        String ln = bfr.readLine();
                         // System.out.println(ln);
-                        storesOrConsumers = ln.split(" ");
-                        JOptionPane.showMessageDialog(null, "You have successfully logged in",
-                                "Login Success", JOptionPane.INFORMATION_MESSAGE);
-                        loginPanel.setVisible(false);
-                        latch.countDown();
-                    }
-                } catch (IOException e1) {
+                        if (!ln.contains("True")) {
+                            userInfo[0] = "";
+                            userInfo[1] = "";
+                            JOptionPane.showMessageDialog(null,
+                                    "There was an issue with your login request", "Login Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                        } else {
+                            ln = ln.replace("True", "");
+                            ln += " exit";
+                            // System.out.println(ln);
+                            storesOrConsumers = ln.split(" ");
+                            JOptionPane.showMessageDialog(null, "You have successfully logged in",
+                                    "Login Success", JOptionPane.INFORMATION_MESSAGE);
+                            loginPanel.setVisible(false);
+                            latch.countDown();
+                        }
+                    } catch (IOException e1) {
                 }
+            } else {
+                JOptionPane.showMessageDialog(null, "Please enter a username and password",
+                        "Login Error", JOptionPane.ERROR_MESSAGE);
+            }
 
             }
         });
