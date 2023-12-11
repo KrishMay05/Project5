@@ -160,6 +160,8 @@ public class BlankServerThread extends Thread {
                                         if (((Consumer) Sel).getName().contains(information[1].replace(" ", ""))) {
                                             // System.out.println("This seems to work");
                                             if (i == 0) {
+                                                System.out.println(Arrays.copyOfRange(information, 3,
+                                                    information.length));
                                                 ((Seller) loggedUser).editMessage(((Consumer) Sel).getName(),
                                                         Integer.parseInt(information[2]), Arrays.toString(
                                                                 Arrays.copyOfRange(information, 3,

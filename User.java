@@ -341,6 +341,10 @@ public class User {
     // newMessage =  new edited message, file2 = name of the other file that is also being edited 
         System.out.println("EDITMESSAGESTUFF");
         DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        newMessage = newMessage.replaceAll("\n", " ");
+        newMessage = newMessage.replaceAll(", ", " ");
+        newMessage = newMessage.substring(1, newMessage.length() - 1);
+        System.out.println(newMessage);
         Date date = new Date();
         String time = dateFormat.format(date);
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
