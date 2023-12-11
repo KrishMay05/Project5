@@ -95,7 +95,7 @@ public class BlankClient extends JComponent implements Runnable {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == enterSystemButton) {
                 welcomePanel.setVisible(false);
-                latch = new CountDownLatch(1);
+                latch = new CountDownLatch(0);
                 SwingUtilities.invokeLater(() -> currentIf = true);
                 SwingUtilities.invokeLater(() -> buttonClick = true);
                 talkin();
