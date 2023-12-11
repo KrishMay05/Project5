@@ -7,6 +7,19 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * BlankServerThread
+ *
+ * This class manages requests via the socket and threading for the server
+ *
+ * <p>
+ * Purdue University -- CS18000 -- Fall 2023
+ * </p>
+ *
+ * @author Krish Patel, Josh Rubow, Aun Ali, Hersh Tripathi
+ * @version 12/11/23
+ */
+
 public class BlankServerThread extends Thread {
     private Socket clientSocket;
     private Database users;

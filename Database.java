@@ -16,7 +16,7 @@ import java.util.Iterator;
  * </p>
  *
  * @author Krish Patel, Josh Rubow, Aun Ali, Hersh Tripathi
- * @version Nov 12 23
+ * @version 12/1/23
  */
 
 public class Database implements Iterable<User> {
