@@ -123,7 +123,7 @@ public class BlankClient extends JComponent implements Runnable {
             if (e.getSource() == loginButton) {
                 // content.removeAll();
                 // content.revalidate();
-                content.repaint();
+                // content.repaint();
                 latch = new CountDownLatch(1);
                 // System.out.println("log" + latch.getCount());
                 conditional = "Works";
