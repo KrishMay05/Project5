@@ -356,11 +356,15 @@ public class BlankClient extends JComponent implements Runnable {
         numStoreButton.addActionListener(actionListener);
         numStoreButton.setFont(new Font("Serif", Font.PLAIN, 25));
         Integer[] choices = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+        JLabel storeNumberDisplay = new JLabel("Please Enter The Number of Stores You Have: ");
+        storeNumberDisplay.setFont(new Font("Serif", Font.PLAIN, 25));
+        storeNumberDisplay.setForeground(Color.WHITE);
         JComboBox<Integer> numberDropdownMenu = new JComboBox<Integer>(choices);
         numberDropdownMenu.setFont(new Font("Serif", Font.PLAIN, 25));
         storeNumberPanel = new JPanel();
         storeNumberPanel.setLayout(new GridLayout(3, 2));
         storeNumberPanel.setBackground(Color.BLACK);
+        storeNumberPanel.add(storeNumberDisplay);
         storeNumberPanel.add(numberDropdownMenu);
         storeNumberPanel.add(numStoreButton);
         content.add(storeNumberPanel, BorderLayout.CENTER);
@@ -387,6 +391,8 @@ public class BlankClient extends JComponent implements Runnable {
         storeNameDisplay.setFont(new Font("Serif", Font.PLAIN, 25));
         storeInfoPanel = new JPanel();
         storeInfoPanel.setLayout(new GridLayout(storeNum + 2, 1));
+        storeInfoPanel.add(storeNameDisplay);
+
         ArrayList<JTextField> storeText = new ArrayList<>();
         for (int i = 0; i < storeNum; i++) {
             storeText.add(new JTextField(20));
@@ -396,7 +402,6 @@ public class BlankClient extends JComponent implements Runnable {
         }
         storeNameDisplay.setForeground(Color.WHITE);
         storeInfoPanel.setBackground(Color.BLACK);
-        storeInfoPanel.add(storeNameDisplay);
         // Add storeField to the panel
         storeInfoPanel.add(submitStore);
         content.add(storeInfoPanel, BorderLayout.CENTER);
