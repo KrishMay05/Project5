@@ -26,6 +26,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
+
 public class BlankClient extends JComponent implements Runnable {
     private JFrame frame;
     private Container content;
@@ -49,7 +50,7 @@ public class BlankClient extends JComponent implements Runnable {
     private JPanel signUpPanel;
     private JPanel storeInfoPanel;
     private JPanel loginPanel;
-    private JPanel messagePanel; 
+    private JPanel messagePanel;
     private JPanel editPanel;
     private JPanel deletePanel;
     // private JPanel consumerProducerPanel;
@@ -70,7 +71,7 @@ public class BlankClient extends JComponent implements Runnable {
     private JTextField usernameFieldLog;
     private JTextField passwordFieldLog;
     private String conditional = null;
-    private String userInfo[] = {"", ""};
+    private String userInfo[] = { "", "" };
     private CountDownLatch latch;
     private String storesOrConsumers[];
     private JButton loginBack;
@@ -85,20 +86,21 @@ public class BlankClient extends JComponent implements Runnable {
                 SwingUtilities.invokeLater(() -> currentIf = true);
                 SwingUtilities.invokeLater(() -> buttonClick = true);
                 talkin();
-                
+
             }
             if (e.getSource() == exitSystemButton) {
                 try {
                     socket = new Socket("localhost", 2020);
                     writer = new PrintWriter(socket.getOutputStream());
-                    int reply = JOptionPane.showConfirmDialog(null, 
-                "Would You Like To Delete ALL DATA?", "Delete Info?", JOptionPane.YES_NO_OPTION);
+                    int reply = JOptionPane.showConfirmDialog(null,
+                            "Would You Like To Delete ALL DATA?", "Delete Info?", JOptionPane.YES_NO_OPTION);
                     if (reply == JOptionPane.YES_OPTION) {
                         sendDataToServer("EXITDELETE");
                     } else {
                         sendDataToServer("EXITSAVE");
                     }
-                } catch (Exception e2) {}
+                } catch (Exception e2) {
+                }
                 JOptionPane.showMessageDialog(null, "Thank you for using the Blank Messaging",
                         "BlankMessaging", JOptionPane.INFORMATION_MESSAGE);
                 frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
@@ -110,7 +112,7 @@ public class BlankClient extends JComponent implements Runnable {
                 // content.revalidate();
                 // content.repaint();
                 latch = new CountDownLatch(1);
-                //System.out.println("log" + latch.getCount());
+                // System.out.println("log" + latch.getCount());
                 conditional = "Works";
                 // latch.countDown();
                 loginSignUpPanel.setVisible(false);
@@ -118,10 +120,10 @@ public class BlankClient extends JComponent implements Runnable {
                 SwingUtilities.invokeLater(() -> login = true);
                 SwingUtilities.invokeLater(() -> buttonClick = true);
                 SwingUtilities.invokeLater(() -> loginIf = true);
-                
+
             }
             if (e.getSource() == signUpButton) {
-                //System.out.println("sign" + latch.getCount());
+                // System.out.println("sign" + latch.getCount());
                 latch = new CountDownLatch(1);
                 conditional = "Works";
                 loginSignUpPanel.setVisible(false);
@@ -129,8 +131,7 @@ public class BlankClient extends JComponent implements Runnable {
                 SwingUtilities.invokeLater(() -> login2 = false);
                 SwingUtilities.invokeLater(() -> buttonClick = true);
                 SwingUtilities.invokeLater(() -> loginIf = true);
-                
-                
+
             }
             if (e.getSource() == backFromMessageButton) {
                 messagePanel.setVisible(false);
@@ -153,7 +154,7 @@ public class BlankClient extends JComponent implements Runnable {
         usernameFieldLog = new JTextField(20);
         usernameFieldLog.setBackground(Color.lightGray);
         usernameFieldLog.setFont(new Font("Serif", Font.PLAIN, 25));
-        passwordFieldLog = new JTextField( 20);
+        passwordFieldLog = new JTextField(20);
         passwordFieldLog.setBackground(Color.lightGray);
         passwordFieldLog.setFont(new Font("Serif", Font.PLAIN, 25));
         loginBack = new JButton("Back");
@@ -177,13 +178,14 @@ public class BlankClient extends JComponent implements Runnable {
         loginPanel.add(usernameFieldLog);
         loginPanel.add(userPasswordDisplay);
         loginPanel.add(passwordFieldLog);
-        //loginPanel.add(userInstructions);
+        // loginPanel.add(userInstructions);
         loginPanel.add(loginBack);
         loginPanel.add(submitLoginInfo);
         content.add(loginPanel, BorderLayout.CENTER);
 
         loginBack.addActionListener(new ActionListener() {
-            @Override public void actionPerformed(ActionEvent e) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 content.removeAll();
                 displayWelcomePanel();
                 content.repaint();
@@ -195,39 +197,39 @@ public class BlankClient extends JComponent implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 userInfo[0] = usernameFieldLog.getText();
                 userInfo[1] = passwordFieldLog.getText();
-                //System.out.println(userInfo[0] + userInfo[1]);
+                // System.out.println(userInfo[0] + userInfo[1]);
                 try {
                     sendDataToServer("LOGIN " + userInfo[0] + " " + userInfo[1]);
                     String ln = bfr.readLine();
-                    //System.out.println(ln);
+                    // System.out.println(ln);
                     if (!ln.contains("True")) {
                         userInfo[0] = "";
                         userInfo[1] = "";
-                        JOptionPane.showMessageDialog(null, 
-                            "There was an issue with your login request", "Login Error", 
-                            JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null,
+                                "There was an issue with your login request", "Login Error",
+                                JOptionPane.ERROR_MESSAGE);
                     } else {
                         ln = ln.replace("True", "");
                         ln += " exit";
-                        //System.out.println(ln);
+                        // System.out.println(ln);
                         storesOrConsumers = ln.split(" ");
-                        JOptionPane.showMessageDialog(null, "You have successfully logged in", 
-                            "Login Success", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "You have successfully logged in",
+                                "Login Success", JOptionPane.INFORMATION_MESSAGE);
                         loginPanel.setVisible(false);
                         latch.countDown();
                     }
-                } catch (IOException e1) {}
+                } catch (IOException e1) {
+                }
 
             }
         });
     }
-    
 
     public void displayWelcomePanel() {
         content.removeAll();
         content.revalidate();
         content.repaint();
-        latch = new CountDownLatch( 0 );
+        latch = new CountDownLatch(0);
         JLabel label = new JLabel("Welcome, would you like access to Blank Messaging?");
         label.setFont(new Font("Serif", Font.PLAIN, 25));
         enterSystemButton = new JButton("Yes");
@@ -269,7 +271,7 @@ public class BlankClient extends JComponent implements Runnable {
         loginSignUpPanel.add(loginButton);
         loginSignUpPanel.add(signUpButton);
         content.add(loginSignUpPanel, BorderLayout.CENTER);
-    } 
+    }
 
     public void displaySignUpPanel() {
         latch = new CountDownLatch(1);
@@ -279,7 +281,7 @@ public class BlankClient extends JComponent implements Runnable {
         usernameField = new JTextField(20);
         usernameField.setBackground(Color.lightGray);
         usernameField.setFont(new Font("Serif", Font.PLAIN, 25));
-        passwordField = new JTextField( 20);
+        passwordField = new JTextField(20);
         passwordField.setBackground(Color.lightGray);
         passwordField.setFont(new Font("Serif", Font.PLAIN, 25));
 
@@ -309,16 +311,27 @@ public class BlankClient extends JComponent implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 // Assign the text input to the variable when the button is pressed
                 if (!usernameField.getText().contains("@")) {
-                    JOptionPane.showMessageDialog(null, "PLEASE PUT AN EMAIL", "EMAIL", 
-                        JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "PLEASE PUT AN EMAIL", "EMAIL",
+                            JOptionPane.ERROR_MESSAGE);
                 } else if ((passwordField.getText().isBlank())) {
-                    JOptionPane.showMessageDialog(null, "Password Can't be Empty", 
-                        "password", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Password Can't be Empty",
+                            "password", JOptionPane.ERROR_MESSAGE);
                 } else {
                     userInfo[0] = usernameField.getText();
                     userInfo[1] = passwordField.getText();
-                    signUpPanel.setVisible(false);
-                    latch.countDown();
+                    try {
+                        sendDataToServer("ISUNIQUE " + usernameField.getText());
+                        if (bfr.readLine().toLowerCase().equals("true")) {
+                            signUpPanel.setVisible(false);
+                            latch.countDown();
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Try a different username, this one is already taken!",
+                                    "password", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+
                 }
             }
         });
@@ -337,8 +350,8 @@ public class BlankClient extends JComponent implements Runnable {
         storeNumberPanel.setBackground(Color.BLACK);
         storeNumberPanel.add(numberDropdownMenu);
         storeNumberPanel.add(numStoreButton);
-            content.add(storeNumberPanel, BorderLayout.CENTER);
-    
+        content.add(storeNumberPanel, BorderLayout.CENTER);
+
         numStoreButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -353,7 +366,7 @@ public class BlankClient extends JComponent implements Runnable {
         content.revalidate();
         content.repaint();
     }
-    
+
     public void displayStoreInfoPanel(int storeNum) {
         submitStore = new JButton("Submit Store");
         submitStore.setFont(new Font("Serif", Font.PLAIN, 25));
@@ -362,7 +375,7 @@ public class BlankClient extends JComponent implements Runnable {
         storeInfoPanel = new JPanel();
         storeInfoPanel.setLayout(new GridLayout(storeNum + 2, 1));
         ArrayList<JTextField> storeText = new ArrayList<>();
-        for ( int i = 0; i < storeNum; i++) {
+        for (int i = 0; i < storeNum; i++) {
             storeText.add(new JTextField(20));
             storeText.get(i).setBackground(Color.lightGray);
             storeText.get(i).setFont(new Font("Serif", Font.PLAIN, 25));
@@ -375,13 +388,13 @@ public class BlankClient extends JComponent implements Runnable {
         storeInfoPanel.add(submitStore);
         content.add(storeInfoPanel, BorderLayout.CENTER);
         // Use a variable to store the user input
-    
+
         submitStore.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Assign the text input to the variable when the button is pressed
                 String l = "";
-                for ( int i = 0; i < storeNum; i++) {
+                for (int i = 0; i < storeNum; i++) {
                     l += " " + storeText.get(i).getText().replace(" ", "_");
                 }
                 storeInfoPanel.setVisible(false);
@@ -391,19 +404,19 @@ public class BlankClient extends JComponent implements Runnable {
                 latch.countDown();
                 try {
                     sendDataToServer("SIGNUP" + userInfo[0] + " " + userInfo[1] + " Producer" + l);
-                } catch (IOException e1) {}
+                } catch (IOException e1) {
+                }
                 displayWelcomePanel();
                 content.revalidate();
                 content.repaint();
             }
         });
-    
+
         // Wait for latch or do any other necessary operations
-    
+
         // Return the user input
     }
-    
-    
+
     public void displayCoSPanel() {
         latch = new CountDownLatch(1);
         Consumer = new JButton("Consumer");
@@ -412,7 +425,7 @@ public class BlankClient extends JComponent implements Runnable {
         Producer.addActionListener(actionListener);
         Consumer.setFont(new Font("Serif", Font.PLAIN, 25));
         Producer.setFont(new Font("Serif", Font.PLAIN, 25));
-    
+
         consumerOrProduerPanel = new JPanel();
         consumerOrProduerPanel.setLayout(new GridLayout(1, 2));
         consumerOrProduerPanel.setBackground(Color.BLACK);
@@ -431,15 +444,17 @@ public class BlankClient extends JComponent implements Runnable {
                 content.revalidate();
                 content.repaint();
                 try {
-                    sendDataToServer("SIGNUP" + userInfo[0] + " " + userInfo[1] + " Consumer");;
-                } catch (IOException e1) {}
-                
+                    sendDataToServer("SIGNUP" + userInfo[0] + " " + userInfo[1] + " Consumer");
+                    ;
+                } catch (IOException e1) {
+                }
+
                 displayWelcomePanel();
                 content.revalidate();
                 content.repaint();
             }
         });
-        
+
         Producer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -465,7 +480,7 @@ public class BlankClient extends JComponent implements Runnable {
             }
         });
     }
-    
+
     public void sendDataToServer(String data) throws IOException {
         writer.println(data);
         writer.flush();
@@ -478,12 +493,11 @@ public class BlankClient extends JComponent implements Runnable {
         loginInstrucions.setBackground(Color.BLACK);
         loginInstrucions.setForeground(Color.WHITE);
 
-
         loginOptionButton = new JButton("Submit Info");
         loginOptionButton.addActionListener(actionListener);
         loginOptionButton.setFont(new Font("Serif", Font.PLAIN, 25));
-        String[] choices = {"Send Message(1)", "Edit Message(2)", "Delete Message(3)", "Read Messages(4)",
-            "Export Conversation(5)", "Import Conversation(6)", "Search Users(7)", "Block Users(8)", "Exit(9)"};
+        String[] choices = { "Send Message(1)", "Edit Message(2)", "Delete Message(3)", "Read Messages(4)",
+                "Export Conversation(5)", "Import Conversation(6)", "Search Users(7)", "Block Users(8)", "Exit(9)" };
         JComboBox<String> stringDropdownMenu = new JComboBox<String>(choices);
         stringDropdownMenu.setFont(new Font("Serif", Font.PLAIN, 25));
         loginOptionPanel = new JPanel();
@@ -494,7 +508,7 @@ public class BlankClient extends JComponent implements Runnable {
         loginOptionPanel.add(stringDropdownMenu);
         loginOptionPanel.add(loginOptionButton);
         content.add(loginOptionPanel, BorderLayout.CENTER);
-    
+
         loginOptionButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -514,7 +528,6 @@ public class BlankClient extends JComponent implements Runnable {
                             JLabel storeBox = new JLabel("Please Select a User to Message");
                             storeBox.setFont(new Font("Serif", Font.PLAIN, 25));
                             storeBox.setForeground(Color.WHITE);
-
 
                             JTextField messageBox = new JTextField("Enter Message:");
                             messageBox.setFont(new Font("Serif", Font.PLAIN, 25));
@@ -536,7 +549,7 @@ public class BlankClient extends JComponent implements Runnable {
                             JPanel messagePanel = new JPanel();
                             messagePanel.setLayout(new GridLayout(3, 2));
                             messagePanel.setBackground(Color.BLACK);
-                            
+
                             messagePanel.add(storeBox);
                             messagePanel.add(storeDropdownMenu);
                             messagePanel.add(messageBox);
@@ -549,20 +562,20 @@ public class BlankClient extends JComponent implements Runnable {
                             submitStoreInfo.addActionListener(new ActionListener() {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
-                                    if (storeDropdownMenu.getSelectedItem().equals( "exit" )) {
-                                            content.removeAll();
-                                            content.revalidate();
-                                            content.repaint();
-                                            // latch = new CountDownLatch(1);
-                                            displayWelcomePanel();
-                                            content.revalidate();
-                                            content.repaint();
+                                    if (storeDropdownMenu.getSelectedItem().equals("exit")) {
+                                        content.removeAll();
+                                        content.revalidate();
+                                        content.repaint();
+                                        // latch = new CountDownLatch(1);
+                                        displayWelcomePanel();
+                                        content.revalidate();
+                                        content.repaint();
                                     } else {
                                         try {
                                             sendDataToServer("SENDMESSAGE" + " " + storeDropdownMenu.getSelectedItem() +
-                                            " " + userInfo[0] + " " + message.getText());
-                                            JOptionPane.showMessageDialog(null, "Message Sent", 
-                                                "Message Sent", JOptionPane.INFORMATION_MESSAGE);
+                                                    " " + userInfo[0] + " " + message.getText());
+                                            JOptionPane.showMessageDialog(null, "Message Sent",
+                                                    "Message Sent", JOptionPane.INFORMATION_MESSAGE);
                                             content.removeAll();
                                             content.revalidate();
                                             content.repaint();
@@ -577,23 +590,23 @@ public class BlankClient extends JComponent implements Runnable {
                             break;
                         case 1:
                             displayMessageSelection(1);
-                            //TODO: need to mess with logic so it can go to secondary panel
-                            //sendDataToServer("MANAGEEDIT");
+                            // TODO: need to mess with logic so it can go to secondary panel
+                            // sendDataToServer("MANAGEEDIT");
                             break;
                         case 2:
                             displayMessageSelection(2);
-                            //TODO: need to mess with logic so it can go to secondary panel
-                            //sendDataToServer("MANAGEDELETE");
+                            // TODO: need to mess with logic so it can go to secondary panel
+                            // sendDataToServer("MANAGEDELETE");
                             break;
                         case 3:
                             displayMessageSelection(3);
-                            //TODO: need to mess with logic so it can go to secondary panel
-                            //sendDataToServer("MANAGEREAD");
+                            // TODO: need to mess with logic so it can go to secondary panel
+                            // sendDataToServer("MANAGEREAD");
                             break;
                         case 4:
                             displayMessageSelection(4);
-                            //TODO: need to mess with logic so it can go to secondary panel
-                            //sendDataToServer("MANAGEEXPORT");
+                            // TODO: need to mess with logic so it can go to secondary panel
+                            // sendDataToServer("MANAGEEXPORT");
                             break;
                         case 5:
                             JPanel importPanel = new JPanel();
@@ -631,15 +644,14 @@ public class BlankClient extends JComponent implements Runnable {
                             importPanel.add(importButton);
                             content.add(importPanel, BorderLayout.CENTER);
 
-
                             importButton.addActionListener(new ActionListener() {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
                                     try {
-                                        JOptionPane.showMessageDialog(null, "File Imported", 
-                                        "File Imported", JOptionPane.INFORMATION_MESSAGE);
+                                        JOptionPane.showMessageDialog(null, "File Imported",
+                                                "File Imported", JOptionPane.INFORMATION_MESSAGE);
                                         sendDataToServer("MANAGEIMPORT" + " " + receiverDropdownMenu.getSelectedItem() +
-                                        " " + importField.getText());
+                                                " " + importField.getText());
                                         content.removeAll();
                                         content.revalidate();
                                         content.repaint();
@@ -680,7 +692,8 @@ public class BlankClient extends JComponent implements Runnable {
                             content.setVisible(true);
 
                             searchButton.addActionListener(new ActionListener() {
-                                @Override public void actionPerformed(ActionEvent e) {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
                                     try {
                                         sendDataToServer("SEARCH" + " " + userInfo[0] + " "
                                                 + searchField.getText());
@@ -688,7 +701,7 @@ public class BlankClient extends JComponent implements Runnable {
                                         content.revalidate();
                                         content.repaint();
                                         String searchReturn = bfr.readLine();
-                                        //System.out.println(searchReturn);
+                                        // System.out.println(searchReturn);
                                         if (searchReturn.isEmpty()) {
                                             JOptionPane.showMessageDialog(null,
                                                     "No users matching your search were found",
@@ -699,7 +712,7 @@ public class BlankClient extends JComponent implements Runnable {
                                             for (String s : searchReturnArray) {
                                                 formattedResults += "\n" + s;
                                             }
-                                            //System.out.println(formattedResults);
+                                            // System.out.println(formattedResults);
                                             JOptionPane.showMessageDialog(null,
                                                     "Here is a list of Users matching your search:" +
                                                             formattedResults,
@@ -715,7 +728,7 @@ public class BlankClient extends JComponent implements Runnable {
                             });
                             break;
                         case 7:
-                            //BLOCKING
+                            // BLOCKING
                             JPanel blockPanel = new JPanel();
                             blockPanel.setLayout(new GridLayout(2, 2));
                             blockPanel.setBackground(Color.BLACK);
@@ -743,7 +756,8 @@ public class BlankClient extends JComponent implements Runnable {
                             content.setVisible(true);
 
                             blockButton.addActionListener(new ActionListener() {
-                                @Override public void actionPerformed(ActionEvent e) {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
                                     try {
                                         content.removeAll();
                                         content.revalidate();
@@ -762,7 +776,6 @@ public class BlankClient extends JComponent implements Runnable {
                                 }
                             });
 
-
                             break;
                         case 8:
                             content.removeAll();
@@ -775,7 +788,7 @@ public class BlankClient extends JComponent implements Runnable {
                         default:
                             break;
                     }
-                latch.countDown();
+                    latch.countDown();
                 } catch (Exception e1) {
 
                 }
@@ -787,8 +800,8 @@ public class BlankClient extends JComponent implements Runnable {
 
     public void displayMessageSelection(int actionType) {
         content.setBackground(getBackground());
-        //TODO: get messages for specific user from server
-        //TODO make a case for if there are no messages
+        // TODO: get messages for specific user from server
+        // TODO make a case for if there are no messages
         String[] messages = storesOrConsumers;
         JComboBox<String> messageDropdownMenu = new JComboBox<String>(messages);
         messageDropdownMenu.setFont(new Font("Serif", Font.PLAIN, 25));
@@ -817,12 +830,13 @@ public class BlankClient extends JComponent implements Runnable {
         content.setVisible(true);
 
         submitPickedMessage.addActionListener(new ActionListener() {
-            @Override public void actionPerformed(ActionEvent e) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 try {
                     content.removeAll();
                     content.revalidate();
                     content.repaint();
-                    //TODO display the message log itself
+                    // TODO display the message log itself
                     if (messageDropdownMenu.getSelectedItem().equals("exit")) {
                         displayLoginOptionPanel();
                         content.revalidate();
@@ -834,34 +848,35 @@ public class BlankClient extends JComponent implements Runnable {
                                 content.revalidate();
                                 content.repaint();
                                 editMessagePanel((String) messageDropdownMenu.getSelectedItem());
-                                // sendDataToServer("MANAGEEDIT " + " " + messageDropdownMenu.getSelectedItem() + " " +
+                                // sendDataToServer("MANAGEEDIT " + " " + messageDropdownMenu.getSelectedItem()
+                                // + " " +
                                 // userInfo[0]);
-                                //displayConversation();
-                                //displayEditPanel
+                                // displayConversation();
+                                // displayEditPanel
                                 break;
                             case 2:
                                 content.removeAll();
                                 content.revalidate();
                                 content.repaint();
                                 deleteMessagePanel((String) messageDropdownMenu.getSelectedItem());
-                                //displayDeletePanel
+                                // displayDeletePanel
                                 break;
                             case 3:
-                                sendDataToServer("MANAGEREAD " + " " + messageDropdownMenu.getSelectedItem() + " " + 
-                                    userInfo[0]);
-                                //System.out.println("WE ARE IN READ");
+                                sendDataToServer("MANAGEREAD " + " " + messageDropdownMenu.getSelectedItem() + " " +
+                                        userInfo[0]);
+                                // System.out.println("WE ARE IN READ");
                                 String ln = bfr.readLine();
                                 ln = ln.replace(", ", "<br>");
                                 content.removeAll();
                                 content.revalidate();
                                 content.repaint();
                                 displaySpecificMessagePanel(ln);
-                                //displayReadPanel
+                                // displayReadPanel
                                 break;
                             case 4:
-                                //System.out.println("Got to export");
+                                // System.out.println("Got to export");
                                 sendDataToServer("MANAGEEXPORT " + messageDropdownMenu.getSelectedItem() + " " +
-                                    userInfo[0]);
+                                        userInfo[0]);
                                 JOptionPane.showMessageDialog(null,
                                         "CSV File has been Exported", "Export Success",
                                         JOptionPane.INFORMATION_MESSAGE);
@@ -872,7 +887,7 @@ public class BlankClient extends JComponent implements Runnable {
                                 content.repaint();
                                 content.revalidate();
 
-                                //displayExportPanel, might not even need that and can just do a JOptionPanel
+                                // displayExportPanel, might not even need that and can just do a JOptionPanel
                                 break;
                         }
                     }
@@ -885,7 +900,7 @@ public class BlankClient extends JComponent implements Runnable {
             }
         });
     }
-    
+
     public void deleteMessagePanel(String name) {
         latch = new CountDownLatch(1);
         JLabel label = new JLabel("What Line Number Would You Like To Delete?");
@@ -899,7 +914,6 @@ public class BlankClient extends JComponent implements Runnable {
         JTextField editField = new JTextField();
         editField.setBackground(Color.WHITE);
         editField.setEditable(true);
-
 
         deletePanel = new JPanel();
         label.setForeground(Color.WHITE);
@@ -917,7 +931,7 @@ public class BlankClient extends JComponent implements Runnable {
                 int lineNum;
                 try {
                     lineNum = Integer.parseInt(editField.getText()) + 1;
-                    //System.out.println(lineNum);
+                    // System.out.println(lineNum);
                     sendDataToServer("MANAGEDELETE " + name + " " + lineNum);
                     content.removeAll();
                     content.revalidate();
@@ -928,7 +942,7 @@ public class BlankClient extends JComponent implements Runnable {
 
                 } catch (Exception e2) {
                     JOptionPane.showMessageDialog(null, "Please enter a number " +
-                        "in the box!", "BlankMessaging", JOptionPane.ERROR_MESSAGE);
+                            "in the box!", "BlankMessaging", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -972,7 +986,7 @@ public class BlankClient extends JComponent implements Runnable {
                 int lineNum;
                 try {
                     lineNum = Integer.parseInt(editField.getText());
-                    sendDataToServer("MANAGEEDIT " + name + " " + (lineNum - 1)+ " " + editField2.getText());
+                    sendDataToServer("MANAGEEDIT " + name + " " + (lineNum - 1) + " " + editField2.getText());
                     content.removeAll();
                     content.revalidate();
                     content.repaint();
@@ -982,7 +996,7 @@ public class BlankClient extends JComponent implements Runnable {
 
                 } catch (Exception e2) {
                     JOptionPane.showMessageDialog(null, "Please enter a number " +
-                        "in the first box!", "BlankMessaging", JOptionPane.ERROR_MESSAGE);
+                            "in the first box!", "BlankMessaging", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -1004,16 +1018,16 @@ public class BlankClient extends JComponent implements Runnable {
         messagePanel.add(backFromMessageButton);
         content.add(messagePanel, BorderLayout.CENTER);
     }
+
     public void selectEditMessage() {
         content.setBackground(getBackground());
 
-        String[] lineNums = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "exit"};
+        String[] lineNums = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "exit" };
         JComboBox<String> lineNumsDropdown = new JComboBox<String>(lineNums);
         lineNumsDropdown.setFont(new Font("Serif", Font.PLAIN, 25));
         JLabel editBox = new JLabel("Please Select the Number of the Message you'd like to Edit");
         editBox.setFont(new Font("Serif", Font.PLAIN, 25));
         editBox.setForeground(Color.WHITE);
-
 
         JTextField editInstructions = new JTextField("Enter the Edited message");
         editInstructions.setFont(new Font("Serif", Font.PLAIN, 25));
@@ -1046,9 +1060,11 @@ public class BlankClient extends JComponent implements Runnable {
         content.add(displayConversationPanel, BorderLayout.CENTER);
         content.setVisible(true);
     }
+
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
         SwingUtilities.invokeLater(new BlankClient());
     }// main method
+
     public void run() {
         frame = new JFrame("BlankMessaging");
         content = frame.getContentPane();
@@ -1064,9 +1080,12 @@ public class BlankClient extends JComponent implements Runnable {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
                 try {
-                    if (bfr != null) bfr.close();
-                    if (writer != null) writer.close();
-                    if (socket != null) socket.close();
+                    if (bfr != null)
+                        bfr.close();
+                    if (writer != null)
+                        writer.close();
+                    if (socket != null)
+                        socket.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -1082,7 +1101,7 @@ public class BlankClient extends JComponent implements Runnable {
                     socket = new Socket("localhost", 2020);
                     bfr = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
                     writer = new PrintWriter(socket.getOutputStream());
-        
+
                     while (!isCancelled()) {
                         if (currentIf) {
                             sendDataToServer("Hello, server!");
@@ -1120,23 +1139,23 @@ public class BlankClient extends JComponent implements Runnable {
                                         displayLoginOptionPanel();
                                         content.revalidate();
                                         content.repaint();
-                                        ////System.out.println(userInfo[0] + " " + userInfo[1]);
+                                        //// System.out.println(userInfo[0] + " " + userInfo[1]);
                                     } else if (login) {
                                         login = false;
-                                    //     ////System.out.println();
-                                    // } else {
+                                        // ////System.out.println();
+                                        // } else {
                                         userInfo[0] = "";
-                                        ////System.out.println("here again");
-                                        ////System.out.println("usklsdjfl " + userInfo[0]);
+                                        //// System.out.println("here again");
+                                        //// System.out.println("usklsdjfl " + userInfo[0]);
                                         displaySignUpPanel();
                                         content.revalidate();
                                         content.repaint();
                                         latch.await();
-                                        
+
                                         content.removeAll();
                                         content.revalidate();
                                         content.repaint();
-                                        ////System.out.println(userInfo[0]+" "+userInfo[1]);
+                                        //// System.out.println(userInfo[0]+" "+userInfo[1]);
                                         displayCoSPanel();
                                         content.revalidate();
                                         content.repaint();
@@ -1162,9 +1181,12 @@ public class BlankClient extends JComponent implements Runnable {
                             "or writing to the server", "BlankMessaging", JOptionPane.ERROR_MESSAGE);
                 } finally {
                     try {
-                        if (bfr != null) bfr.close();
-                        if (writer != null) writer.close();
-                        if (socket != null) socket.close();
+                        if (bfr != null)
+                            bfr.close();
+                        if (writer != null)
+                            writer.close();
+                        if (socket != null)
+                            socket.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

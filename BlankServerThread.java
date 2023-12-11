@@ -14,11 +14,11 @@ public class BlankServerThread extends Thread {
     private PrintWriter pw;
     private User loggedUser; // User that is logged in
 
-
     public BlankServerThread(Socket clientSocket, Database users) {
         this.clientSocket = clientSocket;
         this.users = users;
     }
+
     public void run() {
         // System.out.println("Server Thread is running");
         updateUsers();
@@ -27,9 +27,8 @@ public class BlankServerThread extends Thread {
             pw = new PrintWriter(clientSocket.getOutputStream());
             String line;
 
-
             while ((line = br.readLine()) != null) {
-                //System.out.println(line);
+                // System.out.println(line);
                 if (line.contains("EXIT")) {
                     exit(line);
                     return;
@@ -37,6 +36,12 @@ public class BlankServerThread extends Thread {
                 if (line.contains("LOGIN")) {
                     login(line);
                 }
+                if (line.contains("ISUNIQUE")) {
+                    pw.print(users.isUniqueUsername(line.split(" ")[1]) + "");
+                    pw.println();
+                    pw.flush();
+                }
+
                 if (line.contains("SIGNUP")) {
                     signup(line);
                 }
@@ -56,16 +61,15 @@ public class BlankServerThread extends Thread {
                                 for (User Sel : users) {
                                     if (Sel instanceof Consumer) {
                                         // System.out.println(((Consumer) Sel).getName());
-                                        if (((Consumer) Sel).getName().contains(information[1].
-                                                replace(" ", ""))) {
+                                        if (((Consumer) Sel).getName().contains(information[1].replace(" ", ""))) {
                                             // System.out.println("This seems to work");
                                             if (i == 0) {
                                                 // System.out.println("Send Message, Check File");
                                                 ((Seller) loggedUser).sendMessage(((Consumer) Sel).cF(),
                                                         String.join(" ", Arrays.copyOfRange(information, 3,
-                                                                        information.length)).replace("["
-                                                                        , "").replace("]", "").
-                                                                replaceAll(",", " "), ((Consumer) Sel).name);
+                                                                information.length)).replace("[", "").replace("]", "")
+                                                                .replaceAll(",", " "),
+                                                        ((Consumer) Sel).name);
                                                 i++;
                                             }
                                         }
@@ -90,9 +94,9 @@ public class BlankServerThread extends Thread {
                                             if (i == 0) {
                                                 ((Consumer) loggedUser).sendMessage(((Seller) Sel).sF(),
                                                         String.join(" ",
-                                                                        Arrays.copyOfRange(information, 3, information.length))
-                                                                .replace("[", "").
-                                                                replaceAll("]", "").replaceAll(",", " "),
+                                                                Arrays.copyOfRange(information, 3, information.length))
+                                                                .replace("[", "").replaceAll("]", "")
+                                                                .replaceAll(",", " "),
                                                         ((Seller) Sel).name);
                                                 i++;
                                             }
@@ -107,9 +111,9 @@ public class BlankServerThread extends Thread {
                     }
                 }
                 if (line.contains("BLOCK")) {
-                    //BLOCK BlockeeUser/Store Blocker
+                    // BLOCK BlockeeUser/Store Blocker
 
-                    //System.out.println(line);
+                    // System.out.println(line);
                     String[] information = line.split(" ");
 
                     if (loggedUser instanceof Consumer) {
@@ -128,21 +132,20 @@ public class BlankServerThread extends Thread {
 
                         }
                     } else {
-                        //user is a Seller
+                        // user is a Seller
                         String otherUser = line.split(" ")[1];
-//                        System.out.println(otherUser);
-//                        System.out.println(loggedUser.getName());
+                        // System.out.println(otherUser);
+                        // System.out.println(loggedUser.getName());
                         loggedUser.addBlockedUser("Producer" + loggedUser.getName() + ".txt",
                                 "Consumer" + otherUser + ".txt");
                     }
-
 
                 }
                 if (line.contains("MANAGESEND")) {
 
                 }
                 if (line.contains("MANAGEEDIT")) {
-                    //System.out.println(line);
+                    // System.out.println(line);
                     int i = 0;
                     if (loggedUser instanceof Seller) {
                         // System.out.println("SELLER");
@@ -154,12 +157,11 @@ public class BlankServerThread extends Thread {
                                     if (Sel instanceof Consumer) {
                                         // System.out.println(((Consumer) Sel).getName());
                                         System.out.println(information[1]);
-                                        if (((Consumer) Sel).getName().contains(information[1].
-                                                replace(" ", ""))) {
+                                        if (((Consumer) Sel).getName().contains(information[1].replace(" ", ""))) {
                                             // System.out.println("This seems to work");
                                             if (i == 0) {
-                                                ((Seller) loggedUser).editMessage(((Consumer) Sel).getName()
-                                                        , Integer.parseInt(information[2]), Arrays.toString(
+                                                ((Seller) loggedUser).editMessage(((Consumer) Sel).getName(),
+                                                        Integer.parseInt(information[2]), Arrays.toString(
                                                                 Arrays.copyOfRange(information, 3,
                                                                         information.length)));
                                                 i++;
@@ -184,8 +186,8 @@ public class BlankServerThread extends Thread {
                                                 .replace(" ", ""))) {
                                             if (i == 0) {
                                                 System.out.println(((Consumer) loggedUser).getName());
-                                                ((Consumer) loggedUser).editMessage(((Seller) Sel).getName()
-                                                        , Integer.parseInt(information[2]), Arrays.toString(
+                                                ((Consumer) loggedUser).editMessage(((Seller) Sel).getName(),
+                                                        Integer.parseInt(information[2]), Arrays.toString(
                                                                 Arrays.copyOfRange(information, 3,
                                                                         information.length)));
                                                 i++;
@@ -213,8 +215,7 @@ public class BlankServerThread extends Thread {
                                     if (Sel instanceof Consumer) {
                                         // System.out.println(((Consumer) Sel).getName());
                                         System.out.println(information[1]);
-                                        if (((Consumer) Sel).getName().contains(information[1].
-                                                replace(" ", ""))) {
+                                        if (((Consumer) Sel).getName().contains(information[1].replace(" ", ""))) {
                                             System.out.println("This seems to work");
                                             if (i == 0) {
                                                 ((Seller) loggedUser).deleteMessage(((Consumer) Sel).getName(),
@@ -256,7 +257,7 @@ public class BlankServerThread extends Thread {
                     }
                 }
                 if (line.contains("MANAGEREAD")) {
-                    //System.out.println(line);
+                    // System.out.println(line);
                     int i = 0;
                     if (loggedUser instanceof Seller) {
                         // System.out.println("SELLER");
@@ -268,14 +269,13 @@ public class BlankServerThread extends Thread {
                                     if (Sel instanceof Consumer) {
                                         // System.out.println(((Consumer) Sel).getName());
                                         System.out.println(information[1]);
-                                        if (((Consumer) Sel).getName().contains(information[2].
-                                                replace(" ", ""))) {
+                                        if (((Consumer) Sel).getName().contains(information[2].replace(" ", ""))) {
                                             // System.out.println("This seems to work");
                                             if (i == 0) {
                                                 String message = ((Seller) loggedUser).printTextsLineNumbers(
                                                         ((Consumer) Sel).getName()).toString();
                                                 message = message.substring(1, message.length());
-                                                //System.out.println(message);
+                                                // System.out.println(message);
                                                 pw.print(message);
                                                 pw.println();
                                                 pw.flush();
@@ -298,12 +298,12 @@ public class BlankServerThread extends Thread {
                                 // System.out.println("THIS IS NO. @ " + information[1]);
                                 for (User Sel : users) {
                                     if (Sel instanceof Seller) {
-                                        //System.out.println(information[1]);
+                                        // System.out.println(information[1]);
                                         if (((Seller) Sel).getStores().contains(information[2]
                                                 .replace(" ", ""))) {
                                             if (i == 0) {
-                                                String message = ((Consumer) loggedUser).printTextsLineNumbers((
-                                                        (Seller) Sel).getName()).toString();
+                                                String message = ((Consumer) loggedUser)
+                                                        .printTextsLineNumbers(((Seller) Sel).getName()).toString();
                                                 message = message.substring(1, message.length());
                                                 System.out.println(message);
                                                 pw.print(message);
@@ -322,7 +322,7 @@ public class BlankServerThread extends Thread {
                     }
                 }
                 if (line.contains("MANAGEEXPORT")) {
-                    //MANAGEEXPORT User/Store User
+                    // MANAGEEXPORT User/Store User
 
                     String[] information = line.split(" ");
 
@@ -341,13 +341,13 @@ public class BlankServerThread extends Thread {
 
                         }
                     } else {
-                        //user is a Seller
+                        // user is a Seller
                         String otherUser = line.split(" ")[1];
-                        //System.out.println(otherUser);
-                        //System.out.println(loggedUser.getName());
+                        // System.out.println(otherUser);
+                        // System.out.println(loggedUser.getName());
                         loggedUser.exportFile(loggedUser.getName(), otherUser);
                     }
-                    //loggedUser.exportFile(loggedUser.getName(), );
+                    // loggedUser.exportFile(loggedUser.getName(), );
                 }
                 if (line.contains("MANAGEIMPORT")) {
                     // MANAGEIMPORT Receiver Sender File
@@ -355,73 +355,76 @@ public class BlankServerThread extends Thread {
                     String[] info = line.split(" ");
                     String receiver = info[1];
                     String file = info[2];
-                    if (loggedUser instanceof Consumer) { //consumer importing message to seller
+                    if (loggedUser instanceof Consumer) { // consumer importing message to seller
                         for (User alpha : users) {
                             if (alpha instanceof Seller) {
-                                if (((Seller) alpha).getStores().contains(receiver)) { //find seller given store name
+                                if (((Seller) alpha).getStores().contains(receiver)) { // find seller given store name
                                     System.out.println(alpha.getName() + loggedUser.getName() + ".txt");
-                                    ((Consumer)loggedUser).importFile(alpha.getName() + loggedUser.getName() + ".txt", alpha.getName(), file);   
+                                    ((Consumer) loggedUser).importFile(alpha.getName() + loggedUser.getName() + ".txt",
+                                            alpha.getName(), file);
                                 }
                             }
                         }
                     } else {
                         for (User Sel : users) {
-                                if (Sel instanceof Consumer) {
-                                    // System.out.println(((Consumer) Sel).getName());
-                                    if (((Consumer) Sel).getName().contains(receiver.
-                                            replace(" ", ""))) {
-                                        // System.out.println("This seems to work");
-                                        int i = 0;
-                                        if (i == 0) {
-                                            // System.out.println("Send Message, Check File");
-                                            ((Seller) loggedUser).importFile(("Consumer" + loggedUser.getName() + ".txt"), receiver, file);
-                                            // ((Seller) loggedUser).sendMessage(((Consumer) Sel).cF(),
-                                            //         String.join(" ", Arrays.copyOfRange(information, 3,
-                                            //                         information.length)).replace("["
-                                            //                         , "").replace("]", "").
-                                            //                 replaceAll(",", " "), ((Consumer) Sel).name);
-                                            i++;
-                                        }
+                            if (Sel instanceof Consumer) {
+                                // System.out.println(((Consumer) Sel).getName());
+                                if (((Consumer) Sel).getName().contains(receiver.replace(" ", ""))) {
+                                    // System.out.println("This seems to work");
+                                    int i = 0;
+                                    if (i == 0) {
+                                        // System.out.println("Send Message, Check File");
+                                        ((Seller) loggedUser).importFile(("Consumer" + loggedUser.getName() + ".txt"),
+                                                receiver, file);
+                                        // ((Seller) loggedUser).sendMessage(((Consumer) Sel).cF(),
+                                        // String.join(" ", Arrays.copyOfRange(information, 3,
+                                        // information.length)).replace("["
+                                        // , "").replace("]", "").
+                                        // replaceAll(",", " "), ((Consumer) Sel).name);
+                                        i++;
                                     }
                                 }
-
                             }
+
+                        }
                         // System.out.println("receiver is " + receiver);
                         // System.out.println((receiver + loggedUser.getName() + ".txt"));
-                        // ((Seller) loggedUser).importFile((receiver + loggedUser.getName() + ".txt"), receiver.replace(" ", ""), file);
+                        // ((Seller) loggedUser).importFile((receiver + loggedUser.getName() + ".txt"),
+                        // receiver.replace(" ", ""), file);
                     }
                 }
             }
-            } catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-            
+
     }
 
     private void signup(String line) {
         // System.out.println("Signup");
         try {
-            String userType = line; //reads "Consumer" or "Producer" and name/password
+            String userType = line; // reads "Consumer" or "Producer" and name/password
             String[] userInfo = userType.split(" ");
             // System.out.println(Arrays.toString(userInfo));
             if (userInfo[2].contains("Consumer")) {
                 users.add(new Consumer(userInfo[0].replaceAll("SIGNUP", ""), userInfo[1]));
             } else {
                 users.add(new Seller(userInfo[0].replaceAll("SIGNUP", ""), userInfo[1],
-                    new ArrayList<>(Arrays.asList(Arrays.copyOfRange(userInfo, 3, userInfo.length)))));
-                    // System.out.println(new ArrayList<>(Arrays.asList(Arrays.copyOfRange(userInfo, 3, userInfo.length ))));
+                        new ArrayList<>(Arrays.asList(Arrays.copyOfRange(userInfo, 3, userInfo.length)))));
+                // System.out.println(new ArrayList<>(Arrays.asList(Arrays.copyOfRange(userInfo,
+                // 3, userInfo.length ))));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void search(String line ) {
+    private void search(String line) {
         String[] split = line.split(" ");
         String results = "";
         for (User u : users) {
             if (u.getName().equals(split[1])) {
-                for ( User us : users.search(split[2], u)) {
+                for (User us : users.search(split[2], u)) {
                     results += us.getName() + " ";
                 }
             }
@@ -430,14 +433,13 @@ public class BlankServerThread extends Thread {
         pw.println();
         pw.flush();
 
-        
     }
 
     private void login(String line) {
         // System.out.println("Login");
         // System.out.println(line);
         String consumers = "";
-        String sellers = ""; 
+        String sellers = "";
         try {
             String username = line.split(" ")[1];
             String password = line.split(" ")[2];
@@ -457,7 +459,7 @@ public class BlankServerThread extends Thread {
                         consumers += " " + user.getName();
                     } else {
                         Seller temp = (Seller) user;
-                        for (String d: temp.getStores()) {
+                        for (String d : temp.getStores()) {
                             sellers += " " + d;
                         }
                     }
@@ -489,11 +491,11 @@ public class BlankServerThread extends Thread {
             br.close();
             pw.close();
             if (line.contains("DELETE")) {
-                for (User alpha: users) {
+                for (User alpha : users) {
                     if (alpha instanceof Seller) {
-                        ((Seller)alpha).deleteAllFiles();
+                        ((Seller) alpha).deleteAllFiles();
                     } else {
-                        ((Consumer)alpha).deleteAllFiles();
+                        ((Consumer) alpha).deleteAllFiles();
                     }
                 }
             }
@@ -540,8 +542,7 @@ public class BlankServerThread extends Thread {
                             case 2:
                                 for (String blockedUser : line.split(" ")) {
                                     if (blockedUser.contains("Producer") && blockedUser.contains(".txt")) {
-                                        blockedUsers.add(blockedUser.split("Producer")[1].split(".txt")
-                                                [0]);
+                                        blockedUsers.add(blockedUser.split("Producer")[1].split(".txt")[0]);
                                     }
                                 }
 
@@ -563,8 +564,7 @@ public class BlankServerThread extends Thread {
                             case 2:
                                 for (String blockedUser : line.split(" ")) {
                                     if (blockedUser.contains("Consumer") && blockedUser.contains(".txt")) {
-                                        blockedUsers.add(blockedUser.split("Consumer")[1].split(".txt")[0]
-                                        );
+                                        blockedUsers.add(blockedUser.split("Consumer")[1].split(".txt")[0]);
                                     }
                                 }
                                 break;
